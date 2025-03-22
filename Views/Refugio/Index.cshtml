@@ -1,0 +1,326 @@
+﻿@model Refugio
+@{
+    ViewData["Title"] = "Panel de Control - Refugio";
+}
+
+<div class="container-fluid mt-4">
+    <!-- Encabezado con estilo mejorado -->
+    <div class="panel-welcome-container position-relative mb-5">
+        <div class="decorative-paw decorative-paw-1">🐾</div>
+        <div class="decorative-paw decorative-paw-2">🐾</div>
+        <div class="text-center py-4">
+            <h1 class="panel-welcome-title">
+                <i class="fas fa-home"></i> @Model.NombreRefugio
+            </h1>
+            <p class="panel-welcome-subtitle">
+                Panel de control para la gestión del refugio
+            </p>
+        </div>
+    </div>
+
+    <!-- Tarjetas de Resumen con estilo mejorado -->
+    <div class="row mb-5">
+        <!-- Capacidad -->
+        <div class="col-md-3 mb-3">
+            <div class="card h-100 border-0 shadow-lg overflow-hidden">
+                <div class="card-body dashboard-card bg-primary text-white">
+                    <div class="card-icon-container">
+                        <i class="fas fa-paw fa-3x"></i>
+                    </div>
+                    <h5 class="card-title">Capacidad</h5>
+                    <h2 class="display-4 mb-0">@Model.CantidadAnimales / @Model.CapacidadMaxima</h2>
+                    @{
+                        var porcentajeOcupacion = (Model.CantidadAnimales * 100) / (Model.CapacidadMaxima > 0 ? Model.CapacidadMaxima : 1);
+                    }
+                    <div class="progress mt-3" style="height: 10px;">
+                        <div class="progress-bar bg-warning" role="progressbar" style="width: @porcentajeOcupacion%;"
+                             aria-valuenow="@porcentajeOcupacion" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                    <p class="mt-2 mb-0">@porcentajeOcupacion% de ocupación</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Adopciones Rechazadas -->
+        <div class="col-md-3 mb-3">
+            <div class="card h-100 border-0 shadow-lg overflow-hidden">
+                <div class="card-body dashboard-card bg-danger text-white">
+                    <div class="card-icon-container">
+                        <i class="fas fa-times-circle fa-3x"></i>
+                    </div>
+                    <h5 class="card-title">Rechazadas</h5>
+                    <h2 class="display-4 mb-0">@ViewBag.SolicitudesRechazadas</h2>
+                    <p class="mt-3 mb-0">Solicitudes rechazadas</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mascotas Adoptadas -->
+        <div class="col-md-3 mb-3">
+            <div class="card h-100 border-0 shadow-lg overflow-hidden">
+                <div class="card-body dashboard-card bg-success text-white">
+                    <div class="card-icon-container">
+                        <i class="fas fa-home fa-3x"></i>
+                    </div>
+                    <h5 class="card-title">Adoptadas</h5>
+                    <h2 class="display-4 mb-0">@ViewBag.MascotasAdoptadas</h2>
+                    <p class="mt-3 mb-0">Encuentran hogar</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Nuevas Solicitudes -->
+        <div class="col-md-3 mb-3">
+            <div class="card h-100 border-0 shadow-lg overflow-hidden">
+                <div class="card-body dashboard-card bg-info text-white">
+                    <div class="card-icon-container">
+                        <i class="fas fa-file-alt fa-3x"></i>
+                    </div>
+                    <h5 class="card-title">Solicitudes</h5>
+                    <h2 class="display-4 mb-0">@ViewBag.NuevasSolicitudes</h2>
+                    <p class="mt-3 mb-0">Pendientes de revisión</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Gráficos y Estadísticas -->
+    <div class="row mb-4">
+        <!-- Título de sección con estilo mejorado -->
+        <div class="col-12 text-center mb-4">
+            <h2 class="featured-stats-title">📊 Estadísticas 📊</h2>
+            <hr class="mb-4 w-50 mx-auto">
+        </div>
+
+        <!-- Gráfico de Especies -->
+        <div class="col-md-6 mb-3">
+            <div class="card h-100 border-0 shadow-lg overflow-hidden">
+                <div class="card-header bg-light py-3">
+                    <h5 class="mb-0 fw-bold"><i class="fas fa-chart-pie me-2"></i> Distribución por Especies</h5>
+                </div>
+                <div class="card-body">
+                    @if (ViewBag.EspeciesData != null && ViewBag.EspeciesData.Length > 0)
+                    {
+                        <canvas id="especiesChart" width="400" height="300"></canvas>
+                    }
+                    else
+                    {
+                        <div class="text-center text-muted py-5">
+                            <i class="fas fa-exclamation-circle fa-3x mb-3"></i>
+                            <h4>No hay datos disponibles</h4>
+                            <p>Actualmente no hay información sobre especies para mostrar en el gráfico.</p>
+                            <p class="mt-2">Agrega animales de diferentes especies al refugio para visualizar su distribución.</p>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Espacio para añadir otro gráfico si lo deseas -->
+        <div class="col-md-6 mb-3">
+            <div class="card h-100 border-0 shadow-lg overflow-hidden">
+                <div class="card-header bg-light py-3">
+                    <h5 class="mb-0 fw-bold"><i class="fas fa-chart-line me-2"></i> Tendencia de Adopciones</h5>
+                </div>
+                <div class="card-body d-flex justify-content-center align-items-center">
+                    <div class="text-center text-muted">
+                        <i class="fas fa-paw fa-3x mb-3"></i>
+                        <p>Próximamente verás aquí tus estadísticas de adopciones.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Estilos del encabezado del panel */
+    .panel-welcome-container {
+        position: relative;
+        background: linear-gradient(135deg, #f6f8f9 0%, #e5ebee 100%);
+        padding: 3rem 0;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+    }
+
+    .panel-welcome-title {
+        font-family: 'Arial', sans-serif;
+        font-size: 2.8rem;
+        font-weight: 900;
+        color: #333;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        position: relative;
+        margin-bottom: 1rem;
+    }
+
+        .panel-welcome-title i {
+            color: #007bff;
+            margin-right: 10px;
+        }
+
+    .panel-welcome-subtitle {
+        font-size: 1.2rem;
+        color: #6c757d;
+        margin-bottom: 0;
+        max-width: 700px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    /* Paws decorativas como en la vista de adoptante */
+    .decorative-paw {
+        position: absolute;
+        opacity: 0.1;
+        font-size: 10rem;
+        z-index: 0;
+    }
+
+    .decorative-paw-1 {
+        top: -50px;
+        left: -50px;
+        transform: rotate(-20deg);
+    }
+
+    .decorative-paw-2 {
+        bottom: -50px;
+        right: -50px;
+        transform: rotate(20deg);
+    }
+
+    /* Estilo para las tarjetas del dashboard */
+    .dashboard-card {
+        position: relative;
+        border-radius: 15px;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        padding: 1.5rem;
+    }
+
+    .card {
+        border-radius: 15px;
+        transition: all 0.3s ease;
+    }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1) !important;
+        }
+
+    .card-header {
+        border-top-left-radius: 15px !important;
+        border-top-right-radius: 15px !important;
+    }
+
+    .card-icon-container {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        opacity: 0.2;
+    }
+
+    /* Título para sección de estadísticas */
+    .featured-stats-title {
+        font-family: 'Arial', sans-serif;
+        font-size: 2.2rem;
+        font-weight: 800;
+        color: #333;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        position: relative;
+        margin-bottom: 1.5rem;
+    }
+
+        .featured-stats-title::before {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background: linear-gradient(to right, #007bff, #00c6ff);
+        }
+
+    /* Mejoras en el gráfico */
+    canvas {
+        max-width: 100%;
+        margin: 0 auto;
+    }
+</style>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Datos para el gráfico de especies
+        document.addEventListener('DOMContentLoaded', function () {
+                var especiesChartElement = document.getElementById('especiesChart');
+        if (especiesChartElement) {
+            // Gráfico de distribución por especies
+            var ctxEspecies = document.getElementById('especiesChart').getContext('2d');
+            var especiesChart = new Chart(ctxEspecies, {
+                type: 'pie',
+                data: {
+                    labels: @Html.Raw(Json.Serialize(ViewBag.EspeciesLabels)),
+                    datasets: [{
+                        data: @Html.Raw(Json.Serialize(ViewBag.EspeciesData)),
+                        backgroundColor: [
+                            'rgba(54, 162, 235, 0.8)',
+                            'rgba(255, 99, 132, 0.8)',
+                            'rgba(255, 206, 86, 0.8)',
+                            'rgba(75, 192, 192, 0.8)',
+                            'rgba(153, 102, 255, 0.8)',
+                            'rgba(255, 159, 64, 0.8)',
+                            'rgba(199, 199, 199, 0.8)'
+                        ],
+                        borderColor: [
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 1)',
+                            'rgba(255, 159, 64, 1)',
+                            'rgba(199, 199, 199, 1)'
+                        ],
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                padding: 20,
+                                font: {
+                                    size: 14
+                                }
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            padding: 15,
+                            titleFont: {
+                                size: 16
+                            },
+                            bodyFont: {
+                                size: 14
+                            },
+                            displayColors: true,
+                            borderWidth: 0,
+                            cornerRadius: 8
+                        }
+                    },
+                    animation: {
+                        animateScale: true,
+                        animateRotate: true,
+                        duration: 2000,
+                        easing: 'easeOutQuart'
+                    }
+                }
+            });
+            }
+        });
+    </script>
+}

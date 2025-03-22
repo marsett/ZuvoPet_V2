@@ -1,0 +1,532 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - ZuvoPet_V2</title>
+    <script type="importmap"></script>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/ZuvoPet_V2.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    @await RenderSectionAsync("Styles", required: false)
+    @inject IRepositoryZuvoPet_V2 Repo
+    <style>
+        .nav-pills li a:hover {
+            background-color: blue;
+        }
+
+        .content-area {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .main-content {
+            flex-grow: 1;
+        }
+
+        body {
+            margin-bottom: 0px !important;
+        }
+
+        @@media (max-width: 575.20px) {
+            .col-auto {
+                width: 100px;
+            }
+
+            .nav-link {
+                padding: 1rem;
+                text-align: center;
+            }
+
+            .nav-pills li a i {
+                font-size: 1.5rem;
+            }
+
+            .dropdown .ms-2 {
+                display: none;
+            }
+
+            .dropdown-menu {
+                width: 100%;
+                min-width: 0;
+            }
+        }
+
+        .nombre-usuario {
+            max-width: 100%;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        @@media (min-width: 1055px) {
+            .nombre-usuario {
+                max-width: 100px;
+            }
+        }
+
+        @@media (min-width: 992px) and (max-width: 1055px) {
+            .nombre-usuario {
+                max-width: 70px;
+            }
+        }
+
+        @@media (min-width: 768px) and (max-width: 991px) {
+            .nombre-usuario {
+                max-width: 100px;
+            }
+        }
+
+        @@media (min-width: 575.20px) {
+            .nav-link {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+
+                .nav-link i {
+                    flex-shrink: 0;
+                    align-self: center;
+                    width: 24px;
+                    text-align: center;
+                }
+        }
+
+        @@media (min-width: 768px) and (max-width: 1200px) {
+            .miclase {
+                flex: 0 0 25%;
+                max-width: 25%;
+            }
+        }
+
+    </style>
+    <style>
+        /* Estilos del Footer */
+        .pet-footer {
+            background-color: #f8f9fa;
+            position: relative;
+            overflow: hidden;
+        }
+
+            .pet-footer::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 4px;
+                background: linear-gradient(to right, #007bff, #00c6ff);
+            }
+
+        .footer-title {
+            font-family: 'Arial', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #333;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 1rem;
+        }
+
+        .footer-section-title {
+            position: relative;
+            display: inline-block;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #007bff;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+        }
+
+            .footer-section-title::after {
+                content: '';
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                width: 50px;
+                height: 3px;
+                background: linear-gradient(to right, #007bff, #00c6ff);
+            }
+
+        .footer-links, .footer-contact {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+            .footer-links li, .footer-contact li {
+                padding: 0.5rem 0;
+                transition: transform 0.3s ease;
+            }
+
+                .footer-links li:hover {
+                    transform: translateX(5px);
+                }
+
+            .footer-links a {
+                color: #6c757d;
+                text-decoration: none;
+                transition: color 0.3s ease;
+                display: inline-block;
+            }
+
+                .footer-links a:hover {
+                    color: #007bff;
+                }
+
+            .footer-contact li {
+                color: #6c757d;
+                display: flex;
+                align-items: center;
+            }
+
+                .footer-contact li i {
+                    color: #007bff;
+                    width: 20px;
+                }
+
+        .social-icons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .social-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background-color: #fff;
+            border-radius: 50%;
+            color: #007bff;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+            .social-icon:hover {
+                background-color: #007bff;
+                color: #fff;
+                transform: translateY(-3px);
+            }
+
+        .copyright {
+            color: #6c757d;
+            font-size: 0.9rem;
+            border-top: 1px solid #dee2e6;
+            padding-top: 1.5rem;
+            margin-bottom: 0;
+        }
+
+        /* Reutilización de estilos de la vista Adopta */
+        .title-highlight {
+            position: relative;
+            display: inline-block;
+        }
+
+            .title-highlight::after {
+                content: '';
+                position: absolute;
+                bottom: -5px;
+                left: 0;
+                width: 100%;
+                height: 3px;
+                background: linear-gradient(to right, #007bff, #00c6ff);
+                transform: scaleX(0);
+                transform-origin: right;
+                transition: transform 0.3s ease;
+            }
+
+        .footer-title:hover .title-highlight::after {
+            transform: scaleX(1);
+            transform-origin: left;
+        }
+
+        .title-emoji {
+            display: inline-block;
+            transform: translateY(-3px);
+        }
+    </style>
+</head>
+<body>
+    @{
+        // var tipoUsuario = Context.Session.GetString("TIPOUSUARIO");
+        // var nombreUsuario = Context.Session.GetString("USUARIO");
+        // var fotoUsuario = Context.Session.GetString("AVATAR");
+        // int? idUsuario = Context.Session.GetInt32("USUARIOID");
+        // int notificacionesNoLeidas = 0;
+
+        // if (idUsuario.HasValue)
+        // {
+        //     notificacionesNoLeidas = await Repo.GetTotalNotificacionesNoLeidasAsync(idUsuario.Value);
+        // }
+        // Mantener las variables de sesión actuales para compatibilidad
+        var tipoUsuario = Context.Session.GetString("TIPOUSUARIO");
+        var nombreUsuario = Context.Session.GetString("USUARIO");
+        var fotoUsuario = Context.Session.GetString("AVATAR");
+        int? idUsuario = Context.Session.GetInt32("USUARIOID");
+        int notificacionesNoLeidas = 0;
+
+        // Obtener información de los Claims
+        var identity = User.Identity as ClaimsIdentity;
+        bool isAuthenticated = identity?.IsAuthenticated ?? false;
+        string userRole = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
+        string userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+        string fotoPerfil = User.Claims.FirstOrDefault(c => c.Type == "FotoPerfil")?.Value;
+        string userName = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
+        bool isAdmin = User.HasClaim(c => c.Type == "Admin" && c.Value == "true");
+
+        // Asegurar que idUsuario está disponible para consultas a la base de datos
+        if (idUsuario.HasValue)
+        {
+            notificacionesNoLeidas = await Repo.GetTotalNotificacionesNoLeidasAsync(idUsuario.Value);
+        }
+        else if (int.TryParse(userId, out int parsedUserId))
+        {
+            notificacionesNoLeidas = await Repo.GetTotalNotificacionesNoLeidasAsync(parsedUserId);
+        }
+
+        // Si no tenemos la información del tipo de usuario del Claim, usar la sesión como respaldo
+        if (string.IsNullOrEmpty(userRole))
+        {
+            userRole = tipoUsuario;
+        }
+        bool isLoginPage = Context.Request.Path.ToString().ToLower().Contains("/managed/login");
+    }
+
+    @* @if (string.IsNullOrEmpty(tipoUsuario)) *@
+    @if (!isAuthenticated || isLoginPage)
+    {
+        <div class="container">
+            <main role="main" class="pb-3">
+                @RenderBody()
+            </main>
+        </div>
+    }
+    else
+    {
+        <div class="container-fluid">
+            <div class="row flex-nowrap">
+                <div class="miclase bg-dark col-auto col-md-3 col-lg-2 min-vh-100 d-flex flex-column justify-content-between p-0" style="position: sticky; top: 0; height: 100vh; overflow-y: auto;">
+                    <div class="bg-dark p-2">
+                        <a class="d-flex text-decoration-none mt-1 align-items-center text-white">
+                            <span class="fs-6 d-none d-sm-inline">ZuvoPet_V2</span>
+                            @if (isAdmin)
+                            {
+                                <span class="badge bg-danger ms-2">Admin</span>
+                            }
+                        </a>
+                        <ul class="nav nav-pills flex-column mt-4">
+                            @* @if (tipoUsuario == "Adoptante") *@
+                            @if (userRole == "Adoptante")
+                            {
+                                <li class="nav-item py-2 py-sm-0 mb-2">
+                                    <a asp-controller="Adoptante" asp-action="Index" class="nav-link text-white">
+                                        <i class="fs-6 fa fa-home"></i>
+                                        <span class="fs-6 ms-3 d-none d-sm-inline">Inicio</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item py-2 py-sm-0 mb-2">
+                                    <a asp-controller="Adoptante" asp-action="Adopta" class="nav-link text-white">
+                                        <i class="fs-5 fa fa-paw"></i>
+                                        <span class="fs-6 ms-3 d-none d-sm-inline">Adopta</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item py-2 py-sm-0 mb-2">
+                                    <a asp-controller="Adoptante" asp-action="Refugios" class="nav-link text-white">
+                                        <i class="fs-5 fa fa-map-marker-alt"></i>
+                                        <span class="fs-6 ms-3 d-none d-sm-inline">Refugios y Veterinarios</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item py-2 py-sm-0 mb-2">
+                                    <a asp-controller="Adoptante" asp-action="HistoriasExito" class="nav-link text-white">
+                                        <i class="fs-5 fa fa-book"></i>
+                                        <span class="fs-6 ms-3 d-none d-sm-inline">Historias de Éxito</span>
+                                    </a>
+                                </li>
+                                @* <li class="nav-item py-2 py-sm-0 mb-2">
+                                    <a asp-controller="Adoptante" asp-action="Mensajes" class="nav-link text-white">
+                                        <i class="fs-5 fa fa-comments"></i>
+                                        <span class="fs-6 ms-3 d-none d-sm-inline">Mensajes</span>
+                                    </a>
+                                </li> *@
+                                @* <li class="nav-item py-2 py-sm-0 mb-2">
+                                    <a asp-controller="Adoptante" asp-action="Educacion" class="nav-link text-white">
+                                        <i class="fs-5 fa fa-graduation-cap"></i>
+                                        <span class="fs-6 ms-3 d-none d-sm-inline">Educación y Recursos</span>
+                                    </a>
+                                </li> *@
+                            }
+                            @* else if (tipoUsuario == "Refugio") *@
+                            else if (userRole == "Refugio")
+                            {
+                                <li class="nav-item py-2 py-sm-0 mb-2">
+                                    <a asp-controller="Refugio" asp-action="Index" class="nav-link text-white">
+                                        <i class="fs-5 fa fa-chart-line"></i>
+                                        <span class="fs-6 ms-3 d-none d-sm-inline">Inicio</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item py-2 py-sm-0 mb-2">
+                                    <a asp-controller="Refugio" asp-action="Gestion" class="nav-link text-white">
+                                        <i class="fs-5 fa fa-dog"></i>
+                                        <span class="fs-6 ms-3 d-none d-sm-inline">Gestión de Animales</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item py-2 py-sm-0 mb-2">
+                                    <a asp-controller="Refugio" asp-action="Solicitudes" class="nav-link text-white">
+                                        <i class="fs-5 fa fa-file-alt"></i>
+                                        <span class="fs-6 ms-3 d-none d-sm-inline">Solicitudes de Adopción</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item py-2 py-sm-0 mb-2">
+                                    <a asp-controller="Refugio" asp-action="HistoriasExito" class="nav-link text-white">
+                                        <i class="fs-5 fa fa-book"></i>
+                                        <span class="fs-6 ms-3 d-none d-sm-inline">Historias de Éxito</span>
+                                    </a>
+                                </li>
+                                @* <li class="nav-item py-2 py-sm-0 mb-2">
+                                    <a asp-controller="Refugio" asp-action="Mensajes" class="nav-link text-white">
+                                        <i class="fs-5 fa fa-comments"></i>
+                                        <span class="fs-6 ms-3 d-none d-sm-inline">Mensajes</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item py-2 py-sm-0 mb-2">
+                                    <a asp-controller="Refugio" asp-action="Eventos" class="nav-link text-white">
+                                        <i class="fs-5 fa fa-calendar-alt"></i>
+                                        <span class="fs-6 ms-3 d-none d-sm-inline">Eventos y Voluntariado</span>
+                                    </a>
+                                </li> *@
+                            }
+                            <!-- Opciones específicas para administradores -->
+                            @if (isAdmin)
+                            {
+                                <li class="nav-item py-2 py-sm-0 mb-2">
+                                    <a asp-controller="Admin" asp-action="Dashboard" class="nav-link text-warning">
+                                        <i class="fs-5 fa fa-user-shield"></i>
+                                        <span class="fs-6 ms-3 d-none d-sm-inline">Panel Admin</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item py-2 py-sm-0 mb-2">
+                                    <a asp-controller="Admin" asp-action="Users" class="nav-link text-warning">
+                                        <i class="fs-5 fa fa-users"></i>
+                                        <span class="fs-6 ms-3 d-none d-sm-inline">Gestión Usuarios</span>
+                                    </a>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                    <div class="bg-dark p-2">
+                        <ul class="nav nav-pills flex-column">
+                            <li class="nav-item py-2 py-sm-0 mb-2">
+                                <a asp-controller="Managed" asp-action="Logout" class="nav-link text-danger">
+                                    <i class="fs-5 fa fa-sign-out-alt me-2"></i>
+                                    <span class="fs-6 ms-3 d-none d-sm-inline">Cerrar sesión</span>
+                                </a>
+                            </li>
+                            @* @if (tipoUsuario == "Adoptante")
+                            {
+                                <li class="nav-item py-2 py-sm-0 mb-2">
+                                    <a asp-controller="Adoptante" asp-action="Notificaciones" class="nav-link text-white">
+                                        <i class="fs-5 fa fa-bell me-2"></i>
+                                        <span class="fs-6 ms-3 d-none d-sm-inline">Notificaciones</span>
+                                        @if (notificacionesNoLeidas > 0)
+                                        {
+                                            <span class="badge bg-danger rounded-pill ms-2">@notificacionesNoLeidas</span>
+                                        }
+                                    </a>
+                                </li>
+                            }
+                            else if (tipoUsuario == "Refugio")
+                            {
+                                <li class="nav-item py-2 py-sm-0 mb-2">
+                                    <a asp-controller="Refugio" asp-action="Notificaciones" class="nav-link text-white">
+                                        <i class="fs-5 fa fa-bell me-2"></i>
+                                        <span class="fs-6 ms-3 d-none d-sm-inline">Notificaciones</span>
+                                        @if (notificacionesNoLeidas > 0)
+                                        {
+                                            <span class="badge bg-danger rounded-pill ms-2">@notificacionesNoLeidas</span>
+                                        }
+                                    </a>
+                                </li>
+                            } *@
+                            @if (userRole == "Adoptante" || userRole == "Refugio")
+                            {
+                                <li class="nav-item py-2 py-sm-0 mb-2">
+                                    <a asp-controller="@userRole" asp-action="Notificaciones" class="nav-link text-white">
+                                        <i class="fs-5 fa fa-bell me-2"></i>
+                                        <span class="fs-6 ms-3 d-none d-sm-inline">Notificaciones</span>
+                                        @if (notificacionesNoLeidas > 0)
+                                        {
+                                            <span class="badge bg-danger rounded-pill ms-2">@notificacionesNoLeidas</span>
+                                        }
+                                    </a>
+                                </li>
+                            }
+                            @* <li class="nav-item py-2 py-sm-0 mb-2 text-white">
+                                <a asp-controller="@tipoUsuario.ToString()" asp-action="Perfil" class="nav-link text-white">
+                                    <img src="~/images/@fotoUsuario" alt="Avatar" class="fs-5 rounded-circle" style="width: 40px; height: 40px; object-fit: cover;">
+                                    <span class="fs-6 ms-3 text-truncate d-none d-sm-inline nombre-usuario">@nombreUsuario</span>
+                                </a>
+                            </li> *@
+                            <li class="nav-item py-2 py-sm-0 mb-2 text-white">
+                                <a asp-controller="@userRole" asp-action="Perfil" class="nav-link text-white">
+                                    <img src="~/images/@(fotoPerfil ?? fotoUsuario)" alt="Avatar" class="fs-5 rounded-circle" style="width: 40px; height: 40px; object-fit: cover;">
+                                    <span class="fs-6 ms-3 text-truncate d-none d-sm-inline nombre-usuario">@(userName ?? nombreUsuario)</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="col p-3 content-area">
+                    <div class="main-content">
+                        <main role="main" class="p-3">
+                            @RenderBody()
+                        </main>
+                    </div>
+                    <footer class="border-top pet-footer mt-5">
+                        <div class="container py-4">
+                            <div class="text-center">
+                                <h5 class="footer-title">
+                                    <span class="title-highlight">ZuvoPet_V2</span>
+                                    <span class="title-emoji">🐾</span>
+                                </h5>
+                                <p class="text-muted">Conectando corazones humanos con almas peludas desde 2025.</p>
+                            </div>
+                            <div class="row mt-4">
+                                <div class="col-12 text-center">
+                                    <p class="copyright">
+                                        &copy; 2025 - ZuvoPet_V2 - Todos los derechos reservados
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </footer>
+                </div>
+            </div>
+        </div>
+    }
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+
+    <!-- CDN de Toastify CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+
+    <!-- CDN de Toastify JS -->
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <!-- En el head de tu layout o vista -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+
+    <!-- Antes del cierre del body -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
