@@ -62,21 +62,43 @@ namespace ZuvoPet_V2.Controllers
             return View(vistaInicioAdoptante);
         }
 
-        public async Task<IActionResult> Refugios()
+        public async Task<IActionResult> Refugios(int pagina = 1)
         {
+            // Obtener todos los refugios
             List<Refugio> refugios = await this.repo.ObtenerRefugiosAsync();
-            return View(refugios);
+
+            // Configuración de la paginación
+            int refugiosPorPagina = 9; // Puedes ajustar esta cantidad según tus necesidades
+
+            // Calcula el total de páginas
+            int totalRegistros = refugios.Count;
+            int totalPaginas = (int)Math.Ceiling((double)totalRegistros / refugiosPorPagina);
+
+            // Validación de la página actual
+            if (pagina < 1) pagina = 1;
+            if (pagina > totalPaginas && totalPaginas > 0) pagina = totalPaginas;
+
+            // Filtra los refugios para la página actual
+            var refugiosPaginados = refugios
+                .Skip((pagina - 1) * refugiosPorPagina)
+                .Take(refugiosPorPagina)
+                .ToList();
+
+            // Asigna las variables de paginación al ViewBag
+            ViewBag.PaginaActual = pagina;
+            ViewBag.TotalPaginas = totalPaginas;
+
+            if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            {
+                // Para solicitudes AJAX, devuelve la vista parcial o completa
+                return View(refugiosPaginados);
+            }
+
+            return View(refugiosPaginados);
         }
 
         public async Task<IActionResult> DetallesRefugio(int idrefugio)
         {
-            //Refugio refugio = await this.repo.GetDetallesRefugioAsync(idrefugio);
-
-            //List<Mascota> mascotasDelRefugio = await this.repo.GetMascotasPorRefugioAsync(idrefugio);
-
-            //refugio.ListaMascotas = mascotasDelRefugio;
-
-            //return View(refugio);
             try
             {
                 Refugio refugio = await this.repo.GetDetallesRefugioAsync(idrefugio);
@@ -403,8 +425,7 @@ namespace ZuvoPet_V2.Controllers
             return RedirectToAction("Perfil");
         }
 
-
-        public async Task<IActionResult> Adopta(string ordenEdad, string tamano, string sexo, string especie)
+        public async Task<IActionResult> Adopta(string ordenEdad, string tamano, string sexo, string especie, int pagina = 1)
         {
             // Llamamos al servicio para obtener todas las mascotas
             List<MascotaCard> mascotas = await this.repo.ObtenerMascotasAsync();
@@ -455,8 +476,34 @@ namespace ZuvoPet_V2.Controllers
                 Console.WriteLine("No hay favoritos para este usuario.");
             }
 
+            // Configuración de la paginación
+            int mascotasPorPagina = 9; // Puedes ajustar esta cantidad según tus necesidades
 
-            return View(filteredMascotas);
+            // Calcula el total de páginas
+            int totalRegistros = filteredMascotas.Count; // AQUÍ ESTÁ EL CAMBIO: usamos filteredMascotas.Count
+            int totalPaginas = (int)Math.Ceiling((double)totalRegistros / mascotasPorPagina);
+
+            // Validación de la página actual
+            if (pagina < 1) pagina = 1;
+            if (pagina > totalPaginas && totalPaginas > 0) pagina = totalPaginas;
+
+            // Filtra las mascotas para la página actual
+            var mascotasPaginadas = filteredMascotas // AQUÍ ESTÁ EL CAMBIO: usamos filteredMascotas
+                .Skip((pagina - 1) * mascotasPorPagina)
+                .Take(mascotasPorPagina)
+                .ToList();
+
+            // Asigna las variables de paginación al ViewBag
+            ViewBag.PaginaActual = pagina;
+            ViewBag.TotalPaginas = totalPaginas;
+
+            if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            {
+                // Para solicitudes AJAX, devuelve la vista parcial o completa
+                return View(mascotasPaginadas);
+            }
+
+            return View(mascotasPaginadas);
         }
 
         [HttpPost]

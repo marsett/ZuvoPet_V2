@@ -30,29 +30,61 @@
             margin-bottom: 0px !important;
         }
 
-        @@media (max-width: 575.20px) {
-            .col-auto {
-                width: 100px;
-            }
+        @@media (max-width: 600px) {
+            .d-sm-inline
 
-            .nav-link {
-                padding: 1rem;
-                text-align: center;
-            }
-
-            .nav-pills li a i {
-                font-size: 1.5rem;
-            }
-
-            .dropdown .ms-2 {
-                display: none;
-            }
-
-            .dropdown-menu {
-                width: 100%;
-                min-width: 0;
-            }
+        {
+            display: none !important;
         }
+
+        }
+        @@media (max-width: 600px) {
+            /* Mejoramos el alineamiento de los iconos */
+            .nav-item .nav-link
+
+        {
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: center !important;
+            justify-content: center !important;
+            text-align: center !important;
+            padding: 0.75rem 0.5rem !important;
+        }
+
+        /* Ajustamos el tamaño de los iconos para mejor visibilidad */
+        .nav-pills li a i {
+            font-size: 1.5rem !important;
+            margin-right: 0 !important;
+            margin-bottom: 3px !important;
+        }
+
+        /* Reposicionamos el badge de notificaciones */
+        .badge-notificacion {
+            position: relative !important;
+            top: 5px !important;
+            margin-left: 0 !important;
+            margin-top: 5px !important;
+        }
+
+        /* Ocultamos el texto en móvil */
+        .nav-pills .nav-link .d-none {
+            display: none !important;
+        }
+
+        /* Ajustamos el ancho de la barra lateral */
+        .miclase {
+            flex: 0 0 auto !important;
+            width: 70px !important;
+            max-width: 70px !important;
+        }
+
+        /* Ajuste para la foto de perfil */
+        .nav-item img.rounded-circle {
+            margin: 0 auto !important;
+        }
+
+        }
+
 
         .nombre-usuario {
             max-width: 100%;
@@ -79,26 +111,59 @@
             }
         }
 
-        @@media (min-width: 575.20px) {
-            .nav-link {
-                display: flex;
-                align-items: center;
-                gap: 10px;
-            }
+        
 
-                .nav-link i {
-                    flex-shrink: 0;
-                    align-self: center;
-                    width: 24px;
-                    text-align: center;
-                }
-        }
-
-        @@media (min-width: 768px) and (max-width: 1200px) {
+        @@media (min-width: 1100px) and (max-width: 1430px) {
             .miclase {
                 flex: 0 0 25%;
                 max-width: 25%;
             }
+        }
+
+        @@media (min-width: 956px) and (max-width: 1100px) {
+            .miclase {
+                flex: 0 0 25%;
+                max-width: 25%;
+            }
+        }
+
+
+        @@media (min-width: 793px) and (max-width: 956px) {
+            .miclase
+
+        {
+            flex: 0 0 55%;
+            max-width: 30%;
+        }
+
+        }
+
+        @@media (min-width: 768px) and (max-width: 793px) {
+            .miclase
+
+        {
+            flex: 0 0 35%;
+            max-width: 35%;
+        }
+
+        }
+
+        .badge-notificacion {
+            --bs-badge-padding-x: 0.65em;
+            --bs-badge-padding-y: 0.35em;
+            --bs-badge-font-size: 0.75em;
+            --bs-badge-font-weight: 700;
+            --bs-badge-color: #fff;
+            --bs-badge-border-radius: var(--bs-border-radius);
+            display: inline-block;
+            padding: var(--bs-badge-padding-y) var(--bs-badge-padding-x);
+            font-size: var(--bs-badge-font-size);
+            font-weight: var(--bs-badge-font-weight);
+            line-height: 1;
+            color: var(--bs-badge-color);
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: baseline;
         }
 
     </style>
@@ -251,16 +316,6 @@
 </head>
 <body>
     @{
-        // var tipoUsuario = Context.Session.GetString("TIPOUSUARIO");
-        // var nombreUsuario = Context.Session.GetString("USUARIO");
-        // var fotoUsuario = Context.Session.GetString("AVATAR");
-        // int? idUsuario = Context.Session.GetInt32("USUARIOID");
-        // int notificacionesNoLeidas = 0;
-
-        // if (idUsuario.HasValue)
-        // {
-        //     notificacionesNoLeidas = await Repo.GetTotalNotificacionesNoLeidasAsync(idUsuario.Value);
-        // }
         // Mantener las variables de sesión actuales para compatibilidad
         var tipoUsuario = Context.Session.GetString("TIPOUSUARIO");
         var nombreUsuario = Context.Session.GetString("USUARIO");
@@ -295,7 +350,6 @@
         bool isLoginPage = Context.Request.Path.ToString().ToLower().Contains("/managed/login");
     }
 
-    @* @if (string.IsNullOrEmpty(tipoUsuario)) *@
     @if (!isAuthenticated || isLoginPage)
     {
         <div class="container">
@@ -318,7 +372,6 @@
                             }
                         </a>
                         <ul class="nav nav-pills flex-column mt-4">
-                            @* @if (tipoUsuario == "Adoptante") *@
                             @if (userRole == "Adoptante")
                             {
                                 <li class="nav-item py-2 py-sm-0 mb-2">
@@ -424,32 +477,6 @@
                                     <span class="fs-6 ms-3 d-none d-sm-inline">Cerrar sesión</span>
                                 </a>
                             </li>
-                            @* @if (tipoUsuario == "Adoptante")
-                            {
-                                <li class="nav-item py-2 py-sm-0 mb-2">
-                                    <a asp-controller="Adoptante" asp-action="Notificaciones" class="nav-link text-white">
-                                        <i class="fs-5 fa fa-bell me-2"></i>
-                                        <span class="fs-6 ms-3 d-none d-sm-inline">Notificaciones</span>
-                                        @if (notificacionesNoLeidas > 0)
-                                        {
-                                            <span class="badge bg-danger rounded-pill ms-2">@notificacionesNoLeidas</span>
-                                        }
-                                    </a>
-                                </li>
-                            }
-                            else if (tipoUsuario == "Refugio")
-                            {
-                                <li class="nav-item py-2 py-sm-0 mb-2">
-                                    <a asp-controller="Refugio" asp-action="Notificaciones" class="nav-link text-white">
-                                        <i class="fs-5 fa fa-bell me-2"></i>
-                                        <span class="fs-6 ms-3 d-none d-sm-inline">Notificaciones</span>
-                                        @if (notificacionesNoLeidas > 0)
-                                        {
-                                            <span class="badge bg-danger rounded-pill ms-2">@notificacionesNoLeidas</span>
-                                        }
-                                    </a>
-                                </li>
-                            } *@
                             @if (userRole == "Adoptante" || userRole == "Refugio")
                             {
                                 <li class="nav-item py-2 py-sm-0 mb-2">
@@ -458,17 +485,11 @@
                                         <span class="fs-6 ms-3 d-none d-sm-inline">Notificaciones</span>
                                         @if (notificacionesNoLeidas > 0)
                                         {
-                                            <span class="badge bg-danger rounded-pill ms-2">@notificacionesNoLeidas</span>
+                                            <span class="badge-notificacion bg-danger rounded-pill ms-2">@notificacionesNoLeidas</span>
                                         }
                                     </a>
                                 </li>
                             }
-                            @* <li class="nav-item py-2 py-sm-0 mb-2 text-white">
-                                <a asp-controller="@tipoUsuario.ToString()" asp-action="Perfil" class="nav-link text-white">
-                                    <img src="~/images/@fotoUsuario" alt="Avatar" class="fs-5 rounded-circle" style="width: 40px; height: 40px; object-fit: cover;">
-                                    <span class="fs-6 ms-3 text-truncate d-none d-sm-inline nombre-usuario">@nombreUsuario</span>
-                                </a>
-                            </li> *@
                             <li class="nav-item py-2 py-sm-0 mb-2 text-white">
                                 <a asp-controller="@userRole" asp-action="Perfil" class="nav-link text-white">
                                     <img src="~/images/@(fotoPerfil ?? fotoUsuario)" alt="Avatar" class="fs-5 rounded-circle" style="width: 40px; height: 40px; object-fit: cover;">
@@ -515,15 +536,12 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
 
-    <!-- CDN de Toastify CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
 
-    <!-- CDN de Toastify JS -->
     <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
-    <!-- En el head de tu layout o vista -->
+  
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
 
-    <!-- Antes del cierre del body -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 

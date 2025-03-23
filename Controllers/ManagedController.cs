@@ -222,23 +222,17 @@ namespace ZuvoPet_V2.Controllers
         
         public IActionResult Login()
         {
-            //var tipoUsuario = HttpContext.Session.GetString("TIPOUSUARIO");
-            //if (!string.IsNullOrEmpty(tipoUsuario))
-            //{
-            //    if (tipoUsuario == "Adoptante")
-            //    {
-            //        return RedirectToAction("Index", "Adoptante");
-            //    }
-            //    else if (tipoUsuario == "Refugio")
-            //    {
-            //        return RedirectToAction("Index", "Refugio");
-            //    }
-            //}
-            //return View();
-            // Si ya está autenticado, redirigir
             Response.Headers["Cache-Control"] = "no-cache, no-store, must-revalidate";
             Response.Headers["Pragma"] = "no-cache";
             Response.Headers["Expires"] = "0";
+
+            // Clear session if we're at login page but there's a session
+            // This helps prevent redirect loops
+            if (!User.Identity.IsAuthenticated && HttpContext.Session.GetString("TIPOUSUARIO") != null)
+            {
+                HttpContext.Session.Clear();
+            }
+
             if (User.Identity.IsAuthenticated)
             {
                 string userRole = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;

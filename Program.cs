@@ -45,6 +45,11 @@ builder.Services.AddAuthentication(options =>
     {
         config.LoginPath = "/Managed/Login";
         config.AccessDeniedPath = "/Managed/Denied";
+        config.ExpireTimeSpan = TimeSpan.FromMinutes(30); // Match your session timeout
+        config.SlidingExpiration = true;
+        config.Cookie.HttpOnly = true;
+        // This helps prevent redirect loops by limiting redirects
+        config.ReturnUrlParameter = "returnUrl";
     });
 
 //builder.Services.AddAuthorization(options =>

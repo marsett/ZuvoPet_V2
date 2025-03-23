@@ -1,10 +1,10 @@
 ﻿@model List<MascotaCard>
 
 @{
+    var paginaActual = ViewBag.PaginaActual;
+    var totalPaginas = ViewBag.TotalPaginas;
     @Html.AntiForgeryToken()
 }
-
-
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -98,6 +98,69 @@
     console.log("Favoritos cargados:", @Html.Raw(Json.Serialize(ViewData["IDSFAVORITOS"])));
 </script>
 
+<script>
+        function cargarPagina(pagina) {
+        // Mostrar un indicador de carga
+        const petGallery = document.getElementById('petGallery');
+        petGallery.innerHTML = '<div class="col-12 text-center mt-5"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Cargando...</span></div></div>';
+
+        // Obtener los valores de los filtros actuales
+        const tamano = document.getElementById('tamano').value;
+        const sexo = document.getElementById('sexo').value;
+        const especie = document.getElementById('especie').value;
+        const ordenEdad = document.getElementById('ordenEdad').value;
+
+        // Construir la URL
+        let url = '/Adoptante/Adopta?pagina=' + pagina;
+        if (tamano) url += '&tamano=' + encodeURIComponent(tamano);
+        if (sexo) url += '&sexo=' + encodeURIComponent(sexo);
+        if (especie) url += '&especie=' + encodeURIComponent(especie);
+        if (ordenEdad) url += '&ordenEdad=' + encodeURIComponent(ordenEdad);
+
+        // Realizar la solicitud AJAX
+        fetch(url, {
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => response.text())
+        .then(html => {
+            // Actualizar el contenido de la página
+            document.body.innerHTML = html;
+
+            // Actualizar la URL del navegador sin recargar la página
+            window.history.pushState({ pagina: pagina }, 'Página ' + pagina, url);
+
+            // Reinicializar los eventos
+            inicializarEventos();
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    }
+</script>
+
+<style>
+    .pagination-controls .btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        padding: 0;
+        border-radius: 50%;
+        transition: all 0.3s ease;
+    }
+
+        .pagination-controls .btn:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+    .pagination-controls .badge {
+        height: 40px;
+    }
+</style>
 
 <div class="container-fluid px-4 py-5 pet-adoption-container">
     <div class="row mb-4">
@@ -277,6 +340,31 @@
         <div class="text-center mt-5">
             <h3 class="text-muted">No se encontraron mascotas 😿</h3>
             <p class="lead">Prueba ajustando tus filtros de búsqueda</p>
+        </div>
+    }
+    @if (Model.Any())
+    {
+        <div class="row">
+            <div class="col-12">
+                <div class="pagination-controls d-flex justify-content-center mt-5 mb-5">
+                    <button class="btn btn-outline-primary me-2" onclick="cargarPagina(1)" @(paginaActual <= 1 ? "disabled" : "")>
+                        <i class="fas fa-angle-double-left"></i>
+                    </button>
+                    <button class="btn btn-outline-primary me-2" onclick="cargarPagina(@(paginaActual - 1))" @(paginaActual <= 1 ? "disabled" : "")>
+                        <i class="fas fa-angle-left"></i>
+                    </button>
+                    <span class="badge bg-primary rounded-pill px-3 py-2 d-flex align-items-center mx-2">
+                        <i class="fas fa-paw me-1"></i>
+                        <span id="paginaInfo">@paginaActual de @totalPaginas</span>
+                    </span>
+                    <button class="btn btn-outline-primary ms-2" onclick="cargarPagina(@(paginaActual + 1))" @(paginaActual >= totalPaginas ? "disabled" : "")>
+                        <i class="fas fa-angle-right"></i>
+                    </button>
+                    <button class="btn btn-outline-primary ms-2" onclick="cargarPagina(@totalPaginas)" @(paginaActual >= totalPaginas ? "disabled" : "")>
+                        <i class="fas fa-angle-double-right"></i>
+                    </button>
+                </div>
+            </div>
         </div>
     }
 </div>

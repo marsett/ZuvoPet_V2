@@ -3,6 +3,230 @@
     string colorPrincipal = "#3182CE"; // Color azul para refugios
 }
 
+
+
+<div class="container my-5 position-relative paw-container">
+    <!-- Huellas decorativas animadas -->
+    <i class="bi bi-paw-fill paw-print" style="top: 10%; left: 5%; font-size: 4rem; transform: rotate(20deg);"></i>
+    <i class="bi bi-paw-fill paw-print" style="top: 40%; right: 7%; font-size: 3.5rem; transform: rotate(-15deg);"></i>
+    <i class="bi bi-paw-fill paw-print" style="bottom: 15%; left: 10%; font-size: 3.8rem; transform: rotate(10deg);"></i>
+    <i class="bi bi-paw-fill paw-print" style="bottom: 30%; right: 20%; font-size: 2.5rem; transform: rotate(-25deg);"></i>
+
+    <!-- Card principal del perfil del refugio -->
+    <div class="shelter-profile">
+        <!-- Encabezado con foto panorámica -->
+        <div class="shelter-header">
+            @if (Model?.Usuario?.PerfilUsuario != null && !string.IsNullOrEmpty(Model.Usuario.PerfilUsuario.FotoPerfil))
+            {
+                <img src="~/images/@Model.Usuario.PerfilUsuario.FotoPerfil" class="w-100 h-100 object-fit-cover" alt="Imagen del refugio @Model.NombreRefugio">
+            }
+            else
+            {
+                <img src="~/images/default-shelter.jpg" class="w-100 h-100 object-fit-cover" alt="Imagen predeterminada del refugio">
+            }
+            
+
+            <div class="shelter-header-overlay">
+                <h1 class="display-4 fw-bold mb-3">@Model.NombreRefugio</h1>
+                <div class="d-flex flex-wrap mb-3">
+                    <div class="shelter-tag" style="background-color: @colorPrincipal;">
+                        Refugio de animales
+                    </div>
+                    <div class="shelter-tag" style="background-color: @colorPrincipal;">
+                        @Model.ListaMascotas?.Count(m => m.Estado == "Disponible") animales
+                    </div>
+                </div>
+            </div>
+
+            <!-- Indicador de scroll -->
+            <div class="scroll-indicator">
+                <i class="bi bi-chevron-double-down"></i>
+            </div>
+        </div>
+
+        <div class="shelter-content container">
+            <div class="row">
+                <div class="col-lg-8">
+                    <!-- Acerca del refugio -->
+                    <div class="section-card animate-section">
+                        <h3 class="section-title">Sobre @Model.NombreRefugio</h3>
+                        @if (!string.IsNullOrEmpty(Model.Usuario.PerfilUsuario.Descripcion))
+                        {
+                            <p class="lead">@Html.Raw(Model.Usuario.PerfilUsuario.Descripcion.Replace("\n", "<br>"))</p>
+                        }
+                        else
+                        {
+                            <p class="lead fst-italic text-muted">No hay descripción disponible para @Model.NombreRefugio.</p>
+                        }
+                    </div>
+
+                    <!-- Capacidad del refugio con animaciones -->
+                    <div class="section-card animate-section">
+                        <h3 class="section-title">Capacidad del refugio</h3>
+                        <div class="row mb-4">
+                            <div class="col-12 mb-3">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <h6 class="mb-0 d-flex align-items-center">
+                                        <i class="bi bi-house-heart-fill me-2"></i>
+                                        Ocupación actual
+                                    </h6>
+                                    <span class="fw-bold">@Model.ListaMascotas?.Count(m => m.Estado == "Disponible") de @Model.CapacidadMaxima</span>
+                                </div>
+                                @{
+                                    var porcentajeOcupacion = (int)((double)@Model.ListaMascotas?.Count(m => m.Estado == "Disponible") / Model.CapacidadMaxima * 100);
+                                    var colorOcupacion = porcentajeOcupacion < 60 ? "#10B981" : // Verde
+                                    porcentajeOcupacion < 80 ? "#FBBF24" : // Amarillo
+                                    "#EF4444"; // Rojo
+                                }
+                                <div class="capacity-progress">
+                                    <div class="capacity-progress-bar" data-progress="@porcentajeOcupacion"
+                                         style="background-color: @colorOcupacion; width: @porcentajeOcupacion%;"></div>
+                                </div>
+                                <div class="text-end mt-1">
+                                    <span class="small text-muted">@porcentajeOcupacion% de ocupación</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Mascotas disponibles en el refugio con paginación mejorada -->
+                    <div class="section-card animate-section">
+                        <h3 class="section-title">Mascotas disponibles (@Model.ListaMascotas?.Count(m => m.Estado == "Disponible"))</h3>
+
+                        @if (Model.ListaMascotas != null && Model.ListaMascotas.Any(m => m.Estado == "Disponible") && Model.ListaMascotas.Count() != 0)
+                        {
+                            <div class="pet-carousel mt-4 position-relative">
+                                @{
+                                    var mascotasDisponibles = Model.ListaMascotas.Where(m => m.Estado == "Disponible").ToList();
+                                    var totalMascotas = mascotasDisponibles.Count;
+                                }
+
+                                @for (int i = 0; i < mascotasDisponibles.Count; i++)
+                                {
+                                    var mascota = mascotasDisponibles[i];
+                                    <div class="pet-slide @(i == 0 ? "active" : "")" data-index="@i">
+                                        <div class="row justify-content-center">
+                                            <div class="col-md-8">
+                                                <div class="pet-card position-relative">
+                                                    @if (!string.IsNullOrEmpty(mascota.Foto))
+                                                    {
+                                                        <img src="~/images/@mascota.Foto" class="w-100 pet-image" alt="Foto de @mascota.Nombre">
+                                                    }
+                                                    else
+                                                    {
+                                                        <img src="/img/mascota-default.jpg" class="w-100 pet-image" alt="Sin foto disponible">
+                                                    }
+
+                                                    <div class="p-4">
+                                                        <h5 class="fw-bold mb-3">@mascota.Nombre</h5>
+                                                        <a asp-controller="Adoptante"
+                                                           asp-action="DetallesMascota"
+                                                           asp-route-idmascota="@mascota.Id"
+                                                           class="btn btn-primary btn-lg w-100">
+                                                            Más sobre @mascota.Nombre
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+
+                                @if (totalMascotas > 1)
+                                {
+                                    <div class="nav-arrow prev-pet" id="prevPet">
+                                        <i class="bi bi-chevron-left"></i>
+                                    </div>
+                                    <div class="nav-arrow next-pet" id="nextPet">
+                                        <i class="bi bi-chevron-right"></i>
+                                    </div>
+                                }
+                            </div>
+
+                            <!-- Controles de paginación mejorados -->
+                            <div class="pagination-controls my-4">
+                                <div class="page-indicator">
+                                    <span id="currentPage">1</span> de <span id="totalPages">@totalMascotas</span>
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="alert alert-info mt-4">
+                                <i class="bi bi-info-circle me-2"></i>
+                                Este refugio no tiene mascotas disponibles para adopción en este momento.
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <div class="col-lg-4">
+                    <div class="sticky-top" style="top: 30px;">
+                        <!-- Información de contacto -->
+                        <div class="section-card animate-section">
+                            <h3 class="section-title">Contacto</h3>
+                            <div class="info-item d-flex align-items-center mb-4 mt-4">
+                                <div>
+                                    <div class="text-muted small">Refugio</div>
+                                    <div class="fw-bold fs-5 text-break">@(Model.NombreRefugio ?? "Información no disponible")</div>
+                                </div>
+                            </div>
+                            <div class="info-item d-flex align-items-center mb-4 mt-4">
+                                <div>
+                                    <div class="text-muted small">Acerca de</div>
+                                    <div class="fw-bold fs-5 text-break">@(Model.Usuario.PerfilUsuario.Descripcion ?? "Información no disponible")</div>
+                                </div>
+                            </div>
+                            <div class="info-item d-flex align-items-center mb-4 mt-4">
+                                <div>
+                                    <div class="text-muted small">Contacto</div>
+                                    <div class="fw-bold fs-5 text-break">@(Model.ContactoRefugio ?? "Información no disponible")</div>
+                                </div>
+                            </div>
+                            
+                        </div>
+
+                        <!-- Botón de contacto -->
+                        <div class="section-card animate-section">
+                            <h3 class="section-title mb-4">Contactar al refugio</h3>
+                            <div class="text-center py-3">
+                                <p class="mb-4">¿Quieres colaborar o tienes preguntas sobre este refugio? Contacta directamente con ellos.</p>
+
+                                <a href="mailto:@Model.Usuario?.Email"
+                                   class="btn contact-btn w-100" style="background-color: @colorPrincipal; color: white;">
+                                    <i class="bi bi-envelope-heart me-2"></i>Contactar
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- Tarjeta de voluntariado -->
+                        <div class="section-card animate-section">
+                            <h3 class="section-title mb-4">Voluntariado</h3>
+                            <div class="text-center py-3">
+                                <i class="bi bi-hand-thumbs-up fs-1 mb-3" style="color: @colorPrincipal;"></i>
+                                <p class="mb-4">¿Quieres ayudar como voluntario en este refugio? Contacta con ellos para conocer las oportunidades disponibles.</p>
+
+                                <a href="@Url.Action("EventosRefugio", "Eventos", new { idrefugio = Model.Id })"
+                                   class="btn btn-success w-100">
+                                    <i class="bi bi-calendar-event me-2"></i>Ver eventos
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mapa de ubicación -->
+            @if (Model.Latitud != 0 && Model.Longitud != 0)
+            {
+                <div class="section-card animate-section">
+                    <h3 class="section-title">Ubicación</h3>
+                    <div id="mapa" class="shelter-map mt-4"></div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
 @section Styles {
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
     <style>
@@ -197,6 +421,7 @@
         .page-indicator span {
             margin: 0 5px;
         }
+
         .page-indicator {
             background-color: @colorPrincipal;
             color: white;
@@ -291,229 +516,6 @@
         }
     </style>
 }
-
-<div class="container my-5 position-relative paw-container">
-    <!-- Huellas decorativas animadas -->
-    <i class="bi bi-paw-fill paw-print" style="top: 10%; left: 5%; font-size: 4rem; transform: rotate(20deg);"></i>
-    <i class="bi bi-paw-fill paw-print" style="top: 40%; right: 7%; font-size: 3.5rem; transform: rotate(-15deg);"></i>
-    <i class="bi bi-paw-fill paw-print" style="bottom: 15%; left: 10%; font-size: 3.8rem; transform: rotate(10deg);"></i>
-    <i class="bi bi-paw-fill paw-print" style="bottom: 30%; right: 20%; font-size: 2.5rem; transform: rotate(-25deg);"></i>
-
-    <!-- Card principal del perfil del refugio -->
-    <div class="shelter-profile">
-        <!-- Encabezado con foto panorámica -->
-        <div class="shelter-header">
-            @if (Model?.Usuario?.PerfilUsuario != null && !string.IsNullOrEmpty(Model.Usuario.PerfilUsuario.FotoPerfil))
-            {
-                <img src="~/images/@Model.Usuario.PerfilUsuario.FotoPerfil" class="w-100 h-100 object-fit-cover" alt="Imagen del refugio @Model.NombreRefugio">
-            }
-            else
-            {
-                <img src="~/images/default-shelter.jpg" class="w-100 h-100 object-fit-cover" alt="Imagen predeterminada del refugio">
-            }
-            
-
-            <div class="shelter-header-overlay">
-                <h1 class="display-4 fw-bold mb-3">@Model.NombreRefugio</h1>
-                <div class="d-flex flex-wrap mb-3">
-                    <div class="shelter-tag" style="background-color: @colorPrincipal;">
-                        Refugio de animales
-                    </div>
-                    <div class="shelter-tag" style="background-color: @colorPrincipal;">
-                        @Model.ListaMascotas?.Count(m => m.Estado == "Disponible") animales
-                    </div>
-                </div>
-            </div>
-
-            <!-- Indicador de scroll -->
-            <div class="scroll-indicator">
-                <i class="bi bi-chevron-double-down"></i>
-            </div>
-        </div>
-
-        <div class="shelter-content container">
-            <div class="row">
-                <div class="col-lg-8">
-                    <!-- Acerca del refugio -->
-                    <div class="section-card animate-section">
-                        <h3 class="section-title">Sobre @Model.NombreRefugio</h3>
-                        @if (!string.IsNullOrEmpty(Model.Usuario.PerfilUsuario.Descripcion))
-                        {
-                            <p class="lead">@Html.Raw(Model.Usuario.PerfilUsuario.Descripcion.Replace("\n", "<br>"))</p>
-                        }
-                        else
-                        {
-                            <p class="lead fst-italic text-muted">No hay descripción disponible para @Model.NombreRefugio.</p>
-                        }
-                    </div>
-
-                    <!-- Capacidad del refugio con animaciones -->
-                    <div class="section-card animate-section">
-                        <h3 class="section-title">Capacidad del refugio</h3>
-                        <div class="row mb-4">
-                            <div class="col-12 mb-3">
-                                <div class="d-flex justify-content-between align-items-center mb-2">
-                                    <h6 class="mb-0 d-flex align-items-center">
-                                        <i class="bi bi-house-heart-fill me-2"></i>
-                                        Ocupación actual
-                                    </h6>
-                                    <span class="fw-bold">@Model.CantidadAnimales de @Model.CapacidadMaxima</span>
-                                </div>
-                                @{
-                                    var porcentajeOcupacion = (int)((double)Model.CantidadAnimales / Model.CapacidadMaxima * 100);
-                                    var colorOcupacion = porcentajeOcupacion < 60 ? "#10B981" : // Verde
-                                    porcentajeOcupacion < 80 ? "#FBBF24" : // Amarillo
-                                    "#EF4444"; // Rojo
-                                }
-                                <div class="capacity-progress">
-                                    <div class="capacity-progress-bar" data-progress="@porcentajeOcupacion"
-                                         style="background-color: @colorOcupacion; width: @porcentajeOcupacion%;"></div>
-                                </div>
-                                <div class="text-end mt-1">
-                                    <span class="small text-muted">@porcentajeOcupacion% de ocupación</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Mascotas disponibles en el refugio con paginación mejorada -->
-                    <div class="section-card animate-section">
-                        <h3 class="section-title">Mascotas disponibles (@Model.ListaMascotas?.Count(m => m.Estado == "Disponible"))</h3>
-
-                        @if (Model.ListaMascotas != null && Model.ListaMascotas.Any(m => m.Estado == "Disponible") && Model.ListaMascotas.Count() != 0)
-                        {
-                            <div class="pet-carousel mt-4 position-relative">
-                                @{
-                                    var mascotasDisponibles = Model.ListaMascotas.Where(m => m.Estado == "Disponible").ToList();
-                                    var totalMascotas = mascotasDisponibles.Count;
-                                }
-
-                                @for (int i = 0; i < mascotasDisponibles.Count; i++)
-                                {
-                                    var mascota = mascotasDisponibles[i];
-                                    <div class="pet-slide @(i == 0 ? "active" : "")" data-index="@i">
-                                        <div class="row justify-content-center">
-                                            <div class="col-md-8">
-                                                <div class="pet-card position-relative">
-                                                    @if (!string.IsNullOrEmpty(mascota.Foto))
-                                                    {
-                                                        <img src="~/images/@mascota.Foto" class="w-100 pet-image" alt="Foto de @mascota.Nombre">
-                                                    }
-                                                    else
-                                                    {
-                                                        <img src="/img/mascota-default.jpg" class="w-100 pet-image" alt="Sin foto disponible">
-                                                    }
-
-                                                    <div class="p-4">
-                                                        <h5 class="fw-bold mb-3">@mascota.Nombre</h5>
-                                                        <a asp-controller="Adoptante"
-                                                           asp-action="DetallesMascota"
-                                                           asp-route-idmascota="@mascota.Id"
-                                                           class="btn btn-primary btn-lg w-100">
-                                                            Más sobre @mascota.Nombre
-                                                        </a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                }
-
-                                @if (totalMascotas > 1)
-                                {
-                                    <div class="nav-arrow prev-pet" id="prevPet">
-                                        <i class="bi bi-chevron-left"></i>
-                                    </div>
-                                    <div class="nav-arrow next-pet" id="nextPet">
-                                        <i class="bi bi-chevron-right"></i>
-                                    </div>
-                                }
-                            </div>
-
-                            <!-- Controles de paginación mejorados -->
-                            <div class="pagination-controls my-4">
-                                <div class="page-indicator">
-                                    <span id="currentPage">1</span> de <span id="totalPages">@totalMascotas</span>
-                                </div>
-                            </div>
-                        }
-                        else
-                        {
-                            <div class="alert alert-info mt-4">
-                                <i class="bi bi-info-circle me-2"></i>
-                                Este refugio no tiene mascotas disponibles para adopción en este momento.
-                            </div>
-                        }
-                    </div>
-                </div>
-
-                <div class="col-lg-4">
-                    <div class="sticky-top" style="top: 30px;">
-                        <!-- Información de contacto -->
-                        <div class="section-card animate-section">
-                            <h3 class="section-title">Contacto</h3>
-                            <div class="info-item d-flex align-items-center mb-4 mt-4">
-                                <div>
-                                    <div class="text-muted small">Refugio</div>
-                                    <div class="fw-bold fs-5 text-break">@(Model.NombreRefugio ?? "Información no disponible")</div>
-                                </div>
-                            </div>
-                            <div class="info-item d-flex align-items-center mb-4 mt-4">
-                                <div>
-                                    <div class="text-muted small">Acerca de</div>
-                                    <div class="fw-bold fs-5 text-break">@(Model.Usuario.PerfilUsuario.Descripcion ?? "Información no disponible")</div>
-                                </div>
-                            </div>
-                            <div class="info-item d-flex align-items-center mb-4 mt-4">
-                                <div>
-                                    <div class="text-muted small">Contacto</div>
-                                    <div class="fw-bold fs-5 text-break">@(Model.ContactoRefugio ?? "Información no disponible")</div>
-                                </div>
-                            </div>
-                            
-                        </div>
-
-                        <!-- Botón de contacto -->
-                        <div class="section-card animate-section">
-                            <h3 class="section-title mb-4">Contactar al refugio</h3>
-                            <div class="text-center py-3">
-                                <p class="mb-4">¿Quieres colaborar o tienes preguntas sobre este refugio? Contacta directamente con ellos.</p>
-
-                                <a href="mailto:@Model.Usuario?.Email"
-                                   class="btn contact-btn w-100" style="background-color: @colorPrincipal; color: white;">
-                                    <i class="bi bi-envelope-heart me-2"></i>Contactar
-                                </a>
-                            </div>
-                        </div>
-
-                        <!-- Tarjeta de voluntariado -->
-                        <div class="section-card animate-section">
-                            <h3 class="section-title mb-4">Voluntariado</h3>
-                            <div class="text-center py-3">
-                                <i class="bi bi-hand-thumbs-up fs-1 mb-3" style="color: @colorPrincipal;"></i>
-                                <p class="mb-4">¿Quieres ayudar como voluntario en este refugio? Contacta con ellos para conocer las oportunidades disponibles.</p>
-
-                                <a href="@Url.Action("EventosRefugio", "Eventos", new { idrefugio = Model.Id })"
-                                   class="btn btn-success w-100">
-                                    <i class="bi bi-calendar-event me-2"></i>Ver eventos
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Mapa de ubicación -->
-            @if (Model.Latitud != 0 && Model.Longitud != 0)
-            {
-                <div class="section-card animate-section">
-                    <h3 class="section-title">Ubicación</h3>
-                    <div id="mapa" class="shelter-map mt-4"></div>
-                </div>
-            }
-        </div>
-    </div>
-</div>
 <!-- Scripts de OpenStreetMap -->
 <!-- Scripts de OpenStreetMap -->
 <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>

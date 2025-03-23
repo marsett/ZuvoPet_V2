@@ -4,6 +4,11 @@
     var nombreUsuario = Context.Session.GetString("USUARIO");
     var idusuario = Context.Session.GetInt32("USUARIOID");
     var fotoUsuario = Context.Session.GetString("AVATAR");
+
+    string userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+    int? userIdInt = userId != null ? int.Parse(userId) : null;
+    string fotoPerfil = User.Claims.FirstOrDefault(c => c.Type == "FotoPerfil")?.Value;
+    string userName = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
     @Html.AntiForgeryToken()
 }
 
@@ -104,7 +109,7 @@
                     bool userLiked = false;
                     if (!string.IsNullOrEmpty(nombreUsuario))
                     {
-                        userLiked = likes.Any(l => l.Usuario != null && l.Usuario.NombreUsuario == nombreUsuario);
+                        userLiked = likes.Any(l => l.Usuario != null && l.Usuario.NombreUsuario == userName);
                     }
 
                     <div class="card historia-card mx-auto my-4" data-aos="fade-up" data-id="@historia.Id">
@@ -186,7 +191,7 @@
                                                 <span class="reaction-text">
                                                     @if (userLiked)
                                                     {
-                                                        var tipoReaccionUsuario = likes.FirstOrDefault(l => l.Usuario != null && l.IdUsuario == idusuario)?.TipoReaccion;
+                                                        var tipoReaccionUsuario = likes.FirstOrDefault(l => l.Usuario != null && l.IdUsuario == userIdInt)?.TipoReaccion;
                                                         switch (tipoReaccionUsuario)
                                                         {
                                                             case "MeGusta":
@@ -263,7 +268,7 @@
                                         <!-- Formulario para nuevo comentario -->
                                         <div class="nuevo-comentario mt-3">
                                             <div class="d-flex">
-                                                <img src="~/images/@fotoUsuario" class="comentario-user-img me-2" alt="Tu perfil" />
+                                                <img src="~/images/@fotoPerfil" class="comentario-user-img me-2" alt="Tu perfil" />
                                                 <div class="flex-grow-1">
                                                     <textarea class="form-control" placeholder="Escribe un comentario..." rows="2"></textarea>
                                                     <button class="btn btn-primary btn-sm mt-2">Publicar</button>

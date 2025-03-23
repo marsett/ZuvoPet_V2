@@ -1,5 +1,11 @@
 ﻿@model List<Refugio>
 
+@{
+    var paginaActual = ViewBag.PaginaActual;
+    var totalPaginas = ViewBag.TotalPaginas;
+    @Html.AntiForgeryToken()
+}
+
 <div class="container-fluid px-4 py-5 pet-shelter-container">
     <div class="row mb-4">
         <div class="col-12">
@@ -104,8 +110,81 @@
             <p class="lead">No hay refugios disponibles en este momento</p>
         </div>
     }
+    @if (Model.Any())
+    {
+        <div class="row">
+            <div class="col-12">
+                <div class="pagination-controls d-flex justify-content-center mt-5 mb-5">
+                    <button class="btn btn-outline-primary me-2" onclick="cargarPagina(1)" @(paginaActual <= 1 ? "disabled" : "")>
+                        <i class="fas fa-angle-double-left"></i>
+                    </button>
+                    <button class="btn btn-outline-primary me-2" onclick="cargarPagina(@(paginaActual - 1))" @(paginaActual <= 1 ? "disabled" : "")>
+                        <i class="fas fa-angle-left"></i>
+                    </button>
+                    <span class="badge bg-primary rounded-pill px-3 py-2 d-flex align-items-center mx-2">
+                        <i class="fas fa-paw me-1"></i>
+                        <span id="paginaInfo">@paginaActual de @totalPaginas</span>
+                    </span>
+                    <button class="btn btn-outline-primary ms-2" onclick="cargarPagina(@(paginaActual + 1))" @(paginaActual >= totalPaginas ? "disabled" : "")>
+                        <i class="fas fa-angle-right"></i>
+                    </button>
+                    <button class="btn btn-outline-primary ms-2" onclick="cargarPagina(@totalPaginas)" @(paginaActual >= totalPaginas ? "disabled" : "")>
+                        <i class="fas fa-angle-double-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    }
 </div>
+<script>
+    function cargarPagina(pagina) {
+        // Mostrar un indicador de carga
+        const shelterGallery = document.getElementById('shelterGallery');
+        shelterGallery.innerHTML = '<div class="col-12 text-center mt-5"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Cargando...</span></div></div>';
 
+        // Construir la URL
+        let url = '/Adoptante/Refugios?pagina=' + pagina;
+
+        // Realizar la solicitud AJAX
+        fetch(url, {
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => response.text())
+        .then(html => {
+            // Actualizar el contenido de la página
+            document.body.innerHTML = html;
+
+            // Actualizar la URL del navegador sin recargar la página
+            window.history.pushState({ pagina: pagina }, 'Página ' + pagina, url);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    }
+</script>
+<style>
+    .pagination-controls .btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        padding: 0;
+        border-radius: 50%;
+        transition: all 0.3s ease;
+    }
+
+        .pagination-controls .btn:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+    .pagination-controls .badge {
+        height: 40px;
+    }
+</style>
 <style>
     /* Page Title Styling */
     .shelter-page-title {
