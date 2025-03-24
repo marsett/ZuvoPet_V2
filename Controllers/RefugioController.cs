@@ -8,6 +8,8 @@ using ZuvoPet_V2.Models;
 using ZuvoPet_V2.Repositories;
 using ZuvoPet_V2.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.SignalR;
+using ZuvoPet_V2.Hubs;
 
 namespace ZuvoPet_V2.Controllers
 {
@@ -17,12 +19,13 @@ namespace ZuvoPet_V2.Controllers
         private readonly ZuvoPet_V2Context context;
         private readonly IRepositoryZuvoPet_V2 repo;
         private HelperPathProvider helperPath;
-
-        public RefugioController(ZuvoPet_V2Context context, IRepositoryZuvoPet_V2 repo, HelperPathProvider helperPath)
+        private readonly IHubContext<ChatHub> hubContext;
+        public RefugioController(ZuvoPet_V2Context context, IRepositoryZuvoPet_V2 repo, HelperPathProvider helperPath, IHubContext<ChatHub> hubContext)
         {
             this.repo = repo;
             this.helperPath = helperPath;
             this.context = context;
+            this.hubContext = hubContext;
         }
 
         // Actualización del Controller - Método Index
@@ -655,5 +658,92 @@ namespace ZuvoPet_V2.Controllers
 
             return RedirectToAction("Perfil");
         }
+
+
+
+
+
+
+
+
+        private async Task<int> GetIdUsuarioActual()
+        {
+            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            var refugio = await context.Refugios.FirstOrDefaultAsync(a => a.IdUsuario == userId);
+            return userId;
+        }
+
+        // Lista de conversaciones
+        [HttpGet]
+        public async Task<IActionResult> Mensajes()
+        {
+            int usuarioId = await GetIdUsuarioActual();
+            var conversaciones = await this.repo.GetConversacionesUsuarioAsync(usuarioId);
+            return View(conversaciones);
+        }
+
+        // Ver chat específico
+        [HttpGet]
+        public async Task<IActionResult> Chat(int id)
+        {
+            int usuarioActualId = await GetIdUsuarioActual();
+
+            // Obtener mensajes
+            var mensajes = await this.repo.GetMensajesConversacionAsync(usuarioActualId, id);
+
+            // Marcar como leídos los mensajes recibidos
+            foreach (var mensaje in mensajes.Where(m => m.IdEmisor == id && !m.Leido))
+            {
+                mensaje.Leido = true;
+            }
+            await context.SaveChangesAsync();
+
+            // Obtener nombre del refugio
+            var adoptante = await context.Adoptantes.FirstOrDefaultAsync(r => r.IdUsuario == id);
+            string nombreDestinatario = adoptante != null ? adoptante.Nombre : "UsuarioOL";
+
+            var viewModel = new ChatViewModel
+            {
+                Mensajes = mensajes,
+                NombreDestinatario = nombreDestinatario,
+                IdDestinatario = id
+            };
+
+            return View(viewModel);
+        }
+
+        // Enviar mensaje
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EnviarMensaje(int destinatarioId, string contenido)
+        {
+            if (string.IsNullOrWhiteSpace(contenido))
+            {
+                return BadRequest("El mensaje no puede estar vacío");
+            }
+
+            int emisorId = await GetIdUsuarioActual();
+            var mensaje = await this.repo.AgregarMensajeAsync(emisorId, destinatarioId, contenido);
+
+            // Notificar por SignalR
+            await hubContext.Clients.User(destinatarioId.ToString())
+                .SendAsync("RecibirMensaje", emisorId, mensaje.Contenido, mensaje.Fecha);
+
+            return Json(new { success = true });
+        }
+
+        // Iniciar chat desde detalles de refugio
+        //[HttpGet]
+        //public async Task<IActionResult> IniciarChat(int refugioId)
+        //{
+        //    // Obtener el IdUsuario del refugio
+        //    var refugio = await context.Refugios.FirstOrDefaultAsync(r => r.Id == refugioId);
+        //    if (refugio == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    return RedirectToAction("Chat", new { id = refugio.IdUsuario });
+        //}
     }
 }

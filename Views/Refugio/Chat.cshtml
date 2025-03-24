@@ -1,0 +1,148 @@
+﻿@model ChatViewModel
+@{
+    ViewData["Title"] = "Chat con " + Model.NombreDestinatario;
+    @Html.AntiForgeryToken()
+    ;
+}
+
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header">
+            <div class="d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">@Model.NombreDestinatario</h5>
+                <a href="@Url.Action("Mensajes")" class="btn btn-outline-secondary btn-sm">Volver</a>
+            </div>
+        </div>
+        <div class="card-body" id="chatMessages" style="height: 400px; overflow-y: auto;">
+            @if (Model.Mensajes.Count == 0)
+            {
+                <div class="text-center text-muted">
+                    <p>No hay mensajes aún. ¡Comienza la conversación!</p>
+                </div>
+            }
+            else
+            {
+                foreach (var mensaje in Model.Mensajes)
+                {
+                    bool isCurrentUser = mensaje.IdEmisor == int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                    <div class="message @(isCurrentUser ? "text-right" : "")">
+                        <div class="message-content @(isCurrentUser ? "bg-primary text-white" : "bg-light")"
+                             style="display: inline-block; padding: 8px 15px; border-radius: 20px; margin-bottom: 10px; max-width: 70%;">
+                            <div>@mensaje.Contenido</div>
+                            <small class="@(isCurrentUser ? "text-white-50" : "text-muted")">
+                                @mensaje.Fecha.ToString("dd/MM HH:mm")
+                            </small>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+        <div class="card-footer">
+            <form id="messageForm" class="d-flex">
+                <input type="hidden" id="destinatarioId" value="@Model.IdDestinatario" />
+                <input type="text" id="mensajeInput" class="form-control" placeholder="Escribe un mensaje..." required />
+                <button type="submit" class="btn btn-primary ml-2">Enviar</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.1/signalr.min.js"></script>
+<script>
+    $(document).ready(function () {
+        // Get the anti-forgery token
+        var token = $('input[name="__RequestVerificationToken"]').val();
+
+        // Scroll al final del chat
+        var chatContainer = document.getElementById('chatMessages');
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+
+        // Configurar conexión SignalR
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("/chatHub")
+            .build();
+
+        // Iniciar conexión
+        connection.start()
+            .then(() => {
+                console.log("Conexión establecida con SignalR");
+                // Conectar al grupo del usuario actual
+                connection.invoke("ConectarUsuario", "@User.FindFirst(ClaimTypes.NameIdentifier).Value");
+            })
+            .catch(err => console.error("Error al conectar: " + err));
+
+        // Función para formatear la fecha
+        function formatDate(date) {
+            return new Date(date).toLocaleString('es-ES', {
+                day: '2-digit',
+                month: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+
+        // Función para agregar mensaje al chat
+        function agregarMensajeAlChat(mensaje, esMensajePropio, fecha = new Date()) {
+            const messageHtml = `
+                <div class="message ${esMensajePropio ? "text-right" : ""}">
+                    <div class="message-content ${esMensajePropio ? "bg-primary text-white" : "bg-light"}"
+                         style="display: inline-block; padding: 8px 15px; border-radius: 20px; margin-bottom: 10px; max-width: 70%;">
+                        <div>${mensaje}</div>
+                        <small class="${esMensajePropio ? "text-white-50" : "text-muted"}">
+                            ${formatDate(fecha)}
+                        </small>
+                    </div>
+                </div>
+            `;
+
+            $('#chatMessages').append(messageHtml);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        // Función para recibir mensajes
+        connection.on("RecibirMensaje", function (emisorId, mensaje, fecha) {
+            const isCurrentUser = emisorId == '@User.FindFirst(ClaimTypes.NameIdentifier).Value';
+            agregarMensajeAlChat(mensaje, isCurrentUser, fecha);
+        });
+
+        // Enviar mensaje
+        $('#messageForm').submit(function (e) {
+            e.preventDefault();
+
+            const destinatarioId = $('#destinatarioId').val();
+            const contenido = $('#mensajeInput').val().trim();
+
+            if (!contenido) return;
+
+            // Agregar mensaje inmediatamente al chat
+            agregarMensajeAlChat(contenido, true);
+
+            $.ajax({
+                url: '@Url.Action("EnviarMensaje")',
+                type: 'POST',
+                data: {
+                    __RequestVerificationToken: token,
+                    destinatarioId: destinatarioId,
+                    contenido: contenido
+                },
+                headers: {
+                    "RequestVerificationToken": token
+                },
+                success: function (result) {
+                    $('#mensajeInput').val('');
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error al enviar mensaje:", {
+                        status: xhr.status,
+                        responseText: xhr.responseText,
+                        error: error
+                    });
+                    // Eliminar el mensaje agregado si hay un error
+                    $('#chatMessages .message:last-child').remove();
+                    alert('Error al enviar mensaje: ' + xhr.responseText);
+                }
+            });
+        });
+    });
+</script>

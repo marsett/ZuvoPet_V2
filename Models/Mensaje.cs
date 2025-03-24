@@ -25,5 +25,7 @@ namespace ZuvoPet_V2.Models
         public string Contenido { get; set; }
         [Column("Fecha")]
         public DateTime Fecha { get; set; } = DateTime.Now;
+        [Column("Leido")]
+        public bool Leido { get; set; } = false;
     }
 }

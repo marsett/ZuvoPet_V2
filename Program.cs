@@ -2,9 +2,11 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using Microsoft.AspNetCore.SignalR;
 using ZuvoPet_V2.Data;
 using ZuvoPet_V2.Helpers;
 using ZuvoPet_V2.Repositories;
+using ZuvoPet_V2.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,7 +21,7 @@ builder.Services.AddControllersWithViews(options =>
     options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
     options.EnableEndpointRouting = false;
 }).AddSessionStateTempDataProvider();
-
+builder.Services.AddSignalR();
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options =>
 {
@@ -98,5 +100,5 @@ app.MapControllerRoute(
 //    routes.MapRoute(name: "default",
 //    template: "{controller=Managed}/{action=Landing}/{id?}");
 //});
-
+app.MapHub<ChatHub>("/chatHub");
 app.Run();

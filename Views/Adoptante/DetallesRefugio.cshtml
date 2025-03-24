@@ -192,9 +192,8 @@
                             <div class="text-center py-3">
                                 <p class="mb-4">¿Quieres colaborar o tienes preguntas sobre este refugio? Contacta directamente con ellos.</p>
 
-                                <a href="mailto:@Model.Usuario?.Email"
-                                   class="btn contact-btn w-100" style="background-color: @colorPrincipal; color: white;">
-                                    <i class="bi bi-envelope-heart me-2"></i>Contactar
+                                <a href="@Url.Action("IniciarChat", new { refugioId = Model.Id })" class="btn btn-primary">
+                                    <i class="fa fa-comment"></i> Contactar
                                 </a>
                             </div>
                         </div>

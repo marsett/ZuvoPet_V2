@@ -71,5 +71,10 @@ namespace ZuvoPet_V2.Repositories
         Task<Adoptante> GetAdoptanteByUsuarioId(int idusuario);
 
         Task<bool> HayNotificacionesNuevasDesdeAsync(int idUsuario, DateTime desde);
+
+
+        Task<List<Mensaje>> GetMensajesConversacionAsync(int usuarioActualId, int otroUsuarioId);
+        Task<List<ConversacionViewModel>> GetConversacionesUsuarioAsync(int usuarioId);
+        Task<Mensaje> AgregarMensajeAsync(int emisorId, int receptorId, string contenido);
     }
 }
