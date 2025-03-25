@@ -791,7 +791,7 @@ namespace ZuvoPet_V2.Controllers
         public async Task<IActionResult> Mensajes()
         {
             int usuarioId = await GetIdUsuarioActual();
-            var conversaciones = await this.repo.GetConversacionesUsuarioAsync(usuarioId);
+            var conversaciones = await this.repo.GetConversacionesAdoptanteAsync(usuarioId);
             return View(conversaciones);
         }
 

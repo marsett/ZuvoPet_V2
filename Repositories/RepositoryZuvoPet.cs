@@ -1099,7 +1099,7 @@ namespace ZuvoPet_V2.Repositories
                 .ToListAsync();
         }
 
-        public async Task<List<ConversacionViewModel>> GetConversacionesUsuarioAsync(int usuarioId)
+        public async Task<List<ConversacionViewModel>> GetConversacionesAdoptanteAsync(int usuarioId)
         {
             // Obtenemos todos los usuarios con los que ha conversado
             var usuariosConversaciones = await this.context.Mensajes
@@ -1126,12 +1126,64 @@ namespace ZuvoPet_V2.Repositories
                         .FirstOrDefaultAsync(u => u.Id == otroUsuarioId);
 
                     var refugio = await this.context.Refugios
+                        .Include(refugio => refugio.Usuario.PerfilUsuario)
                         .FirstOrDefaultAsync(r => r.IdUsuario == otroUsuarioId);
 
                     var conversacion = new ConversacionViewModel
                     {
                         UsuarioId = otroUsuarioId,
-                        NombreUsuario = refugio != null ? refugio.NombreRefugio : otroUsuario.NombreUsuario,
+                        Foto = refugio.Usuario.PerfilUsuario.FotoPerfil,
+                        NombreUsuario = refugio.Usuario.NombreUsuario,
+                        UltimoMensaje = ultimoMensaje.Contenido,
+                        FechaUltimoMensaje = ultimoMensaje.Fecha,
+                        NoLeidos = await this.context.Mensajes
+                            .CountAsync(m => m.IdEmisor == otroUsuarioId &&
+                                      m.IdReceptor == usuarioId &&
+                                      !m.Leido)
+                    };
+
+                    conversaciones.Add(conversacion);
+                }
+            }
+
+            return conversaciones.OrderByDescending(c => c.FechaUltimoMensaje).ToList();
+        }
+
+        public async Task<List<ConversacionViewModel>> GetConversacionesRefugioAsync(int usuarioId)
+        {
+            // Obtenemos todos los usuarios con los que ha conversado
+            var usuariosConversaciones = await this.context.Mensajes
+                .Where(m => m.IdEmisor == usuarioId || m.IdReceptor == usuarioId)
+                .Select(m => m.IdEmisor == usuarioId ? m.IdReceptor : m.IdEmisor)
+                .Distinct()
+                .ToListAsync();
+
+            var conversaciones = new List<ConversacionViewModel>();
+
+            foreach (var otroUsuarioId in usuariosConversaciones)
+            {
+                // Obtenemos el último mensaje de cada conversación
+                var ultimoMensaje = await this.context.Mensajes
+                    .Where(m => (m.IdEmisor == usuarioId && m.IdReceptor == otroUsuarioId) ||
+                                (m.IdEmisor == otroUsuarioId && m.IdReceptor == usuarioId))
+                    .OrderByDescending(m => m.Fecha)
+                    .FirstOrDefaultAsync();
+
+                if (ultimoMensaje != null)
+                {
+                    // Obtenemos la información del usuario (refugio)
+                    var otroUsuario = await this.context.Usuarios
+                        .FirstOrDefaultAsync(u => u.Id == otroUsuarioId);
+
+                    var adoptante = await this.context.Adoptantes
+                        .Include(adoptante => adoptante.Usuario.PerfilUsuario)
+                        .FirstOrDefaultAsync(r => r.IdUsuario == otroUsuarioId);
+
+                    var conversacion = new ConversacionViewModel
+                    {
+                        UsuarioId = otroUsuarioId,
+                        Foto = adoptante.Usuario.PerfilUsuario.FotoPerfil,
+                        NombreUsuario = adoptante.Usuario.NombreUsuario,
                         UltimoMensaje = ultimoMensaje.Contenido,
                         FechaUltimoMensaje = ultimoMensaje.Fecha,
                         NoLeidos = await this.context.Mensajes

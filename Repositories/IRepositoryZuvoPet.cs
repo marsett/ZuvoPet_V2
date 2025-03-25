@@ -74,7 +74,8 @@ namespace ZuvoPet_V2.Repositories
 
 
         Task<List<Mensaje>> GetMensajesConversacionAsync(int usuarioActualId, int otroUsuarioId);
-        Task<List<ConversacionViewModel>> GetConversacionesUsuarioAsync(int usuarioId);
+        Task<List<ConversacionViewModel>> GetConversacionesAdoptanteAsync(int usuarioId);
+        Task<List<ConversacionViewModel>> GetConversacionesRefugioAsync(int usuarioId);
         Task<Mensaje> AgregarMensajeAsync(int emisorId, int receptorId, string contenido);
     }
 }
