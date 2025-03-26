@@ -609,7 +609,18 @@ namespace ZuvoPet_V2.Controllers
             {
                 return Json(new { success = false, message = "Ya existe una solicitud para esta mascota" });
             }
-            bool resultado = await this.repo.CrearSolicitudAdopcionAsync(idusuario, idmascota);
+            SolicitudAdopcion resultado = await this.repo.CrearSolicitudAdopcionAsync(idusuario, idmascota);
+
+            if(resultado != null)
+            {
+                string nombreMascota = await this.repo.GetNombreMascotaAsync(idmascota);
+                int idRefugio = await this.repo.IdRefugioPorMascotaAsync(idmascota) ?? 0;
+                bool notificacionARefugio = await this.repo.CrearNotificacionAsync(resultado.Id, idRefugio, nombreMascota);
+            }
+
+            
+
+
             if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
                 return Json(new { success = resultado });
@@ -812,14 +823,17 @@ namespace ZuvoPet_V2.Controllers
             await context.SaveChangesAsync();
 
             // Obtener nombre del refugio
-            var refugio = await context.Refugios.FirstOrDefaultAsync(r => r.IdUsuario == id);
+            var refugio = await context.Refugios
+                .Include(refugio => refugio.Usuario.PerfilUsuario)
+                .FirstOrDefaultAsync(r => r.IdUsuario == id);
             string nombreDestinatario = refugio != null ? refugio.NombreRefugio : "UsuarioO";
 
             var viewModel = new ChatViewModel
             {
                 Mensajes = mensajes,
                 NombreDestinatario = nombreDestinatario,
-                IdDestinatario = id
+                IdDestinatario = id,
+                FotoDestinatario = refugio.Usuario.PerfilUsuario.FotoPerfil
             };
 
             return View(viewModel);

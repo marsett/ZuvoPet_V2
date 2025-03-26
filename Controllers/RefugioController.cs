@@ -562,12 +562,52 @@ namespace ZuvoPet_V2.Controllers
             refugio.ContactoRefugio = modelo.ContactoRefugio;
             refugio.CantidadAnimales = modelo.CantidadAnimales;
             refugio.CapacidadMaxima = modelo.CapacidadMaxima;
-            refugio.Latitud = modelo.Latitud;
-            refugio.Longitud = modelo.Longitud;
+            //refugio.Latitud = modelo.Latitud;
+            //refugio.Longitud = modelo.Longitud;
 
             await context.SaveChangesAsync();
 
             return RedirectToAction("Perfil");
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ActualizarUbicacionRefugio(double Latitud, double Longitud)
+        {
+            try
+            {
+                // Validate input
+                if (Latitud == 0 || Longitud == 0)
+                {
+                    return Request.Headers["X-Requested-With"] == "XMLHttpRequest"
+                        ? Json(new { success = false, error = "Coordenadas inválidas" })
+                        : RedirectToAction("Perfil");
+                }
+
+                int usuarioId = HttpContext.Session.GetInt32("USUARIOID")
+                    ?? throw new InvalidOperationException("Usuario no autenticado");
+
+                var refugio = await repo.GetRefugioByUsuarioIdAsync(usuarioId)
+                    ?? throw new InvalidOperationException("Refugio no encontrado");
+
+                refugio.Latitud = Latitud;
+                refugio.Longitud = Longitud;
+
+                await context.SaveChangesAsync();
+
+                return Request.Headers["X-Requested-With"] == "XMLHttpRequest"
+                    ? Json(new { success = true })
+                    : RedirectToAction("Perfil");
+            }
+            catch (Exception ex)
+            {
+                // Log the error (consider using a logging framework)
+                Console.Error.WriteLine($"Error actualizando ubicación: {ex.Message}");
+
+                return Request.Headers["X-Requested-With"] == "XMLHttpRequest"
+                    ? Json(new { success = false, error = "Error al actualizar la ubicación" })
+                    : RedirectToAction("Perfil");
+            }
         }
 
         [HttpPost]
@@ -585,6 +625,7 @@ namespace ZuvoPet_V2.Controllers
             if (refugio != null)
             {
                 refugio.NombreRefugio = modelo.NombreRefugio;
+                refugio.ContactoRefugio = modelo.ContactoRefugio;
             }
 
             await context.SaveChangesAsync();
@@ -699,14 +740,17 @@ namespace ZuvoPet_V2.Controllers
             await context.SaveChangesAsync();
 
             // Obtener nombre del refugio
-            var adoptante = await context.Adoptantes.FirstOrDefaultAsync(r => r.IdUsuario == id);
+            var adoptante = await context.Adoptantes
+                .Include(adoptante => adoptante.Usuario.PerfilUsuario)
+                .FirstOrDefaultAsync(r => r.IdUsuario == id);
             string nombreDestinatario = adoptante != null ? adoptante.Nombre : "UsuarioOL";
 
             var viewModel = new ChatViewModel
             {
                 Mensajes = mensajes,
                 NombreDestinatario = nombreDestinatario,
-                IdDestinatario = id
+                IdDestinatario = id,
+                FotoDestinatario = adoptante.Usuario.PerfilUsuario.FotoPerfil
             };
 
             return View(viewModel);

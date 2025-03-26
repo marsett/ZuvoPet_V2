@@ -6,5 +6,6 @@
         public string NombreDestinatario { get; set; }
         public int IdDestinatario { get; set; }
         public string NuevoMensaje { get; set; }
+        public string FotoDestinatario { get; set; }
     }
 }

@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Perfil del Refugio";
+    @Html.AntiForgeryToken();
 }
 
 <div class="container py-5">
@@ -78,6 +79,21 @@
                                         </div>
                                     </div>
                                 </div>
+                                <!-- Sobre el Refugio section -->
+                                    <div class="card-body p-4">
+                                        <div class="d-flex justify-content-between align-items-center mb-3">
+                                            <h5 class="card-title fw-bold mb-0">
+                                                <i class="fas fa-info-circle text-primary me-2"></i>Sobre el Refugio
+                                            </h5>
+                                            <button class="btn btn-sm btn-light rounded-circle" data-bs-toggle="modal" data-bs-target="#editSobreMiModal">
+                                                <i class="fas fa-edit text-primary"></i>
+                                            </button>
+                                        </div>
+                                        <p class="card-text @(string.IsNullOrEmpty(Model.Descripcion) ? "text-muted fst-italic" : "")">
+                                            @(string.IsNullOrEmpty(Model.Descripcion) ? "Agrega una descripción para que los posibles adoptantes conozcan mejor tu refugio..." : Model.Descripcion)
+                                        </p>
+                                    </div>
+                                
                             </div>
                         </div>
                     </div>
@@ -125,24 +141,6 @@
     </div>
 
     <div class="row g-4">
-        <!-- Columna izquierda con información del perfil -->
-        
-            <!-- Acerca de mí con diseño renovado -->
-            <div class="card border-0 shadow rounded-4 mb-4">
-                <div class="card-body p-4">
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h5 class="card-title fw-bold mb-0">
-                            <i class="fas fa-info-circle text-primary me-2"></i>Sobre el Refugio
-                        </h5>
-                        <button class="btn btn-sm btn-light rounded-circle" data-bs-toggle="modal" data-bs-target="#editSobreMiModal">
-                            <i class="fas fa-edit text-primary"></i>
-                        </button>
-                    </div>
-                    <p class="card-text @(string.IsNullOrEmpty(Model.Descripcion) ? "text-muted fst-italic" : "")">
-                        @(string.IsNullOrEmpty(Model.Descripcion) ? "Agrega una descripción para que los posibles adoptantes conozcan mejor tu refugio..." : Model.Descripcion)
-                    </p>
-                </div>
-            </div>
 
             <div class="section-container mb-4 p-3 rounded-lg animate-section">
                 <h3 class="section-title mb-4">
@@ -151,7 +149,6 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div id="mapa" style="width: 100%; height: 500px;" class="border rounded shadow-sm"></div>
-                        <p class="text-center text-muted mt-2"><small><i class="fas fa-info-circle me-1"></i>Haz clic en el mapa para establecer la ubicación del refugio</small></p>
                     </div>
                 </div>
                 <div class="row mt-3" style="display: none;">
@@ -219,6 +216,14 @@
                             <input type="email" class="form-control border-0 bg-light" id="Email" name="Email" value="@Model.Email" required>
                         </div>
                         <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+                    <div class="mb-4">
+                        <label for="ContactoRefugio" class="form-label">Teléfono de Contacto</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-0"><i class="fas fa-phone"></i></span>
+                            <input type="text" class="form-control border-0 bg-light" id="ContactoRefugio" name="ContactoRefugio" value="@Model.ContactoRefugio" required>
+                        </div>
+                        <span asp-validation-for="ContactoRefugio" class="text-danger"></span>
                     </div>
                     <div class="d-grid">
                         <button type="submit" class="btn btn-primary rounded-pill">
@@ -631,17 +636,18 @@
 }
 
     <!-- Scripts de OpenStreetMap -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
-    <script>
-        // Inicializar elementos con animaciones
-        document.addEventListener('DOMContentLoaded', function() {
-            // Verificar si el elemento mapa existe y si las coordenadas son válidas
-            const mapaElement = document.getElementById('mapa');
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    // Inicializar elementos con animaciones
+    document.addEventListener('DOMContentLoaded', function() {
+        // Verificar si el elemento mapa existe y si las coordenadas son válidas
+        const mapaElement = document.getElementById('mapa');
 
-        @if (Model.Latitud != null && Model.Longitud != null && Model.Latitud != 0 && Model.Longitud != 0)
-        {
-            <text>
+    @if (Model.Latitud != null && Model.Longitud != null && Model.Latitud != 0 && Model.Longitud != 0)
+    {
+        <text>
                         if (mapaElement) {
             try {
                 // Default coordinates (use existing or fallback to a default location)
@@ -713,45 +719,45 @@
                 mapaElement.innerHTML = '<div class="alert alert-danger">No se pudo cargar el mapa</div>';
             }
         }
-            </text>
-        }
-        else
-        {
-            <text>
+        </text>
+    }
+    else
+    {
+        <text>
                     if (mapaElement) {
                         mapaElement.innerHTML = '<div class="alert alert-info">No hay información de ubicación disponible</div>';
                     }
-            </text>
-        }
+        </text>
+    }
 
-            // Función para animar elementos cuando aparecen en el viewport
-            const animateSections = function() {
-                const sections = document.querySelectorAll('.animate-section');
-                sections.forEach(section => {
-                    const sectionTop = section.getBoundingClientRect().top;
-                    const windowHeight = window.innerHeight;
-                    if (sectionTop < windowHeight * 0.85) {
-                        section.style.opacity = '1';
-                    }
-                });
-            };
-
-            // Ejecutar animación al cargar y al hacer scroll
-            animateSections();
-            window.addEventListener('scroll', animateSections);
-
-            // Resto de tu código JS existente
-            document.getElementById("fotoInput")?.addEventListener("change", function () {
-                if (this.files.length > 0) {
-                    document.getElementById("uploadForm").submit();
+        // Función para animar elementos cuando aparecen en el viewport
+        const animateSections = function() {
+            const sections = document.querySelectorAll('.animate-section');
+            sections.forEach(section => {
+                const sectionTop = section.getBoundingClientRect().top;
+                const windowHeight = window.innerHeight;
+                if (sectionTop < windowHeight * 0.85) {
+                    section.style.opacity = '1';
                 }
             });
+        };
 
-            // Inicialización del mapa en el modal de edición si existe
-            const refugioMap = document.getElementById('refugioMap');
-        @if (Model.Latitud != 0 && Model.Longitud != 0)
-        {
-            <text>
+        // Ejecutar animación al cargar y al hacer scroll
+        animateSections();
+        window.addEventListener('scroll', animateSections);
+
+        // Resto de tu código JS existente
+        document.getElementById("fotoInput")?.addEventListener("change", function () {
+            if (this.files.length > 0) {
+                document.getElementById("uploadForm").submit();
+            }
+        });
+
+        // Inicialización del mapa en el modal de edición si existe
+        const refugioMap = document.getElementById('refugioMap');
+    @if (Model.Latitud != 0 && Model.Longitud != 0)
+    {
+        <text>
                     if (refugioMap) {
                         try {
                             const lat = @Model.Latitud.ToString(System.Globalization.CultureInfo.InvariantCulture);
@@ -769,41 +775,41 @@
                             console.error("Error al inicializar el mapa del refugio:", error);
                         }
                     }
-            </text>
-        }
-        });
+        </text>
+    }
+    });
 
-        // Función para cargar página (mantener tu código existente)
-        function cargarPagina(pagina) {
-            // Realizar la petición Ajax
-            $.ajax({
-                url: '@Url.Action("_MascotaFavoritaPartial", "Adoptante")',
-                data: { pagina: pagina },
-                type: "GET",
-                success: function(data) {
-                    // Actualizar el contenedor con la respuesta
-                    $("#contenedorMascotas").html(data);
+    // Función para cargar página (mantener tu código existente)
+    function cargarPagina(pagina) {
+        // Realizar la petición Ajax
+        $.ajax({
+            url: '@Url.Action("_MascotaFavoritaPartial", "Adoptante")',
+            data: { pagina: pagina },
+            type: "GET",
+            success: function(data) {
+                // Actualizar el contenedor con la respuesta
+                $("#contenedorMascotas").html(data);
 
-                    // Actualizar la información de paginación en la parte superior
-                    var paginaInfo = $("#paginaInfo").text();
-                    $(".pagination-info .badge span").text(paginaInfo);
-                },
-                error: function(xhr, status, error) {
-                    if (xhr.status === 401) {
-                        window.location.href = '@Url.Action("Login", "Managed")';
-                    } else {
-                        console.error("Error al cargar las mascotas favoritas:", xhr);
-                        $("#contenedorMascotas").html('<div class="alert alert-danger">Error al cargar las mascotas favoritas</div>');
-                    }
+                // Actualizar la información de paginación en la parte superior
+                var paginaInfo = $("#paginaInfo").text();
+                $(".pagination-info .badge span").text(paginaInfo);
+            },
+            error: function(xhr, status, error) {
+                if (xhr.status === 401) {
+                    window.location.href = '@Url.Action("Login", "Managed")';
+                } else {
+                    console.error("Error al cargar las mascotas favoritas:", xhr);
+                    $("#contenedorMascotas").html('<div class="alert alert-danger">Error al cargar las mascotas favoritas</div>');
                 }
-            });
-        }
-
-        // Opcional: Inicializar la primera página al cargar
-        $(document).ready(function() {
-            // Solo si no hay contenido inicial
-            if ($("#contenedorMascotas").children().length === 0) {
-                cargarPagina(1);
             }
         });
-    </script>
+    }
+
+    // Opcional: Inicializar la primera página al cargar
+    $(document).ready(function() {
+        // Solo si no hay contenido inicial
+        if ($("#contenedorMascotas").children().length === 0) {
+            cargarPagina(1);
+        }
+    });
+</script>

@@ -629,7 +629,7 @@ namespace ZuvoPet_V2.Repositories
             return mascotas;
         }
 
-        public async Task<bool> CrearSolicitudAdopcionAsync(int idusuario, int idmascota)
+        public async Task<SolicitudAdopcion> CrearSolicitudAdopcionAsync(int idusuario, int idmascota)
         {
             var adoptante = await this.context.Adoptantes
             .FirstOrDefaultAsync(a => a.IdUsuario == idusuario);
@@ -658,9 +658,52 @@ namespace ZuvoPet_V2.Repositories
 
             this.context.SolicitudesAdopcion.Add(soli);
             await this.context.SaveChangesAsync();
-            return true;
+            return soli;
         }
 
+        public async Task<int?> IdRefugioPorMascotaAsync(int idMascota)
+        {
+            int? idRefugio = await this.context.Mascotas
+                .Where(m => m.Id == idMascota)
+                .Select(m => m.IdRefugio)
+                .FirstOrDefaultAsync();
+            return idRefugio;
+        }
+        public async Task<string> GetNombreMascotaAsync(int idMascota)
+        {
+            string nombreMascota = await this.context.Mascotas
+                .Where(m => m.Id == idMascota)
+                .Select(m => m.Nombre)
+                .FirstOrDefaultAsync();
+            return nombreMascota;
+        }
+
+
+        public async Task<bool> CrearNotificacionAsync(int idSolicitud, int idRefugio, string nombreMascota)
+        {
+            var refugio = await this.context.Refugios
+                        .FirstOrDefaultAsync(a => a.Id == idRefugio);
+            // Crear notificación para el adoptante
+            Notificacion notificacion = new Notificacion
+            {
+                Id = await GetMaxIdAsync(this.context.Notificaciones),
+                IdUsuario = refugio.IdUsuario,
+                Tipo = "Mensaje",
+                Fecha = DateTime.Now,
+                Leido = false
+            };
+
+
+            notificacion.Mensaje = $"Te ha llegado una nueva solicitud por {nombreMascota}";
+            notificacion.Url = $"/Refugio/DetallesSolicitud?idsolicitud={idSolicitud}";
+
+            // Agregar la notificación a la base de datos
+            this.context.Notificaciones.Add(notificacion);
+
+            // Guardar todos los cambios
+            await this.context.SaveChangesAsync();
+            return true;
+        }
         public async Task<bool> ExisteSolicitudAdopcionAsync(int idusuario, int idmascota)
         {
             var adoptante = await this.context.Adoptantes
@@ -1004,7 +1047,7 @@ namespace ZuvoPet_V2.Repositories
         }
 
 
-
+        
 
 
 

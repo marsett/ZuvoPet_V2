@@ -25,7 +25,13 @@ namespace ZuvoPet_V2.Repositories
         Task<DateTime?> ObtenerUltimaAccionFavorito(int idusuario, int idmascota);
         Task GuardarUltimaAccionFavorito(int idusuario, int idmascota, DateTime fecha);
         Task<Mascota> GetDetallesMascotaAsync(int idmascota);
-        Task<bool> CrearSolicitudAdopcionAsync(int idusuario, int idmascota);
+
+
+        Task<SolicitudAdopcion> CrearSolicitudAdopcionAsync(int idusuario, int idmascota);
+        Task<int?> IdRefugioPorMascotaAsync(int idMascota);
+        Task<bool> CrearNotificacionAsync(int idSolicitud, int idRefugio, string nombreMascota);
+        Task<string> GetNombreMascotaAsync(int idMascota);
+
         Task<bool> ExisteSolicitudAdopcionAsync(int idusuario, int idmascota);
         Task<LikeHistoria> ObtenerLikeUsuarioHistoriaAsync(int idHistoria, int idusuario);
         Task<bool> CrearLikeHistoriaAsync(int idHistoria, int idusuario, string tipoReaccion);
