@@ -461,6 +461,19 @@
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
     <script>
                 document.addEventListener('DOMContentLoaded', function() {
+                    // Código para mostrar SweetAlert basado en TempData
+        @if (TempData["SweetAlert"] != null)
+        {
+            <text>
+                Swal.fire({
+                    icon: '@TempData["SweetAlert"]',
+                    title: '@TempData["SweetAlertTitle"]',
+                    text: '@TempData["SweetAlertText"]',
+                    confirmButtonColor: '#3085d6',
+                    confirmButtonText: 'Entendido'
+                });
+            </text>
+        }
                     // Manejar la vista previa de imágenes
         const fotoInput = document.getElementById('fichero');
         const previewContainer = document.getElementById('preview');
@@ -559,6 +572,8 @@
             // Ejecutar animación al cargar y al hacer scroll
             animateSections();
             window.addEventListener('scroll', animateSections);
+
+
         });
     </script>
 }

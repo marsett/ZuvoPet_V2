@@ -872,5 +872,63 @@ namespace ZuvoPet_V2.Controllers
 
             return RedirectToAction("Chat", new { id = refugio.IdUsuario });
         }
+
+        [HttpGet]
+        public async Task<IActionResult> VeterinariosRefugio(int idrefugio, int pagina = 1)
+        {
+            List<Veterinario> veterinarios = await this.repo.GetVeterinariosRefugioAsync(idrefugio);
+            // Pagination logic
+            int elementosPorPagina = 1;
+            int totalVeterinarios = veterinarios.Count;
+            int totalPaginas = (int)Math.Ceiling((double)totalVeterinarios / elementosPorPagina);
+
+            // Validar que la página esté dentro del rango válido
+            if (pagina < 1) pagina = 1;
+            if (pagina > totalPaginas) pagina = totalPaginas;
+
+            var veterinariosPaginados = veterinarios
+                .Skip((pagina - 1) * elementosPorPagina)
+                .Take(elementosPorPagina)
+                .ToList();
+
+            ViewBag.PaginaActual = pagina;
+            ViewBag.TotalPaginas = totalPaginas;
+            ViewBag.IdRefugio = idrefugio; // Agregar el ID del refugio al ViewBag
+
+            return View(veterinariosPaginados);
+        }
+
+        //[AjaxAuthentication]
+        //public async Task<IActionResult> _MascotaFavoritaPartial(int pagina = 1)
+        //{
+        //    int idusuario = (int)HttpContext.Session.GetInt32("USUARIOID");
+        //    var favoritos = await this.repo.ObtenerMascotasFavoritas(idusuario);
+
+        //    // Lógica de paginación
+        //    var totalMascotas = favoritos.Count;
+
+        //    // Validar que la página solicitada sea válida
+        //    if (pagina < 1) pagina = 1;
+        //    if (pagina > totalMascotas) pagina = totalMascotas;
+
+        //    // Si no hay mascotas, devolver vista vacía con mensaje
+        //    if (totalMascotas == 0)
+        //    {
+        //        return PartialView(null);
+        //    }
+
+        //    // Obtener la mascota actual (restamos 1 porque los índices empiezan en 0)
+        //    var mascotaActual = favoritos[pagina - 1];
+
+        //    // Crear viewmodel para la vista parcial
+        //    var viewModel = new
+        //    {
+        //        Mascota = mascotaActual,
+        //        PaginaActual = pagina,
+        //        TotalPaginas = totalMascotas
+        //    };
+
+        //    return PartialView(viewModel);
+        //}
     }
 }

@@ -8,32 +8,27 @@
 
     <div class="bg-white shadow rounded-4 mb-4 overflow-hidden">
         <!-- Banner superior con temática de mascotas -->
-        <div class="position-relative" style="height: 220px; background: linear-gradient(135deg, #0d6efd, #0d6efd);">
+        <div class="position-relative" style="height: 220px; background: linear-gradient(135deg, #0d6efd, #6610f2);">
             <!-- Elementos decorativos de fondo con patrón moderno -->
             <div class="position-absolute w-100 h-100" style="overflow: hidden;">
                 <!-- Patrón de fondo con ondas -->
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320" style="position: absolute; bottom: -150px; opacity: 0.15;">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320" style="position: absolute; bottom: -150px; opacity: 0.2;">
                     <path fill="#ffffff" d="M0,128L48,144C96,160,192,192,288,186.7C384,181,480,139,576,138.7C672,139,768,181,864,181.3C960,181,1056,139,1152,133.3C1248,128,1344,160,1392,176L1440,192L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
                 </svg>
 
-                
-
                 <!-- Siluetas decorativas de mascotas reposicionadas a la derecha -->
-                <div class="position-absolute" style="bottom: 15px; right: 30px; opacity: 0.25; z-index: 2;">
+                <div class="position-absolute" style="bottom: 15px; right: 30px; opacity: 0.3; z-index: 2;">
                     <i class="fas fa-dog fa-3x text-white me-4"></i>
                     <i class="fas fa-cat fa-3x text-white me-4"></i>
                     <i class="fas fa-paw fa-3x text-white"></i>
                 </div>
 
-                
                 <!-- Elementos adicionales: Íconos de accesorios para mascotas -->
-                <div class="position-absolute" style="top: 20px; right: 50px; opacity: 0.15; z-index: 2;">
+                <div class="position-absolute" style="top: 20px; right: 50px; opacity: 0.2; z-index: 2;">
                     <i class="fas fa-bone fa-2x text-white me-3"></i>
                     <i class="fas fa-fish fa-2x text-white me-3"></i>
                     <i class="fas fa-feather fa-2x text-white"></i>
                 </div>
-
-
             </div>
 
             <!-- Imagen de perfil con borde mejorado -->
@@ -51,19 +46,19 @@
         </div>
 
         <!-- Contenedor principal con diseño mejorado -->
-        <div class="container-fluid px-4 pb-4" style="margin-top: 60px;">
+        <div class="container-fluid px-4 pb-4" style="margin-top: 70px;">
             <div class="row mt-4 gy-4">
                 <!-- COLUMNA 1: Nombre y estadísticas -->
                 <div class="col-lg-6 mb-4">
-                    <div class="card border-0 shadow-sm rounded-4 h-100">
+                    <div class="card border-0 shadow-sm rounded-4 h-100 hover-lift">
                         <div class="card-body p-4">
-                            <h2 class="fw-bold mb-4 text-center text-lg-start">@Model.Perfil.Nombre</h2>
+                            <h2 class="fw-bold mb-4 text-center text-lg-start text-primary">@Model.Perfil.Nombre</h2>
 
                             <!-- Estadísticas en formato de tarjetas horizontales -->
                             <div class="row g-3">
                                 <div class="col-sm-12">
-                                    <div class="bg-light rounded-4 p-3 h-100 d-flex align-items-center border border-success border-opacity-25">
-                                        <div class="rounded-circle bg-opacity-10 p-2 me-3 d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                                    <div class="bg-light rounded-4 p-3 h-100 d-flex align-items-center border border-success border-opacity-25 hover-scale">
+                                        <div class="rounded-circle bg-primary bg-opacity-10 p-2 me-3 d-flex align-items-center justify-content-center" style="width: 54px; height: 54px;">
                                             <i class="fas fa-heart text-danger fa-lg"></i>
                                         </div>
                                         <div>
@@ -71,22 +66,24 @@
                                             <div class="text-muted small">Favoritos</div>
                                         </div>
                                         <!-- Acerca de mí con diseño renovado -->
-                                        <div class="card border-0 shadow rounded-4 mb-4">
-                                            <div class="card-body p-4">
-                                                <div class="d-flex justify-content-between align-items-center mb-3">
-                                                    <h5 class="card-title fw-bold mb-0">
-                                                        <i class="fas fa-info-circle text-primary me-2"></i>Sobre Mí
-                                                    </h5>
-                                                    <button class="btn btn-sm btn-light rounded-circle" data-bs-toggle="modal" data-bs-target="#editSobreMiModal">
-                                                        <i class="fas fa-edit text-primary"></i>
-                                                    </button>
-                                                </div>
-                                                <p class="card-text @(string.IsNullOrEmpty(Model.Perfil.Descripcion) ? "text-muted fst-italic" : "")">
-                                                    @(string.IsNullOrEmpty(Model.Perfil.Descripcion) ? "Agrega una descripción para que los protectores te conozcan mejor..." : Model.Perfil.Descripcion)
-                                                </p>
-                                            </div>
-                                        </div>
+
                                     </div>
+
+                                </div>
+                            </div>
+                            <div class="card-body p-4 mt-2">
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <h5 class="card-title fw-bold mb-0">
+                                        <i class="fas fa-info-circle text-primary me-2"></i>Sobre Mí
+                                    </h5>
+                                    <button class="btn btn-sm btn-light rounded-circle" data-bs-toggle="modal" data-bs-target="#editSobreMiModal">
+                                        <i class="fas fa-edit text-primary"></i>
+                                    </button>
+                                </div>
+                                <div class="p-3 rounded-4 bg-light">
+                                    <p class="card-text @(string.IsNullOrEmpty(Model.Perfil.Descripcion) ? "text-muted fst-italic" : "")">
+                                        @(string.IsNullOrEmpty(Model.Perfil.Descripcion) ? "Agrega una descripción para que los protectores te conozcan mejor..." : Model.Perfil.Descripcion)
+                                    </p>
                                 </div>
                             </div>
                         </div>
@@ -95,28 +92,30 @@
 
                 <!-- COLUMNA 2: Usuario, email y botón editar -->
                 <div class="col-lg-6 mb-4">
-                    <div class="card border-0 shadow-sm rounded-4 h-100">
+                    <div class="card border-0 shadow-sm rounded-4 h-100 hover-lift">
                         <div class="card-body p-4">
                             <div class="d-flex flex-column justify-content-between h-100">
                                 <div>
-                                    <h4 class=" mb-4 fw-semibold">Información de contacto</h4>
+                                    <h4 class="mb-4 fw-semibold text-primary">
+                                        <i class="fas fa-address-card me-2"></i>Información de contacto
+                                    </h4>
                                     <div class="d-flex flex-column gap-3 mb-4">
-                                        <div class="d-flex align-items-center p-2 border-bottom border-success border-opacity-25">
-                                            <div class="rounded-circle bg-success bg-opacity-10 p-2 me-3 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
-                                                <i class="fas fa-user"></i>
+                                        <div class="d-flex align-items-center p-3 border-bottom border-success border-opacity-25 rounded-3 bg-light hover-scale">
+                                            <div class="rounded-circle bg-success bg-opacity-10 p-3 me-3 d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                                                <i class="fas fa-user text-success"></i>
                                             </div>
                                             <span class="fs-6">@Model.Perfil.NombreUsuario</span>
                                         </div>
-                                        <div class="d-flex align-items-center p-2 border-bottom border-success border-opacity-25">
-                                            <div class="rounded-circle bg-success bg-opacity-10 p-2 me-3 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
-                                                <i class="fas fa-envelope"></i>
+                                        <div class="d-flex align-items-center p-3 border-bottom border-primary border-opacity-25 rounded-3 bg-light hover-scale">
+                                            <div class="rounded-circle bg-primary bg-opacity-10 p-3 me-3 d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                                                <i class="fas fa-envelope text-primary"></i>
                                             </div>
                                             <span class="fs-6">@Model.Perfil.Email</span>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="text-end">
-                                    <button class="btn btn-primary btn-md rounded-pill shadow-sm px-4 py-2" data-bs-toggle="modal" data-bs-target="#editPerfilModal">
+                                    <button class="btn btn-primary btn-lg rounded-pill shadow px-4 py-2 hover-lift" data-bs-toggle="modal" data-bs-target="#editPerfilModal">
                                         <i class="fas fa-user-edit me-2"></i>Editar Perfil
                                     </button>
                                 </div>
@@ -129,107 +128,88 @@
     </div>
 
     <div class="row g-4">
-        <!-- Columna izquierda con información del perfil -->
-        <div class="col-lg-4 mb-4">
-            
-
-            <!-- Detalles del hogar y recursos con diseño renovado -->
-            <div class="card border-0 shadow rounded-4">
+        <!-- IMPROVED PERFIL DE ADOPCIÓN SECTION - Now full width -->
+        <div class="col-12 mb-4">
+            <div class="card border-0 shadow-sm rounded-4 h-100 hover-lift">
                 <div class="card-body p-4">
                     <div class="d-flex justify-content-between align-items-center mb-4">
                         <h5 class="card-title fw-bold mb-0">
                             <i class="fas fa-house-user text-primary me-2"></i>Perfil de Adopción
                         </h5>
-                        <button class="btn btn-sm btn-light rounded-circle" data-bs-toggle="modal" data-bs-target="#editDetallesModal">
-                            <i class="fas fa-edit text-primary"></i>
+                        <button class="btn btn-sm btn-primary rounded-circle shadow-sm" data-bs-toggle="modal" data-bs-target="#editDetallesModal">
+                            <i class="fas fa-edit"></i>
                         </button>
                     </div>
 
-                    <!-- Detalles de hogar con iconos más prominentes -->
+                    <!-- Detalles de hogar con diseño mejorado -->
                     <h6 class="text-primary fw-bold mb-3 border-bottom pb-2">Datos del Hogar</h6>
                     <div class="row g-3 mb-4">
-                        <div class="col-6">
-                            <div class="d-flex align-items-center bg-light rounded-4 p-3 h-100">
-                                <div class="rounded-circle bg-primary bg-opacity-10 p-2 me-3">
+                        <div class="col-md-3 col-6">
+                            <div class="d-flex align-items-center bg-light rounded-4 p-3 h-100 hover-scale">
+                                <div class="rounded-circle bg-primary bg-opacity-10 p-2 me-3 d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
                                     <i class="fas fa-home text-primary"></i>
                                 </div>
                                 <div>
                                     <div class="text-muted small">Vivienda</div>
-                                    <div class="fw-medium">@Model.Perfil.TipoVivienda</div>
+                                    <div class="fw-medium">Piso</div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-6">
-                            <div class="d-flex align-items-center bg-light rounded-4 p-3 h-100">
-                                <div class="rounded-circle bg-primary bg-opacity-10 p-2 me-3">
+                        <div class="col-md-3 col-6">
+                            <div class="d-flex align-items-center bg-light rounded-4 p-3 h-100 hover-scale">
+                                <div class="rounded-circle bg-primary bg-opacity-10 p-2 me-3 d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
                                     <i class="fas fa-clock text-primary"></i>
                                 </div>
                                 <div>
                                     <div class="text-muted small">En Casa</div>
-                                    <div class="fw-medium">@Model.Perfil.TiempoEnCasa</div>
+                                    <div class="fw-medium">4-8 horas</div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-6">
-                            <div class="d-flex align-items-center bg-light rounded-4 p-3 h-100">
-                                <div class="rounded-circle bg-@(Model.Perfil.TieneJardin ? "success" : "danger") bg-opacity-10 p-2 me-3">
-                                    <i class="fas fa-tree text-@(Model.Perfil.TieneJardin ? "success" : "danger")"></i>
+                        <div class="col-md-3 col-6">
+                            <div class="d-flex align-items-center bg-light rounded-4 p-3 h-100 hover-scale">
+                                <div class="rounded-circle bg-danger bg-opacity-10 p-2 me-3 d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
+                                    <i class="fas fa-tree text-danger"></i>
                                 </div>
                                 <div>
                                     <div class="text-muted small">Jardín</div>
-                                    <div class="fw-medium">@(Model.Perfil.TieneJardin ? "Disponible" : "No disponible")</div>
+                                    <div class="fw-medium">No disponible</div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-6">
-                            <div class="d-flex align-items-center bg-light rounded-4 p-3 h-100">
-                                <div class="rounded-circle bg-@(Model.Perfil.OtrosAnimales ? "success" : "danger") bg-opacity-10 p-2 me-3">
-                                    <i class="fas fa-paw text-@(Model.Perfil.OtrosAnimales ? "success" : "danger")"></i>
+                        <div class="col-md-3 col-6">
+                            <div class="d-flex align-items-center bg-light rounded-4 p-3 h-100 hover-scale">
+                                <div class="rounded-circle bg-success bg-opacity-10 p-2 me-3 d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
+                                    <i class="fas fa-paw text-success"></i>
                                 </div>
                                 <div>
                                     <div class="text-muted small">Otros Animales</div>
-                                    <div class="fw-medium">@(Model.Perfil.OtrosAnimales ? "Sí tiene" : "No tiene")</div>
+                                    <div class="fw-medium">Sí tiene</div>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Recursos y experiencia -->
+                    <!-- Recursos y experiencia con diseño mejorado -->
                     <h6 class="text-primary fw-bold mb-3 border-bottom pb-2">Recursos y Experiencia</h6>
 
-                    <!-- Recursos con diseño de tarjetas -->
-                    <div class="d-flex flex-wrap gap-2 mb-4">
-                        @foreach (var recurso in Model.Perfil.RecursosDisponibles)
-                        {
-                            <div class="bg-light rounded-pill px-3 py-2 d-flex align-items-center">
-                                @switch (recurso)
-                                {
-                                    case "Espacio suficiente":
-                                        <i class="fas fa-ruler text-primary me-1"></i>
-                                        break;
-                                    case "Tiempo suficiente":
-                                        <i class="fas fa-hourglass-half text-primary me-1"></i>
-                                        break;
-                                    case "Compromiso emocional":
-                                        <i class="fas fa-heart text-primary me-1"></i>
-                                        break;
-                                    case "Recursos financieros":
-                                        <i class="fas fa-dollar-sign text-primary me-1"></i>
-                                        break;
-                                    default:
-                                        <i class="fas fa-check text-primary me-1"></i>
-                                        break;
-                                }
-                                <span>@recurso</span>
-                            </div>
-                        }
+                    <!-- Recursos con diseño mejorado -->
+                    <div class="d-flex flex-wrap gap-2 mb-2">
+                        <div class="bg-light rounded-pill px-3 py-2 d-flex align-items-center hover-scale border border-primary border-opacity-25">
+                            <i class="fas fa-check-circle text-primary me-2"></i>
+                            <span>Estilo de vida adecuado</span>
+                        </div>
+                        <div class="bg-light rounded-pill px-3 py-2 d-flex align-items-center hover-scale border border-primary border-opacity-25">
+                            <i class="fas fa-heart text-primary me-2"></i>
+                            <span>Compromiso emocional</span>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Columna derecha con mascotas favoritas -->
-        <div class="col-lg-8">
+        <!-- IMPROVED MASCOTAS FAVORITAS SECTION - Now below the profile -->
+        <div class="col-12">
             <div class="card border-0 shadow rounded-4">
                 <div class="card-body p-4">
                     <div class="d-flex justify-content-between align-items-center mb-4">
@@ -498,44 +478,55 @@
 @section Styles {
     <style>
         @@media (max-width: 991.98px) {
-            .bg-primary.position-relative
-
-        {
-            height: 180px;
-        }
-
+            .bg-primary.position-relative {
+                height: 180px;
+            }
         }
 
         @@media (max-width: 767.98px) {
-            .position-relative[style*="margin-top: -80px"]
+            .position-relative[style*="margin-top: -80px"] {
+                margin-top: -60px !important;
+            }
 
-        {
-            margin-top: -60px !important;
-        }
-
-        .col-lg-4.col-md-12 .d-flex {
-            margin-bottom: 1rem;
-        }
-
+            .col-lg-4.col-md-12 .d-flex {
+                margin-bottom: 1rem;
+            }
         }
 
         @@media (max-width: 575.98px) {
-            .position-relative[style*="margin-top: -80px"] img
+            .position-relative[style*="margin-top: -80px"] img {
+                width: 200px !important;
+                height: 200px !important;
+            }
 
-        {
-            width: 200px !important;
-            height: 200px !important;
+            .bg-primary.position-relative {
+                height: 150px;
+            }
+
+            .flex-sm-row {
+                flex-direction: column !important;
+            }
         }
 
-        .bg-primary.position-relative {
-            height: 150px;
+        /* Mejoras para hover y transiciones */
+        .hover-lift {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
-        .flex-sm-row {
-            flex-direction: column !important;
+            .hover-lift:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 12px 20px rgba(0, 0, 0, 0.1);
+            }
+
+        .hover-scale {
+            transition: transform 0.3s ease, background-color 0.3s ease;
         }
 
-        }
+            .hover-scale:hover {
+                transform: scale(1.03);
+                background-color: #f8f9fa;
+            }
+
         .pet-card-carousel .pet-card {
             max-width: 100%;
             margin: 0 auto;
@@ -563,16 +554,30 @@
             align-items: center;
             justify-content: center;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
         }
+
+            .pet-sex-badge:hover {
+                transform: scale(1.1);
+            }
 
         .bg-pink {
             background-color: #ff69b4 !important;
         }
 
         .pet-card {
-            perspective: 1000px;
+            border-radius: 16px;
+            overflow: hidden;
+            background-color: white;
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            max-width: 90%;
+            margin: 0 auto;
         }
+
+            .pet-card:hover {
+                transform: translateY(-8px) rotateX(3deg);
+                box-shadow: 0 15px 30px rgba(0, 0, 0, 0.12);
+            }
 
         .pet-card-image {
             height: 300px;
@@ -582,7 +587,7 @@
         }
 
         .pet-card:hover .pet-card-image {
-            transform: scale(1.1);
+            transform: scale(1.05);
         }
 
         .pet-card-overlay {
@@ -612,7 +617,12 @@
             display: flex;
             align-items: center;
             gap: 1rem;
+            transition: transform 0.3s ease;
         }
+
+            .characteristic:hover {
+                transform: translateX(5px);
+            }
 
         .characteristic-icon {
             background-color: rgba(0, 123, 255, 0.1);
@@ -622,11 +632,22 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            transition: all 0.3s ease;
         }
+
+            .characteristic-icon:hover {
+                background-color: rgba(0, 123, 255, 0.2);
+                transform: scale(1.1);
+            }
 
             .characteristic-icon i {
                 font-size: 1.5rem;
+                transition: transform 0.3s ease;
             }
+
+        .characteristic:hover .characteristic-icon i {
+            transform: scale(1.2);
+        }
 
         .characteristic-info {
             display: flex;
@@ -637,12 +658,22 @@
                 font-size: 0.8rem;
                 color: #6c757d;
                 text-transform: uppercase;
+                transition: color 0.3s ease;
             }
 
-            .characteristic-info .value {
-                font-weight: bold;
-                color: #333;
-            }
+        .characteristic:hover .characteristic-info .label {
+            color: #495057;
+        }
+
+        .characteristic-info .value {
+            font-weight: bold;
+            color: #333;
+            transition: color 0.3s ease;
+        }
+
+        .characteristic:hover .characteristic-info .value {
+            color: #0d6efd;
+        }
 
         .pet-name-container {
             display: flex;
@@ -656,7 +687,14 @@
             font-weight: 700;
             color: #007bff;
             text-align: center;
+            position: relative;
+            transition: all 0.3s ease;
         }
+
+            .pet-name:hover {
+                transform: scale(1.05);
+                color: #0056b3;
+            }
 
             .pet-name::before {
                 content: '';
@@ -668,6 +706,13 @@
                 background: rgba(0, 123, 255, 0.2);
                 z-index: -1;
                 transform: rotate(-1deg);
+                transition: all 0.3s ease;
+            }
+
+            .pet-name:hover::before {
+                height: 10px;
+                background: rgba(0, 123, 255, 0.3);
+                transform: rotate(-2deg);
             }
 
         .adopt-btn {
@@ -676,10 +721,26 @@
             overflow: hidden;
         }
 
-        .pet-card:hover {
-            transform: translateY(-10px) rotateX(5deg);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
-        }
+            .adopt-btn:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+            }
+
+            .adopt-btn::after {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(255, 255, 255, 0.2);
+                transform: translateX(-100%);
+                transition: transform 0.5s ease;
+            }
+
+            .adopt-btn:hover::after {
+                transform: translateX(100%);
+            }
 
         .pet-card .text-center {
             display: flex;
@@ -705,19 +766,19 @@
         .favorite-heart {
             cursor: pointer;
             color: #aaa;
-            transition: color 0.5s ease, transform 0.2s ease;
+            transition: color 0.5s ease, transform 0.3s ease;
             font-size: 1.5rem;
             text-decoration: none;
         }
 
             .favorite-heart:hover {
                 color: #ff4136;
-                transform: scale(1.2);
+                transform: scale(1.3) rotate(5deg);
             }
 
             .favorite-heart.active {
                 color: #ff4136;
-                animation: heart-beat 0.5s ease;
+                animation: heart-beat 0.8s ease;
             }
 
         @@keyframes heart-beat {
@@ -725,24 +786,37 @@
                 transform: scale(1);
             }
 
+            25% {
+                transform: scale(1.2) rotate(5deg);
+            }
+
             50% {
-                transform: scale(1.2);
+                transform: scale(1.1);
+            }
+
+            75% {
+                transform: scale(1.25) rotate(-5deg);
             }
         }
 
         .pagination-btn {
-            width: 48px;
-            height: 48px;
+            width: 40px;
+            height: 40px;
             display: flex;
             align-items: center;
             justify-content: center;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
             .pagination-btn:hover:not(:disabled) {
                 transform: translateY(-3px);
-                box-shadow: 0 6px 8px rgba(0,0,0,0.15);
+                box-shadow: 0 4px 6px rgba(0,0,0,0.15);
+            }
+
+            .pagination-btn:disabled {
+                opacity: 0.5;
+                cursor: not-allowed;
             }
 
         .pagination-info {
@@ -758,6 +832,140 @@
             display: flex;
             align-items: center;
             justify-content: center;
+        }
+
+        /* Mejoras para los botones */
+        .btn {
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+            .btn:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #0d6efd, #0953c2);
+            border: none;
+        }
+
+            .btn-primary:hover {
+                background: linear-gradient(135deg, #0953c2, #0d6efd);
+            }
+
+        /* Mejora para el mapa */
+        #mapa {
+            border: 2px solid rgba(13, 110, 253, 0.2);
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+            #mapa:hover {
+                border-color: rgba(13, 110, 253, 0.5);
+                box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            }
+
+        /* Mejora para modals */
+        .modal-content {
+            transition: transform 0.3s ease;
+        }
+
+        .modal.show .modal-content {
+            transform: scale(1);
+        }
+
+        .modal .modal-content {
+            transform: scale(0.95);
+        }
+
+        /* Mejora para la imagen de perfil */
+        img[alt="Foto de Perfil"] {
+            transition: all 0.4s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+            img[alt="Foto de Perfil"]:hover {
+                transform: scale(1.02) rotate(1deg);
+                box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            }
+
+        /* Mejora para input groups */
+        .input-group {
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+        }
+
+            .input-group:focus-within {
+                box-shadow: 0 2px 10px rgba(13, 110, 253, 0.1);
+            }
+
+        .hover-scale {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+            .hover-scale:hover {
+                transform: scale(1.03);
+                box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+            }
+
+        /* Mejora para los íconos */
+        .fas {
+            transition: transform 0.3s ease;
+        }
+
+        .hover-scale:hover .fas,
+        .btn:hover .fas {
+            transform: scale(1.2);
+        }
+
+        /* Gradientes sutiles para fondos */
+        .bg-light {
+            background: linear-gradient(to bottom, #f8f9fa, #ffffff) !important;
+        }
+
+        /* Mejora para la animación de secciones */
+        .animate-section {
+            transition: opacity 0.8s ease, transform 0.8s ease !important;
+        }
+
+        /* Mejora para las tarjetas */
+        .card {
+            transition: all 0.3s ease;
+        }
+
+            .card:hover {
+                box-shadow: 0 10px 25px rgba(13, 110, 253, 0.1) !important;
+            }
+
+        /* Mejora para los bordes redondeados */
+        .rounded-4 {
+            border-radius: 16px !important;
+        }
+
+        /* Efecto de elevación para elementos al hacer hover */
+        .hover-lift {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+            .hover-lift:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 12px 20px rgba(0, 0, 0, 0.1);
+            }
+
+        /* Mobile responsiveness enhancements */
+        @@media (max-width: 767.98px) {
+            .pet-card
+
+        {
+            max-width: 100%;
+        }
+
+        .col-6 {
+            width: 100%;
+        }
+
         }
     </style>
 }

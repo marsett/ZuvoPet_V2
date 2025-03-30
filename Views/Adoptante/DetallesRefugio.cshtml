@@ -33,7 +33,8 @@
                         Refugio de animales
                     </div>
                     <div class="shelter-tag" style="background-color: @colorPrincipal;">
-                        @Model.ListaMascotas?.Count(m => m.Estado == "Disponible") animales
+                        @* @Model.ListaMascotas?.Count(m => m.Estado == "Disponible") animales *@
+                        @Model.CantidadAnimales animales
                     </div>
                 </div>
             </div>
@@ -70,7 +71,7 @@
                                         <i class="bi bi-house-heart-fill me-2"></i>
                                         Ocupación actual
                                     </h6>
-                                    <span class="fw-bold">@Model.ListaMascotas?.Count(m => m.Estado == "Disponible") de @Model.CapacidadMaxima</span>
+                                    <span class="fw-bold">@* @Model.ListaMascotas?.Count(m => m.Estado == "Disponible") *@ @Model.CantidadAnimales de @Model.CapacidadMaxima</span>
                                 </div>
                                 @{
                                     var porcentajeOcupacion = (int)((double)@Model.ListaMascotas?.Count(m => m.Estado == "Disponible") / Model.CapacidadMaxima * 100);
@@ -198,19 +199,19 @@
                             </div>
                         </div>
 
-                        <!-- Tarjeta de voluntariado -->
                         <div class="section-card animate-section">
-                            <h3 class="section-title mb-4">Voluntariado</h3>
+                            <h3 class="section-title mb-4">Veterinarios</h3>
                             <div class="text-center py-3">
-                                <i class="bi bi-hand-thumbs-up fs-1 mb-3" style="color: @colorPrincipal;"></i>
-                                <p class="mb-4">¿Quieres ayudar como voluntario en este refugio? Contacta con ellos para conocer las oportunidades disponibles.</p>
+                                <i class="bi bi-heart-pulse fs-1 mb-3" style="color: @colorPrincipal;"></i>
+                                <p class="mb-4">Conoce a los veterinarios que colaboran con nuestro refugio y brindan atención médica a nuestros animales.</p>
 
-                                <a href="@Url.Action("EventosRefugio", "Eventos", new { idrefugio = Model.Id })"
+                                <a href="@Url.Action("VeterinariosRefugio", "Adoptante", new { idrefugio = Model.Id })"
                                    class="btn btn-success w-100">
-                                    <i class="bi bi-calendar-event me-2"></i>Ver eventos
+                                    <i class="bi bi-person-badge me-2"></i>Ver veterinarios
                                 </a>
                             </div>
                         </div>
+                        
                     </div>
                 </div>
             </div>

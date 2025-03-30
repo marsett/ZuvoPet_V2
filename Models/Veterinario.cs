@@ -18,11 +18,19 @@ namespace ZuvoPet_V2.Models
         [Column("Especializacion")]
         public string Especializacion { get; set; }
         [Column("Contacto")]
-        public string? Contacto { get; set; }
-        [Column("Latitud")]
-        public double Latitud { get; set; }
+        public string Contacto { get; set; }
 
-        [Column("Longitud")]
-        public double Longitud { get; set; }
+        [Column("HorarioAtencion")]
+        public string HorarioAtencion { get; set; }
+
+        [Column("Descripcion")]
+        public string Descripcion { get; set; }
+        [Column("Foto")]
+        public string Foto { get; set; }
+
+        [ForeignKey("Refugio")]
+        [Column("IdRefugio")]
+        public int IdRefugio { get; set; }
+        public Refugio Refugio { get; set; }
     }
 }

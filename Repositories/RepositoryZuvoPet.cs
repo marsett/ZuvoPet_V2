@@ -787,6 +787,8 @@ namespace ZuvoPet_V2.Repositories
                 FechaRegistro = DateTime.Now
             };
 
+            refugio.CantidadAnimales++;
+
             this.context.Mascotas.Add(mascota);
             await this.context.SaveChangesAsync();
             return true;
@@ -914,6 +916,9 @@ namespace ZuvoPet_V2.Repositories
                     // 4. Finalmente, eliminar la mascota
                     this.context.Mascotas.Remove(mascota);
 
+                    var refugio = await this.context.Refugios
+                        .FirstOrDefaultAsync(a => a.Id == mascota.IdRefugio);
+                    refugio.CantidadAnimales--;
                     // Guardar todos los cambios
                     await this.context.SaveChangesAsync();
 
@@ -1259,6 +1264,13 @@ namespace ZuvoPet_V2.Repositories
             return mensaje;
         }
 
-
+        public async Task<List<Veterinario>> GetVeterinariosRefugioAsync(int idrefugio)
+        {
+            List<Veterinario> veterinarios = await this.context.Veterinarios
+                .Where(s => s.IdRefugio == idrefugio)
+                .Include(v => v.Refugio) // Include the Refugio navigation property
+                .ToListAsync();
+            return veterinarios;
+        }
     }
 }

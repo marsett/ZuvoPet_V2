@@ -116,6 +116,20 @@ namespace ZuvoPet_V2.Controllers
         [HttpPost]
         public async Task<IActionResult> CrearMascota(Mascota mascota, IFormFile fichero)
         {
+            int idusuario = (int)HttpContext.Session.GetInt32("USUARIOID");
+            // Obtenemos el refugio asociado al usuario
+            var refugio = await this.context.Refugios
+                .FirstOrDefaultAsync(a => a.IdUsuario == idusuario);
+
+            // Verificamos si el refugio ya está en su capacidad máxima
+            if (refugio.CantidadAnimales >= refugio.CapacidadMaxima)
+            {
+                // Si está lleno, guardamos un mensaje para mostrar el SweetAlert
+                TempData["SweetAlert"] = "error";
+                TempData["SweetAlertTitle"] = "Capacidad máxima alcanzada";
+                TempData["SweetAlertText"] = "No se puede agregar más mascotas. El refugio ha alcanzado su capacidad máxima.";
+                return RedirectToAction("CrearMascota");
+            }
             if (fichero != null)
             {
                 string fileName = Guid.NewGuid().ToString() + ".png";
@@ -127,8 +141,12 @@ namespace ZuvoPet_V2.Controllers
                 mascota.Foto = fileName;
             }
 
-            int idusuario = (int)HttpContext.Session.GetInt32("USUARIOID");
+            
             await this.repo.CrearMascotaRefugioAsync(mascota, idusuario);
+            // Mensaje de éxito
+            TempData["SweetAlert"] = "success";
+            TempData["SweetAlertTitle"] = "¡Mascota agregada!";
+            TempData["SweetAlertText"] = "La mascota ha sido registrada correctamente.";
             return RedirectToAction("Gestion");
         }
 
@@ -234,7 +252,7 @@ namespace ZuvoPet_V2.Controllers
 
             // Eliminar la mascota y sus relaciones de la base de datos
             bool result = await this.repo.DeleteMascotaAsync(idmascota);
-
+            
             // Para solicitudes AJAX, devolver un resultado JSON
             if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
@@ -584,15 +602,17 @@ namespace ZuvoPet_V2.Controllers
                         : RedirectToAction("Perfil");
                 }
 
+                // Redondea los valores a 6 decimales
+                Latitud = Math.Round(Latitud, 6);
+                Longitud = Math.Round(Longitud, 6);
+
                 int usuarioId = HttpContext.Session.GetInt32("USUARIOID")
                     ?? throw new InvalidOperationException("Usuario no autenticado");
-
                 var refugio = await repo.GetRefugioByUsuarioIdAsync(usuarioId)
                     ?? throw new InvalidOperationException("Refugio no encontrado");
 
                 refugio.Latitud = Latitud;
                 refugio.Longitud = Longitud;
-
                 await context.SaveChangesAsync();
 
                 return Request.Headers["X-Requested-With"] == "XMLHttpRequest"
@@ -603,7 +623,6 @@ namespace ZuvoPet_V2.Controllers
             {
                 // Log the error (consider using a logging framework)
                 Console.Error.WriteLine($"Error actualizando ubicación: {ex.Message}");
-
                 return Request.Headers["X-Requested-With"] == "XMLHttpRequest"
                     ? Json(new { success = false, error = "Error al actualizar la ubicación" })
                     : RedirectToAction("Perfil");
@@ -789,5 +808,10 @@ namespace ZuvoPet_V2.Controllers
 
         //    return RedirectToAction("Chat", new { id = refugio.IdUsuario });
         //}
+
+        public async Task<IActionResult> GestionVeterinarios()
+        {
+            return View();
+        }
     }
 }
