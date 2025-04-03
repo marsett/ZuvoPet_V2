@@ -51,7 +51,7 @@
 <section id="stats" class="py-4">
     <div class="container">
         <div class="row text-center">
-            <div class="col-md-4">
+            <div class="col-md-6">
                 <div class="stat-item">
                     <div class="stat-icon-container">
                         <i class="fas fa-heart stat-icon pulse-animation"></i>
@@ -60,7 +60,7 @@
                     <div class="stat-label">Me gustas</div>
                 </div>
             </div>
-            <div class="col-md-4">
+            @* <div class="col-md-4">
                 <div class="stat-item">
                     <div class="stat-icon-container">
                         <i class="fas fa-comment stat-icon bounce-animation"></i>
@@ -68,8 +68,8 @@
                     <div class="stat-counter">@Model.Sum(h => h.ComentariosHistoria.Count)</div>
                     <div class="stat-label">Comentarios</div>
                 </div>
-            </div>
-            <div class="col-md-4">
+            </div> *@
+            <div class="col-md-6">
                 <div class="stat-item">
                     <div class="stat-icon-container">
                         <i class="fas fa-book-open stat-icon float-animation"></i>
@@ -98,7 +98,6 @@
                 @foreach (var historiaConDetalles in Model)
                 {
                     var historia = historiaConDetalles.HistoriaExito;
-                    var comentarios = historiaConDetalles.ComentariosHistoria ?? new List<ComentarioHistoria>();
                     var likes = historiaConDetalles.LikeHistorias ?? new List<LikeHistoria>();
                     var contadorMeGusta = 0;
                     var contadorMeEncanta = 0;
@@ -118,13 +117,10 @@
                             <div class="personalizado p-0">
                                 <div class="img-container">
                                     <img src="~/images/@historia.Foto" class="card-img-left" alt="Imagen de la historia" />
-                                    <div class="img-overlay">
-                                        <span class="fecha-badge">@historia.FechaPublicacion.ToString("dd MMM yyyy")</span>
-                                    </div>
                                 </div>
                             </div>
                             <!-- Contenido de la historia -->
-                            <div class="col-md-8">
+                            <div class="col-md-12 col-xl-8">
                                 <div class="card-body">
                                     <!-- Título de la historia -->
                                     <h3 class="card-title">@historia.Titulo</h3>
@@ -173,10 +169,10 @@
                                             <i class="fas fa-star text-warning @(userLiked)"></i>
                                             <span>@contadorAsombroso</span>
                                         </div>
-                                        <div class="historia-stat">
+                                        @* <div class="historia-stat">
                                             <i class="fas fa-comment"></i>
                                             <span>@comentarios.Count</span>
-                                        </div>
+                                        </div> *@
                                     </div>
 
                                     <!-- Botones de interacción -->
@@ -248,59 +244,6 @@
                                             </div>
                                         </div>
 
-                                        <button class="btn btn-outline-primary btn-action" onclick="toggleComentarios('@historia.Id')">
-                                            <i class="fas fa-comment"></i> Comentar
-                                        </button>
-                                        <button class="btn btn-outline-secondary btn-action">
-                                            <i class="fas fa-share-alt"></i> Compartir
-                                        </button>
-                                    </div>
-
-                                    <!-- Comentarios sección desplegable -->
-                                    <div class="mt-4 comentarios-section" id="comentarios-@historia.Id" style="display: none;">
-                                        <div class="comentarios-header d-flex justify-content-between align-items-center">
-                                            <h6><i class="fas fa-comments me-2"></i>Comentarios (@comentarios.Count)</h6>
-                                            <button class="btn btn-sm btn-link" onclick="toggleComentarios('@historia.Id')">
-                                                <i class="fas fa-times"></i>
-                                            </button>
-                                        </div>
-
-                                        <!-- Formulario para nuevo comentario -->
-                                        <div class="nuevo-comentario mt-3">
-                                            <div class="d-flex">
-                                                <img src="~/images/@fotoPerfil" class="comentario-user-img me-2" alt="Tu perfil" />
-                                                <div class="flex-grow-1">
-                                                    <textarea class="form-control" placeholder="Escribe un comentario..." rows="2"></textarea>
-                                                    <button class="btn btn-primary btn-sm mt-2">Publicar</button>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <!-- Lista de comentarios - con comprobación de nulos -->
-                                        <div class="comentarios-lista mt-3">
-                                            @foreach (var comentario in comentarios.OrderByDescending(c => c.Fecha))
-                                            {
-                                                <div class="comment-item">
-                                                    <div class="d-flex">
-                                                        @if (comentario.Usuario != null && comentario.Usuario.PerfilUsuario != null)
-                                                        {
-                                                            <img src="~/images/@comentario.Usuario.PerfilUsuario.FotoPerfil" class="comentario-user-img me-2" alt="Foto de perfil" />
-                                                        }
-                                                        else
-                                                        {
-                                                            <img src="~/images/default-profile.png" class="comentario-user-img me-2" alt="Foto de perfil" />
-                                                        }
-                                                        <div class="flex-grow-1">
-                                                            <div class="comment-header">
-                                                                <strong>@(comentario.Usuario?.NombreUsuario ?? "Usuario")</strong>
-                                                                <small class="text-muted">@comentario.Fecha.ToString("dd MMM yyyy, HH:mm")</small>
-                                                            </div>
-                                                            <p class="comment-text">@comentario.Comentario</p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            }
-                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -318,691 +261,6 @@
         </div>
     </div>
 </section>
-
-<!-- Modal para compartir historia -->
-<div class="modal fade" id="shareStoryModal" tabindex="-1" aria-labelledby="shareStoryModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="shareStoryModalLabel">Comparte tu historia de éxito</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form>
-                    <div class="mb-3">
-                        <label for="historia-titulo" class="form-label">Título</label>
-                        <input type="text" class="form-control" id="historia-titulo" placeholder="Escribe un título para tu historia">
-                    </div>
-                    <div class="mb-3">
-                        <label for="historia-descripcion" class="form-label">Descripción</label>
-                        <textarea class="form-control" id="historia-descripcion" rows="5" placeholder="Cuenta tu historia..."></textarea>
-                    </div>
-                    <div class="mb-3">
-                        <label for="historia-foto" class="form-label">Imagen</label>
-                        <input type="file" class="form-control" id="historia-foto">
-                    </div>
-                    <div class="mb-3">
-                        <label for="historia-etiquetas" class="form-label">Etiquetas</label>
-                        <input type="text" class="form-control" id="historia-etiquetas" placeholder="Superación, Salud, Educación...">
-                        <small class="text-muted">Separa las etiquetas con comas</small>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-primary">Publicar historia</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-@section Scripts {
-    <script>
-                // Configuración de paginación
-        const HISTORIAS_POR_PAGINA = 3;
-        let paginaActual = 1;
-        let historiasVisibles = []; // Array para almacenar solo las historias que coinciden con el filtro de búsqueda
-
-        // Función para inicializar la paginación
-        function inicializarPaginacion() {
-            // Obtener todas las tarjetas de historias
-            const todasLasHistorias = document.querySelectorAll('.historia-card');
-
-            // Actualizar las historias visibles (todas al inicio)
-            historiasVisibles = Array.from(todasLasHistorias);
-
-            // Calcular el número total de páginas
-            const totalPaginas = Math.ceil(historiasVisibles.length / HISTORIAS_POR_PAGINA);
-
-            // Generar los botones de paginación
-            generarBotonesPaginacion(totalPaginas);
-
-            // Mostrar la primera página
-            mostrarPagina(1);
-        }
-
-        // Función para generar los botones de paginación
-        function generarBotonesPaginacion(totalPaginas) {
-            const paginacionUl = document.querySelector('.pagination');
-
-            // Limpiar la paginación actual
-            paginacionUl.innerHTML = '';
-
-            // Botón "Anterior"
-            const liAnterior = document.createElement('li');
-            liAnterior.className = 'page-item' + (paginaActual === 1 ? ' disabled' : '');
-            liAnterior.innerHTML = `<a class="page-link" href="#" aria-label="Anterior" data-page="prev">
-                                     <span aria-hidden="true">&laquo;</span>
-                                     <span class="sr-only">Anterior</span>
-                                   </a>`;
-            paginacionUl.appendChild(liAnterior);
-
-            // Botones de página
-            for (let i = 1; i <= totalPaginas; i++) {
-                const li = document.createElement('li');
-                li.className = 'page-item' + (i === paginaActual ? ' active' : '');
-                li.innerHTML = `<a class="page-link" href="#" data-page="${i}">${i}</a>`;
-                paginacionUl.appendChild(li);
-            }
-
-            // Botón "Siguiente"
-            const liSiguiente = document.createElement('li');
-            liSiguiente.className = 'page-item' + (paginaActual === totalPaginas ? ' disabled' : '');
-            liSiguiente.innerHTML = `<a class="page-link" href="#" aria-label="Siguiente" data-page="next">
-                                      <span aria-hidden="true">&raquo;</span>
-                                      <span class="sr-only">Siguiente</span>
-                                    </a>`;
-            paginacionUl.appendChild(liSiguiente);
-
-            // Agregar eventos a los botones de paginación
-            document.querySelectorAll('.pagination .page-link').forEach(link => {
-                link.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const pageAction = this.getAttribute('data-page');
-
-                    if (pageAction === 'prev') {
-                        if (paginaActual > 1) {
-                            mostrarPagina(paginaActual - 1);
-                        }
-                    } else if (pageAction === 'next') {
-                        const totalPaginas = Math.ceil(historiasVisibles.length / HISTORIAS_POR_PAGINA);
-                        if (paginaActual < totalPaginas) {
-                            mostrarPagina(paginaActual + 1);
-                        }
-                    } else {
-                        mostrarPagina(parseInt(pageAction));
-                    }
-                });
-            });
-        }
-
-        // Función para mostrar una página específica
-        function mostrarPagina(numeroPagina) {
-            // Actualizar página actual
-            paginaActual = numeroPagina;
-
-            // Calcular índices de inicio y fin para esta página
-            const inicio = (paginaActual - 1) * HISTORIAS_POR_PAGINA;
-            const fin = inicio + HISTORIAS_POR_PAGINA;
-
-            // Ocultar todas las historias primero
-            document.querySelectorAll('.historia-card').forEach(card => {
-                card.style.display = 'none';
-            });
-
-            // Mostrar solo las historias de la página actual
-            for (let i = inicio; i < fin && i < historiasVisibles.length; i++) {
-                historiasVisibles[i].style.display = 'flex';
-            }
-
-            // Actualizar los botones de paginación
-            actualizarEstadoPaginacion();
-
-            // Desplazarse al principio de la sección de historias
-            document.querySelector('#historias-contenido').scrollIntoView({ behavior: 'smooth' });
-        }
-
-        // Función para actualizar el estado de los botones de paginación
-        function actualizarEstadoPaginacion() {
-            const totalPaginas = Math.ceil(historiasVisibles.length / HISTORIAS_POR_PAGINA);
-
-            // Actualizar el estado activo de los botones de página
-            document.querySelectorAll('.pagination .page-item').forEach(item => {
-                item.classList.remove('active', 'disabled');
-            });
-
-            // Marcar la página actual como activa
-            const paginaActualBtn = document.querySelector(`.pagination .page-link[data-page="${paginaActual}"]`);
-            if (paginaActualBtn) {
-                paginaActualBtn.parentElement.classList.add('active');
-            }
-
-            // Deshabilitar botón "Anterior" si estamos en la primera página
-            const btnAnterior = document.querySelector('.pagination .page-link[data-page="prev"]');
-            if (btnAnterior && paginaActual === 1) {
-                btnAnterior.parentElement.classList.add('disabled');
-            }
-
-            // Deshabilitar botón "Siguiente" si estamos en la última página
-            const btnSiguiente = document.querySelector('.pagination .page-link[data-page="next"]');
-            if (btnSiguiente && paginaActual === totalPaginas) {
-                btnSiguiente.parentElement.classList.add('disabled');
-            }
-        }
-
-                // Función para filtrar historias (conserva esta y elimina la segunda definición)
-        function filtrarHistorias() {
-            // Obtener el valor del campo de búsqueda
-            const textoBusqueda = document.getElementById('buscar-historias').value.toLowerCase().trim();
-
-            // Obtener todas las tarjetas de historias
-            const todasLasHistorias = document.querySelectorAll('.historia-card');
-
-            // Resetear el array de historias visibles
-            historiasVisibles = [];
-
-            // Iterar por cada tarjeta y agregar al array de visibles si coincide
-            todasLasHistorias.forEach(card => {
-                // Obtener el título de la historia
-                const titulo = card.querySelector('.card-title').textContent.toLowerCase();
-
-                // Verificar si el título contiene el texto de búsqueda
-                if (textoBusqueda === '' || titulo.includes(textoBusqueda)) {
-                    historiasVisibles.push(card);
-                    // Nota: No cambiar display aquí, se hará en mostrarPagina()
-                }
-            });
-
-            // Mostrar mensaje si no hay resultados
-            const noResultados = document.getElementById('no-resultados');
-            if (historiasVisibles.length === 0 && textoBusqueda !== '') {
-                // Ocultar todas las historias primero
-                todasLasHistorias.forEach(card => {
-                    card.style.display = 'none';
-                });
-
-                // Crear el elemento si no existe
-                if (!noResultados) {
-                    const mensajeNoResultados = document.createElement('div');
-                    mensajeNoResultados.id = 'no-resultados';
-                    mensajeNoResultados.className = 'text-center py-5';
-                    mensajeNoResultados.innerHTML = `
-                        <i class="fas fa-search empty-icon"></i>
-                        <h3 class="mt-3">No se encontraron resultados</h3>
-                        <p>No hay historias que coincidan con "<span id="termino-busqueda">${textoBusqueda}</span>"</p>
-                        <button class="btn btn-outline-primary mt-3" onclick="limpiarBusqueda()">
-                            <i class="fas fa-undo-alt me-2"></i>Ver todas las historias
-                        </button>
-                    `;
-                    document.querySelector('.historias-exito').appendChild(mensajeNoResultados);
-                } else {
-                    // Actualizar el término de búsqueda si ya existe el mensaje
-                    document.getElementById('termino-busqueda').textContent = textoBusqueda;
-                    noResultados.style.display = 'block';
-                }
-
-                // Ocultar paginación cuando no hay resultados
-                document.querySelector('nav[aria-label="Paginación de historias"]').style.display = 'none';
-            } else {
-                // Ocultar mensaje de no resultados
-                if (noResultados) {
-                    noResultados.style.display = 'none';
-                }
-
-                // Mostrar paginación
-                document.querySelector('nav[aria-label="Paginación de historias"]').style.display = 'block';
-
-                // Recalcular paginación con las historias visibles
-                const totalPaginas = Math.ceil(historiasVisibles.length / HISTORIAS_POR_PAGINA);
-                generarBotonesPaginacion(totalPaginas);
-
-                // Resetear a primera página tras buscar
-                paginaActual = 1;
-                mostrarPagina(1);
-            }
-
-            // Actualizar contador de historias en el área de estadísticas
-            const historiasCounter = document.querySelector('.stat-counter:last-child');
-            if (historiasCounter) {
-                historiasCounter.textContent = historiasVisibles.length;
-            }
-        }
-
-        // Función para limpiar la búsqueda
-        function limpiarBusqueda() {
-            // Limpiar el campo de búsqueda
-            document.getElementById('buscar-historias').value = '';
-
-            // Obtener todas las tarjetas de historias
-            const todasLasHistorias = document.querySelectorAll('.historia-card');
-
-            // Resetear el array de historias visibles (todas las historias)
-            historiasVisibles = Array.from(todasLasHistorias);
-
-            // Ocultar mensaje de no resultados si existe
-            const noResultados = document.getElementById('no-resultados');
-            if (noResultados) {
-                noResultados.style.display = 'none';
-            }
-
-            // Mostrar paginación
-            document.querySelector('nav[aria-label="Paginación de historias"]').style.display = 'block';
-
-            // Recalcular paginación
-            const totalPaginas = Math.ceil(historiasVisibles.length / HISTORIAS_POR_PAGINA);
-            generarBotonesPaginacion(totalPaginas);
-
-            // Mostrar primera página
-            mostrarPagina(1);
-
-            // Restaurar contador original de historias
-            const historiasCounter = document.querySelector('.stat-counter:last-child');
-            if (historiasCounter) {
-                historiasCounter.textContent = todasLasHistorias.length;
-            }
-        }
-
-        // Inicializar cuando se cargue el documento
-        document.addEventListener('DOMContentLoaded', function() {
-            // Inicializar paginación
-            inicializarPaginacion();
-
-            // Obtener el campo de búsqueda y el botón
-            const campoBusqueda = document.getElementById('buscar-historias');
-            const botonBusqueda = document.getElementById('boton-buscar');
-
-            // Agregar evento al botón de búsqueda
-            if (botonBusqueda) {
-                botonBusqueda.addEventListener('click', filtrarHistorias);
-            }
-
-            // Agregar evento para buscar al presionar Enter en el campo de búsqueda
-            if (campoBusqueda) {
-                campoBusqueda.addEventListener('keypress', function(e) {
-                    if (e.key === 'Enter') {
-                        e.preventDefault();
-                        filtrarHistorias();
-                    }
-                });
-            }
-        });
-    </script>
-    <script>
-        function toggleComentarios(historiaId) {
-            const comentariosSection = document.getElementById(`comentarios-${historiaId}`);
-            if (comentariosSection.style.display === 'none') {
-                comentariosSection.style.display = 'block';
-            } else {
-                comentariosSection.style.display = 'none';
-            }
-        }
-
-        // Animación de contador
-        document.addEventListener('DOMContentLoaded', function() {
-            const counters = document.querySelectorAll('.stat-counter');
-
-            counters.forEach(counter => {
-                const target = parseInt(counter.innerText);
-                let count = 0;
-                const duration = 2000; // 2 segundos
-                const increment = target / (duration / 20); // incremento cada 20ms
-
-                counter.innerText = '0';
-
-                const timer = setInterval(() => {
-                    count += increment;
-                    if (count >= target) {
-                        clearInterval(timer);
-                        counter.innerText = target;
-                    } else {
-                        counter.innerText = Math.round(count);
-                    }
-                }, 20);
-            });
-        });
-    </script>
-    <script>
-                // Función para inicializar botones de reacción
-        function inicializarBotonesReaccion() {
-            // Obtener todos los botones de reacción
-            const botonesReaccion = document.querySelectorAll('.btn-reaction');
-
-            botonesReaccion.forEach(boton => {
-                boton.addEventListener('click', function(e) {
-                    e.preventDefault();
-
-                    // Obtener datos del botón
-                    const historiaId = this.getAttribute('data-historia-id');
-                    const tipoReaccion = this.getAttribute('data-tipo');
-                    const color = this.getAttribute('data-color');
-
-                    // Enviar la solicitud AJAX
-                    reaccionarHistoria(historiaId, tipoReaccion, color, this);
-                });
-            });
-        }
-
-        // Función para inicializar los botones de reacción con el estado correcto
-        async function inicializarEstadoBotonesReaccion() {
-            // Obtener todos los botones de reacción principal
-            const botonesReaccion = document.querySelectorAll('.reaction-btn');
-
-            // Verificar si el usuario está autenticado
-            if (!document.querySelector('input[name="__RequestVerificationToken"]')) {
-                return; // No hay token, usuario no autenticado
-            }
-
-            for (const boton of botonesReaccion) {
-                const historiaId = boton.getAttribute('data-historia-id');
-
-                // Consultar al servidor para obtener el estado de reacción actual
-                const tipoReaccion = await verificarEstadoReaccion(historiaId);
-
-                // Si hay una reacción actual, aplicar el estilo correspondiente
-                if (tipoReaccion && tipoReaccion !== '') {
-                    // Actualizar el atributo data-reaccion-actual
-                    boton.setAttribute('data-reaccion-actual', tipoReaccion);
-
-                    // Aplicar estilo al botón según tipo de reacción
-                    aplicarEstiloSegunReaccion(boton, tipoReaccion);
-                }
-            }
-        }
-
-        // Función para aplicar estilo según el tipo de reacción
-        function aplicarEstiloSegunReaccion(boton, tipoReaccion) {
-            // Primero quitar todas las clases de colores previas
-            boton.classList.remove('btn-danger', 'btn-outline-danger', 'btn-pink', 'btn-purple', 'btn-success', 'btn-warning');
-
-            // Aplicar clase según tipo de reacción
-            switch (tipoReaccion) {
-                case 'MeGusta':
-                    boton.classList.add('btn-danger');
-                    boton.innerHTML = `<i class="fas fa-heart me-1"></i> <span class="reaction-text">Me gusta</span>`;
-                    break;
-                case 'MeEncanta':
-                    boton.classList.add('btn-pink');
-                    boton.innerHTML = `<i class="fas fa-grin-hearts me-1"></i> <span class="reaction-text">Me encanta</span>`;
-                    break;
-                case 'Inspirador':
-                    boton.classList.add('btn-purple');
-                    boton.innerHTML = `<i class="fas fa-lightbulb me-1"></i> <span class="reaction-text">Inspirador</span>`;
-                    break;
-                case 'Solidario':
-                    boton.classList.add('btn-success');
-                    boton.innerHTML = `<i class="fas fa-hands-helping me-1"></i> <span class="reaction-text">Solidario</span>`;
-                    break;
-                case 'Asombroso':
-                    boton.classList.add('btn-warning');
-                    boton.innerHTML = `<i class="fas fa-star me-1"></i> <span class="reaction-text">Asombroso</span>`;
-                    break;
-                default:
-                    boton.classList.add('btn-outline-danger');
-                    boton.innerHTML = `<span class="reaction-text">Reacción</span> <i class="fas fa-caret-down ms-1"></i>`;
-                    break;
-            }
-        }
-
-        // Función para verificar el estado de la reacción desde el servidor
-        async function verificarEstadoReaccion(historiaId) {
-            // Crear un FormData y añadir los datos necesarios
-            const formData = new FormData();
-            formData.append('idHistoria', historiaId);
-
-            // Obtener el token para la solicitud
-            const tokenElement = document.querySelector('input[name="__RequestVerificationToken"]');
-            if (tokenElement) {
-                formData.append('__RequestVerificationToken', tokenElement.value);
-            } else {
-                return null; // No hay token, posiblemente usuario no autenticado
-            }
-
-            try {
-                // Realizar petición AJAX
-                const response = await fetch('/Adoptante/ObtenerEstadoReaccion', {
-                    method: 'POST',
-                    body: formData,
-                    headers: {
-                        'X-Requested-With': 'XMLHttpRequest'
-                    }
-                });
-
-                if (!response.ok) {
-                    throw new Error(`Error HTTP: ${response.status}`);
-                }
-
-                const data = await response.json();
-
-                if (data.success) {
-                    return data.tipoReaccion;
-                } else {
-                    console.error('Error al obtener estado de reacción:', data.message);
-                    return null;
-                }
-            } catch (error) {
-                console.error('Error en la petición AJAX:', error);
-                return null;
-            }
-        }
-
-        // Función para enviar la reacción por AJAX
-        function reaccionarHistoria(historiaId, tipoReaccion, color, botonClicado) {
-            // Crear un FormData y añadir los datos necesarios
-            const formData = new FormData();
-            formData.append('idHistoria', historiaId);
-            formData.append('tipoReaccion', tipoReaccion);
-
-            // Obtener el token para la solicitud
-            const tokenElement = document.querySelector('input[name="__RequestVerificationToken"]');
-            if (tokenElement) {
-                formData.append('__RequestVerificationToken', tokenElement.value);
-            }
-
-            // Realizar petición AJAX
-            fetch('/Adoptante/ReaccionarHistoria', {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest'
-                }
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`Error HTTP: ${response.status}`);
-                }
-                return response.json();
-            })
-            .then(data => {
-                if (data.success) {
-                    // Obtener el botón principal de reacción para esta historia
-                    const dropdownBtn = document.querySelector(`.reaction-btn[data-historia-id="${historiaId}"]`);
-
-                    // Cerrar el dropdown después de seleccionar una reacción
-                    const bootstrap = window.bootstrap;
-                    const dropdown = bootstrap.Dropdown.getInstance(dropdownBtn);
-                    if (dropdown) {
-                        dropdown.hide();
-                    }
-
-                    // Actualizar contadores de reacción en la interfaz
-                    actualizarContadoresReaccion(historiaId, data.contadores);
-
-                    // Cambiar la apariencia del botón de reacción principal
-                    if (data.accion === "eliminado") {
-                        // Restaurar estilo por defecto
-                        dropdownBtn.classList.remove('btn-danger', 'btn-pink', 'btn-purple', 'btn-success', 'btn-warning');
-                        dropdownBtn.classList.add('btn-outline-danger');
-                        dropdownBtn.innerHTML = `<span class="reaction-text">Reacción</span> <i class="fas fa-caret-down ms-1"></i>`;
-
-                        // Actualizar el atributo de reacción actual
-                        dropdownBtn.setAttribute('data-reaccion-actual', '');
-
-                        // Quitar marca de activo de todos los botones del dropdown
-                        const dropdownButtons = dropdownBtn.closest('.reaction-dropdown')
-                            .querySelectorAll('.btn-reaction');
-                        dropdownButtons.forEach(btn => btn.classList.remove('active'));
-                    } else {
-                        // Aplicar estilo según el tipo de reacción
-                        aplicarEstiloSegunReaccion(dropdownBtn, tipoReaccion);
-
-                        // Actualizar el atributo de reacción actual
-                        dropdownBtn.setAttribute('data-reaccion-actual', tipoReaccion);
-
-                        // Marcar como activo el botón seleccionado y quitar la marca de los demás
-                        const dropdownButtons = dropdownBtn.closest('.reaction-dropdown')
-                            .querySelectorAll('.btn-reaction');
-                        dropdownButtons.forEach(btn => {
-                            if (btn.getAttribute('data-tipo') === tipoReaccion) {
-                                btn.classList.add('active');
-                            } else {
-                                btn.classList.remove('active');
-                            }
-                        });
-
-                        darEfectoSeleccionado(botonClicado);
-                    }
-                } else {
-                    console.error('Error al procesar la reacción:', data.message);
-                    alert('No se pudo procesar tu reacción. Por favor, inicia sesión o inténtalo más tarde.');
-                }
-            })
-            .catch(error => {
-                console.error('Error en la petición AJAX:', error);
-                alert('Ocurrió un error al procesar tu reacción. Por favor, inténtalo de nuevo más tarde.');
-            });
-        }
-
-        function actualizarContadoresReaccion(historiaId, contadores) {
-            const historiaCard = document.querySelector(`.historia-card[data-id="${historiaId}"]`) ||
-                                 document.querySelector(`.card.historia-card`);
-
-            if (historiaCard) {
-                const statsRow = historiaCard.querySelector('.stats-row .historia-stat:nth-child(2)');
-
-                if (statsRow) {
-                    statsRow.innerHTML = `
-                        <i class="fas fa-heart text-danger"></i><span>${contadores.meGusta || 0}</span>
-                        <i class="fas fa-grin-hearts text-pink"></i><span>${contadores.meEncanta || 0}</span>
-                        <i class="fas fa-lightbulb text-purple"></i><span>${contadores.inspirador || 0}</span>
-                        <i class="fas fa-hands-helping text-success"></i><span>${contadores.solidario || 0}</span>
-                        <i class="fas fa-star text-warning"></i><span>${contadores.asombroso || 0}</span>
-                    `;
-                }
-            }
-        }
-        function darEfectoSeleccionado(boton) {
-            boton.classList.add('selected');
-            setTimeout(() => {
-                boton.classList.remove('selected');
-            }, 300);
-        }
-
-        document.addEventListener('DOMContentLoaded', function() {
-            const campoBusqueda = document.getElementById('buscar-historias');
-            const botonBusqueda = document.getElementById('boton-buscar');
-
-            botonBusqueda.addEventListener('click', filtrarHistorias);
-
-            campoBusqueda.addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    e.preventDefault();
-                    filtrarHistorias();
-                }
-            });
-            
-        });
-
-        document.addEventListener('DOMContentLoaded', function() {
-            inicializarBotonesReaccion();
-            inicializarEstadoBotonesReaccion();
-
-            const style = document.createElement('style');
-            style.textContent = `
-                /* Estilo para los botones de reacción */
-                .btn-reaction.selected {
-                    transform: scale(1.2);
-                    transition: transform 0.2s;
-                }
-                .btn-reaction.active {
-                    background-color: rgba(0,0,0,0.1);
-                    font-weight: bold;
-                }
-                .reaction-options {
-                    display: flex;
-                    flex-wrap: wrap;
-                    gap: 8px;
-                    padding: 8px;
-                }
-                .btn-reaction {
-                    display: flex;
-                    flex-direction: column;
-                    align-items: center;
-                    padding: 8px;
-                    border: none;
-                    background: transparent;
-                    border-radius: 8px;
-                    cursor: pointer;
-                    transition: all 0.2s;
-                }
-                .btn-reaction:hover {
-                    background-color: rgba(0,0,0,0.05);
-                    transform: scale(1.05);
-                }
-                .btn-reaction i {
-                    font-size: 1.5rem;
-                    margin-bottom: 5px;
-                }
-                .btn-reaction span {
-                    font-size: 0.8rem;
-                }
-
-                /* Colores para los botones principales */
-                .btn-pink {
-                    background-color: #e83e8c !important;
-                    border-color: #e83e8c !important;
-                    color: white !important;
-                }
-                .btn-purple {
-                    background-color: #6f42c1 !important;
-                    border-color: #6f42c1 !important;
-                    color: white !important;
-                }
-
-                /* Colores para los iconos en los botones de reacción */
-                .btn-reaction[data-tipo="MeGusta"] i {
-                    color: #dc3545;
-                }
-                .btn-reaction[data-tipo="MeEncanta"] i {
-                    color: #e83e8c;
-                }
-                .btn-reaction[data-tipo="Inspirador"] i {
-                    color: #6f42c1;
-                }
-                .btn-reaction[data-tipo="Solidario"] i {
-                    color: #198754;
-                }
-                .btn-reaction[data-tipo="Asombroso"] i {
-                    color: #fd7e14;
-                }
-
-                /* Estilo para el menú desplegable */
-                .reaction-menu {
-                    min-width: 280px;
-                    border-radius: 12px;
-                    box-shadow: 0 5px 15px rgba(0,0,0,0.15);
-                }
-                .dropdown-header {
-                    text-align: center;
-                    font-weight: bold;
-                    color: #495057;
-                    border-bottom: 1px solid #e9ecef;
-                    padding-bottom: 10px;
-                }
-            `;
-            document.head.appendChild(style);
-        });
-    </script>
-}
 
 <style>
     .dropup .dropdown-menu {
@@ -1241,7 +499,7 @@
 
     .img-container {
         position: relative;
-        height: 100%;
+        height: 350px;
         overflow: hidden;
     }
 
@@ -1447,9 +705,15 @@
         align-items: flex-start;
     }
 
+        .img-container {
+            position: relative;
+            height: 100%;
+            overflow: hidden;
+        }
+
     }
 
-    @@media (min-width: 1111px) {
+    @@media (min-width: 1220px) {
         .personalizado
 
     {
@@ -1792,3 +1056,643 @@
         }
     }
 </style>
+
+@section Scripts {
+    <script>
+                // Configuración de paginación
+        const HISTORIAS_POR_PAGINA = 3;
+        let paginaActual = 1;
+        let historiasVisibles = []; // Array para almacenar solo las historias que coinciden con el filtro de búsqueda
+
+        // Función para inicializar la paginación
+        function inicializarPaginacion() {
+            // Obtener todas las tarjetas de historias
+            const todasLasHistorias = document.querySelectorAll('.historia-card');
+
+            // Actualizar las historias visibles (todas al inicio)
+            historiasVisibles = Array.from(todasLasHistorias);
+
+            // Calcular el número total de páginas
+            const totalPaginas = Math.ceil(historiasVisibles.length / HISTORIAS_POR_PAGINA);
+
+            // Generar los botones de paginación
+            generarBotonesPaginacion(totalPaginas);
+
+            // Mostrar la primera página
+            mostrarPagina(1);
+        }
+
+        // Función para generar los botones de paginación
+        function generarBotonesPaginacion(totalPaginas) {
+            const paginacionUl = document.querySelector('.pagination');
+
+            // Limpiar la paginación actual
+            paginacionUl.innerHTML = '';
+
+            // Botón "Anterior"
+            const liAnterior = document.createElement('li');
+            liAnterior.className = 'page-item' + (paginaActual === 1 ? ' disabled' : '');
+            liAnterior.innerHTML = `<a class="page-link" href="#" aria-label="Anterior" data-page="prev">
+                                     <span aria-hidden="true">&laquo;</span>
+                                     <span class="sr-only">Anterior</span>
+                                   </a>`;
+            paginacionUl.appendChild(liAnterior);
+
+            // Botones de página
+            for (let i = 1; i <= totalPaginas; i++) {
+                const li = document.createElement('li');
+                li.className = 'page-item' + (i === paginaActual ? ' active' : '');
+                li.innerHTML = `<a class="page-link" href="#" data-page="${i}">${i}</a>`;
+                paginacionUl.appendChild(li);
+            }
+
+            // Botón "Siguiente"
+            const liSiguiente = document.createElement('li');
+            liSiguiente.className = 'page-item' + (paginaActual === totalPaginas ? ' disabled' : '');
+            liSiguiente.innerHTML = `<a class="page-link" href="#" aria-label="Siguiente" data-page="next">
+                                      <span aria-hidden="true">&raquo;</span>
+                                      <span class="sr-only">Siguiente</span>
+                                    </a>`;
+            paginacionUl.appendChild(liSiguiente);
+
+            // Agregar eventos a los botones de paginación
+            document.querySelectorAll('.pagination .page-link').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const pageAction = this.getAttribute('data-page');
+
+                    if (pageAction === 'prev') {
+                        if (paginaActual > 1) {
+                            mostrarPagina(paginaActual - 1);
+                        }
+                    } else if (pageAction === 'next') {
+                        const totalPaginas = Math.ceil(historiasVisibles.length / HISTORIAS_POR_PAGINA);
+                        if (paginaActual < totalPaginas) {
+                            mostrarPagina(paginaActual + 1);
+                        }
+                    } else {
+                        mostrarPagina(parseInt(pageAction));
+                    }
+                });
+            });
+        }
+
+        // Función para mostrar una página específica
+        function mostrarPagina(numeroPagina) {
+            // Actualizar página actual
+            paginaActual = numeroPagina;
+
+            // Calcular índices de inicio y fin para esta página
+            const inicio = (paginaActual - 1) * HISTORIAS_POR_PAGINA;
+            const fin = inicio + HISTORIAS_POR_PAGINA;
+
+            // Ocultar todas las historias primero
+            document.querySelectorAll('.historia-card').forEach(card => {
+                card.style.display = 'none';
+            });
+
+            // Mostrar solo las historias de la página actual
+            for (let i = inicio; i < fin && i < historiasVisibles.length; i++) {
+                historiasVisibles[i].style.display = 'flex';
+            }
+
+            // Actualizar los botones de paginación
+            actualizarEstadoPaginacion();
+
+            // Desplazarse al principio de la sección de historias
+            document.querySelector('#historias-contenido').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Función para actualizar el estado de los botones de paginación
+        function actualizarEstadoPaginacion() {
+            const totalPaginas = Math.ceil(historiasVisibles.length / HISTORIAS_POR_PAGINA);
+
+            // Actualizar el estado activo de los botones de página
+            document.querySelectorAll('.pagination .page-item').forEach(item => {
+                item.classList.remove('active', 'disabled');
+            });
+
+            // Marcar la página actual como activa
+            const paginaActualBtn = document.querySelector(`.pagination .page-link[data-page="${paginaActual}"]`);
+            if (paginaActualBtn) {
+                paginaActualBtn.parentElement.classList.add('active');
+            }
+
+            // Deshabilitar botón "Anterior" si estamos en la primera página
+            const btnAnterior = document.querySelector('.pagination .page-link[data-page="prev"]');
+            if (btnAnterior && paginaActual === 1) {
+                btnAnterior.parentElement.classList.add('disabled');
+            }
+
+            // Deshabilitar botón "Siguiente" si estamos en la última página
+            const btnSiguiente = document.querySelector('.pagination .page-link[data-page="next"]');
+            if (btnSiguiente && paginaActual === totalPaginas) {
+                btnSiguiente.parentElement.classList.add('disabled');
+            }
+        }
+
+                // Función para filtrar historias (conserva esta y elimina la segunda definición)
+        function filtrarHistorias() {
+            // Obtener el valor del campo de búsqueda
+            const textoBusqueda = document.getElementById('buscar-historias').value.toLowerCase().trim();
+
+            // Obtener todas las tarjetas de historias
+            const todasLasHistorias = document.querySelectorAll('.historia-card');
+
+            // Resetear el array de historias visibles
+            historiasVisibles = [];
+
+            // Iterar por cada tarjeta y agregar al array de visibles si coincide
+            todasLasHistorias.forEach(card => {
+                // Obtener el título de la historia
+                const titulo = card.querySelector('.card-title').textContent.toLowerCase();
+
+                // Verificar si el título contiene el texto de búsqueda
+                if (textoBusqueda === '' || titulo.includes(textoBusqueda)) {
+                    historiasVisibles.push(card);
+                    // Nota: No cambiar display aquí, se hará en mostrarPagina()
+                }
+            });
+
+            // Mostrar mensaje si no hay resultados
+            const noResultados = document.getElementById('no-resultados');
+            if (historiasVisibles.length === 0 && textoBusqueda !== '') {
+                // Ocultar todas las historias primero
+                todasLasHistorias.forEach(card => {
+                    card.style.display = 'none';
+                });
+
+                // Crear el elemento si no existe
+                if (!noResultados) {
+                    const mensajeNoResultados = document.createElement('div');
+                    mensajeNoResultados.id = 'no-resultados';
+                    mensajeNoResultados.className = 'text-center py-5';
+                    mensajeNoResultados.innerHTML = `
+                        <i class="fas fa-search empty-icon"></i>
+                        <h3 class="mt-3">No se encontraron resultados</h3>
+                        <p>No hay historias que coincidan con "<span id="termino-busqueda">${textoBusqueda}</span>"</p>
+                        <button class="btn btn-outline-primary mt-3" onclick="limpiarBusqueda()">
+                            <i class="fas fa-undo-alt me-2"></i>Ver todas las historias
+                        </button>
+                    `;
+                    document.querySelector('.historias-exito').appendChild(mensajeNoResultados);
+                } else {
+                    // Actualizar el término de búsqueda si ya existe el mensaje
+                    document.getElementById('termino-busqueda').textContent = textoBusqueda;
+                    noResultados.style.display = 'block';
+                }
+
+                // Ocultar paginación cuando no hay resultados
+                document.querySelector('nav[aria-label="Paginación de historias"]').style.display = 'none';
+            } else {
+                // Ocultar mensaje de no resultados
+                if (noResultados) {
+                    noResultados.style.display = 'none';
+                }
+
+                // Mostrar paginación
+                document.querySelector('nav[aria-label="Paginación de historias"]').style.display = 'block';
+
+                // Recalcular paginación con las historias visibles
+                const totalPaginas = Math.ceil(historiasVisibles.length / HISTORIAS_POR_PAGINA);
+                generarBotonesPaginacion(totalPaginas);
+
+                // Resetear a primera página tras buscar
+                paginaActual = 1;
+                mostrarPagina(1);
+            }
+
+            // Actualizar contador de historias en el área de estadísticas
+            const historiasCounter = document.querySelector('.stat-counter:last-child');
+            if (historiasCounter) {
+                historiasCounter.textContent = historiasVisibles.length;
+            }
+        }
+
+        // Función para limpiar la búsqueda
+        function limpiarBusqueda() {
+            // Limpiar el campo de búsqueda
+            document.getElementById('buscar-historias').value = '';
+
+            // Obtener todas las tarjetas de historias
+            const todasLasHistorias = document.querySelectorAll('.historia-card');
+
+            // Resetear el array de historias visibles (todas las historias)
+            historiasVisibles = Array.from(todasLasHistorias);
+
+            // Ocultar mensaje de no resultados si existe
+            const noResultados = document.getElementById('no-resultados');
+            if (noResultados) {
+                noResultados.style.display = 'none';
+            }
+
+            // Mostrar paginación
+            document.querySelector('nav[aria-label="Paginación de historias"]').style.display = 'block';
+
+            // Recalcular paginación
+            const totalPaginas = Math.ceil(historiasVisibles.length / HISTORIAS_POR_PAGINA);
+            generarBotonesPaginacion(totalPaginas);
+
+            // Mostrar primera página
+            mostrarPagina(1);
+
+            // Restaurar contador original de historias
+            const historiasCounter = document.querySelector('.stat-counter:last-child');
+            if (historiasCounter) {
+                historiasCounter.textContent = todasLasHistorias.length;
+            }
+        }
+
+        // Inicializar cuando se cargue el documento
+        document.addEventListener('DOMContentLoaded', function() {
+            // Inicializar paginación
+            inicializarPaginacion();
+
+            // Obtener el campo de búsqueda y el botón
+            const campoBusqueda = document.getElementById('buscar-historias');
+            const botonBusqueda = document.getElementById('boton-buscar');
+
+            // Agregar evento al botón de búsqueda
+            if (botonBusqueda) {
+                botonBusqueda.addEventListener('click', filtrarHistorias);
+            }
+
+            // Agregar evento para buscar al presionar Enter en el campo de búsqueda
+            if (campoBusqueda) {
+                campoBusqueda.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        filtrarHistorias();
+                    }
+                });
+            }
+        });
+    </script>
+    <script>
+
+        // Animación de contador
+        document.addEventListener('DOMContentLoaded', function() {
+            const counters = document.querySelectorAll('.stat-counter');
+
+            counters.forEach(counter => {
+                const target = parseInt(counter.innerText);
+                let count = 0;
+                const duration = 2000; // 2 segundos
+                const increment = target / (duration / 20); // incremento cada 20ms
+
+                counter.innerText = '0';
+
+                const timer = setInterval(() => {
+                    count += increment;
+                    if (count >= target) {
+                        clearInterval(timer);
+                        counter.innerText = target;
+                    } else {
+                        counter.innerText = Math.round(count);
+                    }
+                }, 20);
+            });
+        });
+    </script>
+    <script>
+                // Función para inicializar botones de reacción
+        function inicializarBotonesReaccion() {
+            // Obtener todos los botones de reacción
+            const botonesReaccion = document.querySelectorAll('.btn-reaction');
+
+            botonesReaccion.forEach(boton => {
+                boton.addEventListener('click', function(e) {
+                    e.preventDefault();
+
+                    // Obtener datos del botón
+                    const historiaId = this.getAttribute('data-historia-id');
+                    const tipoReaccion = this.getAttribute('data-tipo');
+                    const color = this.getAttribute('data-color');
+
+                    // Enviar la solicitud AJAX
+                    reaccionarHistoria(historiaId, tipoReaccion, color, this);
+                });
+            });
+        }
+
+        // Función para inicializar los botones de reacción con el estado correcto
+        async function inicializarEstadoBotonesReaccion() {
+            // Obtener todos los botones de reacción principal
+            const botonesReaccion = document.querySelectorAll('.reaction-btn');
+
+            // Verificar si el usuario está autenticado
+            if (!document.querySelector('input[name="__RequestVerificationToken"]')) {
+                return; // No hay token, usuario no autenticado
+            }
+
+            for (const boton of botonesReaccion) {
+                const historiaId = boton.getAttribute('data-historia-id');
+
+                // Consultar al servidor para obtener el estado de reacción actual
+                const tipoReaccion = await verificarEstadoReaccion(historiaId);
+
+                // Si hay una reacción actual, aplicar el estilo correspondiente
+                if (tipoReaccion && tipoReaccion !== '') {
+                    // Actualizar el atributo data-reaccion-actual
+                    boton.setAttribute('data-reaccion-actual', tipoReaccion);
+
+                    // Aplicar estilo al botón según tipo de reacción
+                    aplicarEstiloSegunReaccion(boton, tipoReaccion);
+                }
+            }
+        }
+
+        // Función para aplicar estilo según el tipo de reacción
+        function aplicarEstiloSegunReaccion(boton, tipoReaccion) {
+            // Primero quitar todas las clases de colores previas
+            boton.classList.remove('btn-danger', 'btn-outline-danger', 'btn-pink', 'btn-purple', 'btn-success', 'btn-warning');
+
+            // Aplicar clase según tipo de reacción
+            switch (tipoReaccion) {
+                case 'MeGusta':
+                    boton.classList.add('btn-danger');
+                    boton.innerHTML = `<i class="fas fa-heart me-1"></i> <span class="reaction-text">Me gusta</span>`;
+                    break;
+                case 'MeEncanta':
+                    boton.classList.add('btn-pink');
+                    boton.innerHTML = `<i class="fas fa-grin-hearts me-1"></i> <span class="reaction-text">Me encanta</span>`;
+                    break;
+                case 'Inspirador':
+                    boton.classList.add('btn-purple');
+                    boton.innerHTML = `<i class="fas fa-lightbulb me-1"></i> <span class="reaction-text">Inspirador</span>`;
+                    break;
+                case 'Solidario':
+                    boton.classList.add('btn-success');
+                    boton.innerHTML = `<i class="fas fa-hands-helping me-1"></i> <span class="reaction-text">Solidario</span>`;
+                    break;
+                case 'Asombroso':
+                    boton.classList.add('btn-warning');
+                    boton.innerHTML = `<i class="fas fa-star me-1"></i> <span class="reaction-text">Asombroso</span>`;
+                    break;
+                default:
+                    boton.classList.add('btn-outline-danger');
+                    boton.innerHTML = `<span class="reaction-text">Reacción</span> <i class="fas fa-caret-down ms-1"></i>`;
+                    break;
+            }
+        }
+
+        // Función para verificar el estado de la reacción desde el servidor
+        async function verificarEstadoReaccion(historiaId) {
+            // Crear un FormData y añadir los datos necesarios
+            const formData = new FormData();
+            formData.append('idHistoria', historiaId);
+
+            // Obtener el token para la solicitud
+            const tokenElement = document.querySelector('input[name="__RequestVerificationToken"]');
+            if (tokenElement) {
+                formData.append('__RequestVerificationToken', tokenElement.value);
+            } else {
+                return null; // No hay token, posiblemente usuario no autenticado
+            }
+
+            try {
+                // Realizar petición AJAX
+                const response = await fetch('/Adoptante/ObtenerEstadoReaccion', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Error HTTP: ${response.status}`);
+                }
+
+                const data = await response.json();
+
+                if (data.success) {
+                    return data.tipoReaccion;
+                } else {
+                    console.error('Error al obtener estado de reacción:', data.message);
+                    return null;
+                }
+            } catch (error) {
+                console.error('Error en la petición AJAX:', error);
+                return null;
+            }
+        }
+
+        // Función para enviar la reacción por AJAX
+        function reaccionarHistoria(historiaId, tipoReaccion, color, botonClicado) {
+            // Crear un FormData y añadir los datos necesarios
+            const formData = new FormData();
+            formData.append('idHistoria', historiaId);
+            formData.append('tipoReaccion', tipoReaccion);
+
+            // Obtener el token para la solicitud
+            const tokenElement = document.querySelector('input[name="__RequestVerificationToken"]');
+            if (tokenElement) {
+                formData.append('__RequestVerificationToken', tokenElement.value);
+            }
+
+            // Realizar petición AJAX
+            fetch('/Adoptante/ReaccionarHistoria', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`Error HTTP: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    // Obtener el botón principal de reacción para esta historia
+                    const dropdownBtn = document.querySelector(`.reaction-btn[data-historia-id="${historiaId}"]`);
+
+                    // Cerrar el dropdown después de seleccionar una reacción
+                    const bootstrap = window.bootstrap;
+                    const dropdown = bootstrap.Dropdown.getInstance(dropdownBtn);
+                    if (dropdown) {
+                        dropdown.hide();
+                    }
+
+                    // Actualizar contadores de reacción en la interfaz
+                    actualizarContadoresReaccion(historiaId, data.contadores);
+
+                    // Cambiar la apariencia del botón de reacción principal
+                    if (data.accion === "eliminado") {
+                        // Restaurar estilo por defecto
+                        dropdownBtn.classList.remove('btn-danger', 'btn-pink', 'btn-purple', 'btn-success', 'btn-warning');
+                        dropdownBtn.classList.add('btn-outline-danger');
+                        dropdownBtn.innerHTML = `<span class="reaction-text">Reacción</span> <i class="fas fa-caret-down ms-1"></i>`;
+
+                        // Actualizar el atributo de reacción actual
+                        dropdownBtn.setAttribute('data-reaccion-actual', '');
+
+                        // Quitar marca de activo de todos los botones del dropdown
+                        const dropdownButtons = dropdownBtn.closest('.reaction-dropdown')
+                            .querySelectorAll('.btn-reaction');
+                        dropdownButtons.forEach(btn => btn.classList.remove('active'));
+                    } else {
+                        // Aplicar estilo según el tipo de reacción
+                        aplicarEstiloSegunReaccion(dropdownBtn, tipoReaccion);
+
+                        // Actualizar el atributo de reacción actual
+                        dropdownBtn.setAttribute('data-reaccion-actual', tipoReaccion);
+
+                        // Marcar como activo el botón seleccionado y quitar la marca de los demás
+                        const dropdownButtons = dropdownBtn.closest('.reaction-dropdown')
+                            .querySelectorAll('.btn-reaction');
+                        dropdownButtons.forEach(btn => {
+                            if (btn.getAttribute('data-tipo') === tipoReaccion) {
+                                btn.classList.add('active');
+                            } else {
+                                btn.classList.remove('active');
+                            }
+                        });
+
+                        darEfectoSeleccionado(botonClicado);
+                    }
+                } else {
+                    console.error('Error al procesar la reacción:', data.message);
+                    alert('No se pudo procesar tu reacción. Por favor, inicia sesión o inténtalo más tarde.');
+                }
+            })
+            .catch(error => {
+                console.error('Error en la petición AJAX:', error);
+                alert('Ocurrió un error al procesar tu reacción. Por favor, inténtalo de nuevo más tarde.');
+            });
+        }
+
+        function actualizarContadoresReaccion(historiaId, contadores) {
+            const historiaCard = document.querySelector(`.historia-card[data-id="${historiaId}"]`) ||
+                                 document.querySelector(`.card.historia-card`);
+
+            if (historiaCard) {
+                const statsRow = historiaCard.querySelector('.stats-row .historia-stat:nth-child(2)');
+
+                if (statsRow) {
+                    statsRow.innerHTML = `
+                        <i class="fas fa-heart text-danger"></i><span>${contadores.meGusta || 0}</span>
+                        <i class="fas fa-grin-hearts text-pink"></i><span>${contadores.meEncanta || 0}</span>
+                        <i class="fas fa-lightbulb text-purple"></i><span>${contadores.inspirador || 0}</span>
+                        <i class="fas fa-hands-helping text-success"></i><span>${contadores.solidario || 0}</span>
+                        <i class="fas fa-star text-warning"></i><span>${contadores.asombroso || 0}</span>
+                    `;
+                }
+            }
+        }
+        function darEfectoSeleccionado(boton) {
+            boton.classList.add('selected');
+            setTimeout(() => {
+                boton.classList.remove('selected');
+            }, 300);
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const campoBusqueda = document.getElementById('buscar-historias');
+            const botonBusqueda = document.getElementById('boton-buscar');
+
+            botonBusqueda.addEventListener('click', filtrarHistorias);
+
+            campoBusqueda.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    filtrarHistorias();
+                }
+            });
+
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            inicializarBotonesReaccion();
+            inicializarEstadoBotonesReaccion();
+
+            const style = document.createElement('style');
+            style.textContent = `
+                /* Estilo para los botones de reacción */
+                .btn-reaction.selected {
+                    transform: scale(1.2);
+                    transition: transform 0.2s;
+                }
+                .btn-reaction.active {
+                    background-color: rgba(0,0,0,0.1);
+                    font-weight: bold;
+                }
+                .reaction-options {
+                    display: flex;
+                    flex-wrap: wrap;
+                    gap: 8px;
+                    padding: 8px;
+                }
+                .btn-reaction {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    padding: 8px;
+                    border: none;
+                    background: transparent;
+                    border-radius: 8px;
+                    cursor: pointer;
+                    transition: all 0.2s;
+                }
+                .btn-reaction:hover {
+                    background-color: rgba(0,0,0,0.05);
+                    transform: scale(1.05);
+                }
+                .btn-reaction i {
+                    font-size: 1.5rem;
+                    margin-bottom: 5px;
+                }
+                .btn-reaction span {
+                    font-size: 0.8rem;
+                }
+
+                /* Colores para los botones principales */
+                .btn-pink {
+                    background-color: #e83e8c !important;
+                    border-color: #e83e8c !important;
+                    color: white !important;
+                }
+                .btn-purple {
+                    background-color: #6f42c1 !important;
+                    border-color: #6f42c1 !important;
+                    color: white !important;
+                }
+
+                /* Colores para los iconos en los botones de reacción */
+                .btn-reaction[data-tipo="MeGusta"] i {
+                    color: #dc3545;
+                }
+                .btn-reaction[data-tipo="MeEncanta"] i {
+                    color: #e83e8c;
+                }
+                .btn-reaction[data-tipo="Inspirador"] i {
+                    color: #6f42c1;
+                }
+                .btn-reaction[data-tipo="Solidario"] i {
+                    color: #198754;
+                }
+                .btn-reaction[data-tipo="Asombroso"] i {
+                    color: #fd7e14;
+                }
+
+                /* Estilo para el menú desplegable */
+                .reaction-menu {
+                    min-width: 280px;
+                    border-radius: 12px;
+                    box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+                }
+                .dropdown-header {
+                    text-align: center;
+                    font-weight: bold;
+                    color: #495057;
+                    border-bottom: 1px solid #e9ecef;
+                    padding-bottom: 10px;
+                }
+            `;
+            document.head.appendChild(style);
+        });
+    </script>
+}

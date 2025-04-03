@@ -7,7 +7,7 @@ namespace ZuvoPet_V2.Repositories
         Task<List<MascotaCard>> ObtenerMascotasDestacadasAsync();
         Task<bool> UserExistsAsync(string username, string email);
         Task<List<HistoriaExito>> ObtenerHistoriasExitoAsync();
-        Task<List<ComentarioHistoria>> ObtenerComentariosHistoriaAsync(int idHistoria);
+        //Task<List<ComentarioHistoria>> ObtenerComentariosHistoriaAsync(int idHistoria);
         Task<List<LikeHistoria>> ObtenerLikeHistoriaAsync(int idHistoria);
         Task<int?> RegisterUserAsync(string nombreusuario, string email, string contrasenalimpia, string tipousuario);
         Task RegisterAdoptanteAsync(int idusuario, string nombre, string tipoVivienda, bool tieneJardin, bool otrosAnimales, List<string> recursosDisponibles, string tiempoEnCasa);

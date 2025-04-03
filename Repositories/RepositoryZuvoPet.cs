@@ -202,17 +202,17 @@ namespace ZuvoPet_V2.Repositories
                 .FirstOrDefaultAsync(a => a.IdUsuario == idusuario);
         }
 
-        public async Task<List<ComentarioHistoria>> ObtenerComentariosHistoriaAsync(int idHistoria)
-        {
-            List<ComentarioHistoria> comentariosHistoria = await this.context.ComentariosHistorias
-             .Include(c => c.Usuario)
-             .ThenInclude(u => u.PerfilUsuario)
-                .Where(m => m.IdHistoria == idHistoria)
-                .OrderByDescending(m => m.Fecha)
-                .ToListAsync();
+        //public async Task<List<ComentarioHistoria>> ObtenerComentariosHistoriaAsync(int idHistoria)
+        //{
+        //    List<ComentarioHistoria> comentariosHistoria = await this.context.ComentariosHistorias
+        //     .Include(c => c.Usuario)
+        //     .ThenInclude(u => u.PerfilUsuario)
+        //        .Where(m => m.IdHistoria == idHistoria)
+        //        .OrderByDescending(m => m.Fecha)
+        //        .ToListAsync();
 
-            return comentariosHistoria;
-        }
+        //    return comentariosHistoria;
+        //}
 
         public async Task<List<LikeHistoria>> ObtenerLikeHistoriaAsync(int idHistoria)
         {

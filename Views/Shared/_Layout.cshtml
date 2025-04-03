@@ -389,7 +389,7 @@
                                 <li class="nav-item py-2 py-sm-0 mb-2">
                                     <a asp-controller="Adoptante" asp-action="Refugios" class="nav-link text-white">
                                         <i class="fs-5 fa fa-map-marker-alt"></i>
-                                        <span class="fs-6 ms-3 d-none d-sm-inline">Refugios y Veterinarios</span>
+                                        <span class="fs-6 ms-3 d-none d-sm-inline">Refugios</span>
                                     </a>
                                 </li>
                                 <li class="nav-item py-2 py-sm-0 mb-2">
@@ -404,14 +404,7 @@
                                         <span class="fs-6 ms-3 d-none d-sm-inline">Mensajes</span>
                                     </a>
                                 </li>
-                                @* <li class="nav-item py-2 py-sm-0 mb-2">
-                                    <a asp-controller="Adoptante" asp-action="Educacion" class="nav-link text-white">
-                                        <i class="fs-5 fa fa-graduation-cap"></i>
-                                        <span class="fs-6 ms-3 d-none d-sm-inline">Educación y Recursos</span>
-                                    </a>
-                                </li> *@
                             }
-                            @* else if (tipoUsuario == "Refugio") *@
                             else if (userRole == "Refugio")
                             {
                                 <li class="nav-item py-2 py-sm-0 mb-2">
@@ -424,12 +417,6 @@
                                     <a asp-controller="Refugio" asp-action="Gestion" class="nav-link text-white">
                                         <i class="fs-5 fa fa-dog"></i>
                                         <span class="fs-6 ms-3 d-none d-sm-inline">Gestión de Animales</span>
-                                    </a>
-                                </li>
-                                <li class="nav-item py-2 py-sm-0 mb-2">
-                                    <a asp-controller="Refugio" asp-action="GestionVeterinarios" class="nav-link text-white">
-                                        <i class="fs-5 fa fa-stethoscope"></i>
-                                        <span class="fs-6 ms-3 d-none d-sm-inline">Gestión de Veterinarios</span>
                                     </a>
                                 </li>
                                 <li class="nav-item py-2 py-sm-0 mb-2">
@@ -450,12 +437,6 @@
                                         <span class="fs-6 ms-3 d-none d-sm-inline">Mensajes</span>
                                     </a>
                                 </li>
-                                @* <li class="nav-item py-2 py-sm-0 mb-2">
-                                    <a asp-controller="Refugio" asp-action="Eventos" class="nav-link text-white">
-                                        <i class="fs-5 fa fa-calendar-alt"></i>
-                                        <span class="fs-6 ms-3 d-none d-sm-inline">Eventos y Voluntariado</span>
-                                    </a>
-                                </li> *@
                             }
                             <!-- Opciones específicas para administradores -->
                             @if (isAdmin)

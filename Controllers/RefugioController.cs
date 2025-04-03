@@ -80,7 +80,7 @@ namespace ZuvoPet_V2.Controllers
             List<MascotaCard> mascotas = await this.repo.ObtenerMascotasRefugioAsync(idusuario);
 
             // Configuración de la paginación
-            int mascotasPorPagina = 9; // Puedes ajustar esta cantidad según tus necesidades
+            int mascotasPorPagina = 6; // Puedes ajustar esta cantidad según tus necesidades
 
             // Calcula el total de páginas
             int totalRegistros = mascotas.Count;
@@ -348,7 +348,7 @@ namespace ZuvoPet_V2.Controllers
             foreach (var historia in historiasExito)
             {
                 // Obtener los comentarios y likes para cada historia
-                var comentariosHistoria = await this.repo.ObtenerComentariosHistoriaAsync(historia.Id);
+                //var comentariosHistoria = await this.repo.ObtenerComentariosHistoriaAsync(historia.Id);
                 var likeHistorias = await this.repo.ObtenerLikeHistoriaAsync(historia.Id);
 
 
@@ -357,7 +357,7 @@ namespace ZuvoPet_V2.Controllers
                 var historiaConDetalles = new HistoriaExitoConDetalles
                 {
                     HistoriaExito = historia,
-                    ComentariosHistoria = comentariosHistoria,
+                    //ComentariosHistoria = comentariosHistoria,
                     LikeHistorias = likeHistorias
                 };
 

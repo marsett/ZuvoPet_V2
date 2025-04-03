@@ -21,7 +21,7 @@
     <!-- Tarjetas de Resumen con estilo mejorado -->
     <div class="row mb-5">
         <!-- Capacidad -->
-        <div class="col-md-3 mb-3">
+        <div class="col-12 col-md-6 col-lg-3 mb-3">
             <div class="card h-100 border-0 shadow-lg overflow-hidden">
                 <div class="card-body dashboard-card bg-primary text-white">
                     <div class="card-icon-container">
@@ -42,7 +42,7 @@
         </div>
 
         <!-- Adopciones Rechazadas -->
-        <div class="col-md-3 mb-3">
+        <div class="col-12 col-md-6 col-lg-3 mb-3">
             <div class="card h-100 border-0 shadow-lg overflow-hidden">
                 <div class="card-body dashboard-card bg-danger text-white">
                     <div class="card-icon-container">
@@ -56,7 +56,7 @@
         </div>
 
         <!-- Mascotas Adoptadas -->
-        <div class="col-md-3 mb-3">
+        <div class="col-12 col-md-6 col-lg-3 mb-3">
             <div class="card h-100 border-0 shadow-lg overflow-hidden">
                 <div class="card-body dashboard-card bg-success text-white">
                     <div class="card-icon-container">
@@ -70,7 +70,7 @@
         </div>
 
         <!-- Nuevas Solicitudes -->
-        <div class="col-md-3 mb-3">
+        <div class="col-12 col-md-6 col-lg-3 mb-3">
             <div class="card h-100 border-0 shadow-lg overflow-hidden">
                 <div class="card-body dashboard-card bg-info text-white">
                     <div class="card-icon-container">
@@ -93,15 +93,17 @@
         </div>
 
         <!-- Gráfico de Especies -->
-        <div class="col-md-6 mb-3">
-            <div class="card h-100 border-0 shadow-lg overflow-hidden">
+        <div class="col-md-12 mb-6">
+            <div class="card h-100 border-0 shadow-lg">
                 <div class="card-header bg-light py-3">
                     <h5 class="mb-0 fw-bold"><i class="fas fa-chart-pie me-2"></i> Distribución por Especies</h5>
                 </div>
-                <div class="card-body">
+                <div class="card-body chart-stable-container">
                     @if (ViewBag.EspeciesData != null && ViewBag.EspeciesData.Length > 0)
                     {
-                        <canvas id="especiesChart" width="400" height="300"></canvas>
+                        <div class="chart-wrapper">
+                            <canvas id="especiesChart"></canvas>
+                        </div>
                     }
                     else
                     {
@@ -112,21 +114,6 @@
                             <p class="mt-2">Agrega animales de diferentes especies al refugio para visualizar su distribución.</p>
                         </div>
                     }
-                </div>
-            </div>
-        </div>
-
-        <!-- Espacio para añadir otro gráfico si lo deseas -->
-        <div class="col-md-6 mb-3">
-            <div class="card h-100 border-0 shadow-lg overflow-hidden">
-                <div class="card-header bg-light py-3">
-                    <h5 class="mb-0 fw-bold"><i class="fas fa-chart-line me-2"></i> Tendencia de Adopciones</h5>
-                </div>
-                <div class="card-body d-flex justify-content-center align-items-center">
-                    <div class="text-center text-muted">
-                        <i class="fas fa-paw fa-3x mb-3"></i>
-                        <p>Próximamente verás aquí tus estadísticas de adopciones.</p>
-                    </div>
                 </div>
             </div>
         </div>
@@ -252,75 +239,161 @@
 @section Scripts {
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        // Datos para el gráfico de especies
-        document.addEventListener('DOMContentLoaded', function () {
-                var especiesChartElement = document.getElementById('especiesChart');
-        if (especiesChartElement) {
-            // Gráfico de distribución por especies
-            var ctxEspecies = document.getElementById('especiesChart').getContext('2d');
-            var especiesChart = new Chart(ctxEspecies, {
-                type: 'pie',
-                data: {
-                    labels: @Html.Raw(Json.Serialize(ViewBag.EspeciesLabels)),
-                    datasets: [{
-                        data: @Html.Raw(Json.Serialize(ViewBag.EspeciesData)),
-                        backgroundColor: [
-                            'rgba(54, 162, 235, 0.8)',
-                            'rgba(255, 99, 132, 0.8)',
-                            'rgba(255, 206, 86, 0.8)',
-                            'rgba(75, 192, 192, 0.8)',
-                            'rgba(153, 102, 255, 0.8)',
-                            'rgba(255, 159, 64, 0.8)',
-                            'rgba(199, 199, 199, 0.8)'
-                        ],
-                        borderColor: [
-                            'rgba(54, 162, 235, 1)',
-                            'rgba(255, 99, 132, 1)',
-                            'rgba(255, 206, 86, 1)',
-                            'rgba(75, 192, 192, 1)',
-                            'rgba(153, 102, 255, 1)',
-                            'rgba(255, 159, 64, 1)',
-                            'rgba(199, 199, 199, 1)'
-                        ],
-                        borderWidth: 2
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: true,
-                    plugins: {
-                        legend: {
-                            position: 'bottom',
-                            labels: {
-                                padding: 20,
-                                font: {
-                                    size: 14
-                                }
-                            }
+                  document.addEventListener('DOMContentLoaded', function () {
+            var especiesChartElement = document.getElementById('especiesChart');
+
+            if (especiesChartElement) {
+                // Configurar un tamaño fijo para el canvas que se mantendrá estable
+                especiesChartElement.style.width = '100%';
+
+                // Esperar a que el DOM esté completamente cargado y el contenedor tenga dimensiones estables
+                setTimeout(function() {
+                    var ctxEspecies = especiesChartElement.getContext('2d');
+                    var especiesChart = new Chart(ctxEspecies, {
+                        type: 'pie',
+                        data: {
+                            labels: @Html.Raw(Json.Serialize(ViewBag.EspeciesLabels)),
+                            datasets: [{
+                                data: @Html.Raw(Json.Serialize(ViewBag.EspeciesData)),
+                                backgroundColor: [
+                                    'rgba(54, 162, 235, 0.8)',
+                                    'rgba(255, 99, 132, 0.8)',
+                                    'rgba(255, 206, 86, 0.8)',
+                                    'rgba(75, 192, 192, 0.8)',
+                                    'rgba(153, 102, 255, 0.8)',
+                                    'rgba(255, 159, 64, 0.8)',
+                                    'rgba(199, 199, 199, 0.8)',
+                                    'rgba(0, 0, 0, 0.8)'
+                                ],
+                                borderColor: [
+                                    'rgba(54, 162, 235, 1)',
+                                    'rgba(255, 99, 132, 1)',
+                                    'rgba(255, 206, 86, 1)',
+                                    'rgba(75, 192, 192, 1)',
+                                    'rgba(153, 102, 255, 1)',
+                                    'rgba(255, 159, 64, 1)',
+                                    'rgba(199, 199, 199, 1)',
+                                    'rgba(0, 0, 0, 0.8)'
+                                ],
+                                borderWidth: 2
+                            }]
                         },
-                        tooltip: {
-                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                            padding: 15,
-                            titleFont: {
-                                size: 16
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: true, // Cambiado a true para mantener estabilidad
+                            aspectRatio: 2, // Proporción fija de ancho/alto (2:1)
+                            layout: {
+                                padding: {
+                                    left: 10,
+                                    right: 10,
+                                    top: 0,
+                                    bottom: 0
+                                }
                             },
-                            bodyFont: {
-                                size: 14
+                            plugins: {
+                                legend: {
+                                    position: 'bottom',
+                                    labels: {
+                                        padding: 20,
+                                        font: {
+                                            size: 14
+                                        }
+                                    }
+                                },
+                                tooltip: {
+                                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                                    padding: 15,
+                                    titleFont: {
+                                        size: 16
+                                    },
+                                    bodyFont: {
+                                        size: 14
+                                    },
+                                    displayColors: true,
+                                    borderWidth: 0,
+                                    cornerRadius: 8,
+                                    boxPadding: 8,
+                                }
                             },
-                            displayColors: true,
-                            borderWidth: 0,
-                            cornerRadius: 8
+                            animation: {
+                                animateScale: true,
+                                animateRotate: true,
+                                duration: 1500,
+                                easing: 'easeOutQuart'
+                            },
+                            // Desactivar cualquier interacción con el gráfico que pueda causar redimensionamiento
+                            events: ['mousemove', 'mouseout', 'click', 'touchstart', 'touchmove'],
+                            // No permitir actualizaciones del diseño después de la inicialización
+                            resizeDelay: 0,
+                            onResize: null
                         }
-                    },
-                    animation: {
-                        animateScale: true,
-                        animateRotate: true,
-                        duration: 2000,
-                        easing: 'easeOutQuart'
-                    }
-                }
-            });
+                    });
+
+                    // Desactivar manualmente el evento de resize para este gráfico específico
+                    Chart.instances.forEach(function(instance) {
+                        if (instance.canvas === especiesChartElement) {
+                            instance.resize = function() { return; }; // No hacer nada en resize
+                        }
+                    });
+                }, 200); // Pequeño retraso para asegurar que los contenedores estén estables
             }
         });
     </script>
 }
+
+<style>
+    /* Estilos para contenedor estable del gráfico */
+    .chart-stable-container {
+        padding: 20px;
+        position: relative;
+    }
+
+    /* Mejor adaptación del contenedor del gráfico a diferentes tamaños de pantalla */
+    .chart-wrapper {
+        position: relative;
+        width: 100%;
+        height: auto; /* Cambiado de height: 0 a height: auto */
+        min-height: 300px; /* Altura mínima para el gráfico */
+        max-height: 500px; /* Altura máxima para el gráfico */
+        padding-bottom: 0; /* Eliminamos el padding-bottom que forzaba un ratio */
+    }
+
+        .chart-wrapper canvas {
+            position: relative; /* Cambiado de position: absolute */
+            width: 100% !important;
+            height: auto !important; /* Permite que la altura se ajuste automáticamente */
+            max-height: 500px;
+        }
+
+    /* Eliminar cualquier animación en el contenedor que pueda afectar al gráfico */
+    .card, .chart-stable-container, .chart-wrapper {
+        transition: none !important;
+    }
+
+    /* Media query manteniendo estabilidad */
+    @@media (max-width: 991px) {
+        .chart-wrapper
+
+    {
+        padding-bottom: 70%; /* Ligeramente más alto en móviles */
+    }
+
+        canvas#especiesChart {
+            display: none !important; /* Fuerza la ocultación con !important */
+        }
+        /* Opcional: si quieres agregar un texto alternativo */
+        .chart-wrapper:has(#especiesChart) {
+            position: relative;
+        }
+
+            .chart-wrapper:has(#especiesChart)::before {
+                content: "Gráfico no disponible en versión móvil";
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                text-align: center;
+                color: #6c757d;
+            }
+    }
+</style>

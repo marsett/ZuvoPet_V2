@@ -2,9 +2,6 @@
 @{
     string colorPrincipal = "#3182CE"; // Color azul para refugios
 }
-
-
-
 <div class="container my-5 position-relative paw-container">
     <!-- Huellas decorativas animadas -->
     <i class="bi bi-paw-fill paw-print" style="top: 10%; left: 5%; font-size: 4rem; transform: rotate(20deg);"></i>
@@ -195,19 +192,6 @@
 
                                 <a href="@Url.Action("IniciarChat", new { refugioId = Model.Id })" class="btn btn-primary">
                                     <i class="fa fa-comment"></i> Contactar
-                                </a>
-                            </div>
-                        </div>
-
-                        <div class="section-card animate-section">
-                            <h3 class="section-title mb-4">Veterinarios</h3>
-                            <div class="text-center py-3">
-                                <i class="bi bi-heart-pulse fs-1 mb-3" style="color: @colorPrincipal;"></i>
-                                <p class="mb-4">Conoce a los veterinarios que colaboran con nuestro refugio y brindan atención médica a nuestros animales.</p>
-
-                                <a href="@Url.Action("VeterinariosRefugio", "Adoptante", new { idrefugio = Model.Id })"
-                                   class="btn btn-success w-100">
-                                    <i class="bi bi-person-badge me-2"></i>Ver veterinarios
                                 </a>
                             </div>
                         </div>
@@ -516,7 +500,6 @@
         }
     </style>
 }
-<!-- Scripts de OpenStreetMap -->
 <!-- Scripts de OpenStreetMap -->
 <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
 <script>
