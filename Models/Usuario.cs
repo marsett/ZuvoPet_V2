@@ -35,8 +35,6 @@ namespace ZuvoPet_V2.Models
         public string TipoUsuario { get; set; } // "Adoptante" o "Refugio"
         [Column("FechaRegistro")]
         public DateTime FechaRegistro { get; set; } = DateTime.Now;
-
-        public virtual ICollection<UsuarioRol> UsuariosRoles { get; set; } = new HashSet<UsuarioRol>();
         public PerfilUsuario PerfilUsuario { get; set; }
     }
 }

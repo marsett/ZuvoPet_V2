@@ -71,7 +71,7 @@
                         </div>
 
                         <div class="text-center">
-                            <button type="submit" class="btn btn-primary btn-lg shadow-sm adopt-btn w-100">
+                            <button type="submit" class="btn botoninicio btn-lg shadow-sm adopt-btn w-100">
                                 <i class="fas fa-paw me-2"></i>Registrar Refugio
                             </button>
                         </div>
@@ -87,6 +87,17 @@
 <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
 
 <style>
+    .botoninicio {
+        background-color: #000039;
+        color: #ffffff;
+        border: none;
+    }
+
+        .botoninicio:hover {
+            background-color: transparent;
+            color: #bab986;
+            border: 2px solid #bab986;
+        }
     /* Page Title Styling */
     .pet-page-title {
         font-family: 'Arial', sans-serif;
@@ -109,7 +120,7 @@
             left: 0;
             width: 100%;
             height: 3px;
-            background: linear-gradient(to right, #007bff, #00c6ff);
+            background: linear-gradient(to right, #bab986, #bab986);
             transform: scaleX(0);
             transform-origin: right;
             transition: transform 0.3s ease;
@@ -145,8 +156,9 @@
     }
 
         .form-control:focus, .form-select:focus {
-            box-shadow: 0 0 0 0.25rem rgba(0, 123, 255, 0.25);
-            border-color: #007bff;
+            box-shadow: none;
+            border-color: #bab986;
+            border-width: 2px;
         }
 
     .form-floating label {
@@ -158,8 +170,8 @@
     }
 
         .form-check-input:checked {
-            background-color: #007bff;
-            border-color: #007bff;
+            background-color: #000039;
+            border-color: #000039;
         }
 
     .form-check-label {

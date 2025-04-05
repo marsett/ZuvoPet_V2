@@ -488,7 +488,7 @@
     /* Sección de cabecera */
     #historias-header {
         position: relative;
-        background: linear-gradient(135deg, #007bff 0%, #00c6ff 100%);
+        background: #bab986 !important;
         color: white;
         padding: 5rem 0 6rem;
         margin-bottom: 3rem;
@@ -553,6 +553,10 @@
         max-width: 500px;
         margin: 0 auto;
     }
+
+        .search-box .btn {
+            color: #000039 !important;
+        }
 
     .filters {
         display: flex;
@@ -1140,7 +1144,7 @@
             actualizarEstadoPaginacion();
 
             // Desplazarse al principio de la sección de historias
-            document.querySelector('#historias-contenido').scrollIntoView({ behavior: 'smooth' });
+            //document.querySelector('#historias-contenido').scrollIntoView({ behavior: 'smooth' });
         }
 
         // Función para actualizar el estado de los botones de paginación

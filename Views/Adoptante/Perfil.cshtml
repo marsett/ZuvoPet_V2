@@ -8,7 +8,7 @@
 
     <div class="bg-white shadow rounded-4 mb-4 overflow-hidden">
         <!-- Banner superior con temática de mascotas -->
-        <div class="position-relative" style="height: 220px; background: linear-gradient(135deg, #0d6efd, #6610f2);">
+        <div class="position-relative" style="height: 220px; background: #bab986 !important;">
             <!-- Elementos decorativos de fondo con patrón moderno -->
             <div class="position-absolute w-100 h-100" style="overflow: hidden;">
                 <!-- Patrón de fondo con ondas -->
@@ -56,7 +56,7 @@
 
                             <!-- Estadísticas en formato de tarjetas horizontales -->
                             <div class="row g-3">
-                                <div class="col-sm-12">
+                                <div class="col-sm-6">
                                     <div class="bg-light rounded-4 p-3 h-100 d-flex align-items-center border border-success border-opacity-25 hover-scale">
                                         <div class="rounded-circle bg-primary bg-opacity-10 p-2 me-3 d-flex align-items-center justify-content-center" style="width: 54px; height: 54px;">
                                             <i class="fas fa-heart text-danger fa-lg"></i>
@@ -65,10 +65,18 @@
                                             <div class="fs-5 fw-bold">@(Model.MascotasFavoritas != null ? Model.MascotasFavoritas.Count() : 0)</div>
                                             <div class="text-muted small">Favoritos</div>
                                         </div>
-                                        <!-- Acerca de mí con diseño renovado -->
-
                                     </div>
-
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="bg-light rounded-4 p-3 h-100 d-flex align-items-center border border-success border-opacity-25 hover-scale">
+                                        <div class="rounded-circle bg-success bg-opacity-10 p-2 me-3 d-flex align-items-center justify-content-center" style="width: 54px; height: 54px;">
+                                            <i class="fas fa-home text-success fa-lg"></i>
+                                        </div>
+                                        <div>
+                                            <div class="fs-5 fw-bold">@(Model.MascotasAdoptadas != null ? Model.MascotasAdoptadas.Count() : 0)</div>
+                                            <div class="text-muted small">Adoptadas</div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="card-body p-4 mt-2">
@@ -246,6 +254,44 @@
                 </div>
             </div>
         </div>
+
+        <!-- AÑADIR DESPUÉS DE LA SECCIÓN DE MASCOTAS FAVORITAS -->
+        <!-- MASCOTAS ADOPTADAS SECTION -->
+        <div class="col-12 mt-4">
+            <div class="card border-0 shadow rounded-4">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h5 class="card-title fw-bold mb-0">
+                            <i class="fas fa-home text-success me-2"></i>Mis Mascotas Adoptadas
+                        </h5>
+                    </div>
+
+                    <!-- Contenedor de mascotas adoptadas -->
+                    <div id="mascotasAdoptadasContainer">
+                        @if (Model.MascotasAdoptadas != null && Model.MascotasAdoptadas.Any())
+                        {
+                            <div id="contenedorMascotasAdoptadas" class="pet-card-carousel">
+                                <!-- El contenido se cargará mediante Ajax -->
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="text-center py-5">
+                                <div class="d-inline-flex justify-content-center align-items-center bg-light rounded-circle p-4 mb-3">
+                                    <i class="fas fa-home text-success" style="font-size: 2.5rem;"></i>
+                                </div>
+                                <h5 class="text-dark mt-3">Aún no has adoptado ninguna mascota</h5>
+                                <p class="text-muted">Cuando adoptes una mascota, aparecerá en esta sección</p>
+                                <a href="@Url.Action("Adopta", "Adoptante")" class="btn btn-success rounded-pill mt-2 px-4">
+                                    <i class="fas fa-search me-2"></i>Explorar Mascotas
+                                </a>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 </div>
 
@@ -465,11 +511,40 @@
             });
         }
 
+        // Función para cargar página de adoptadas
+        function cargarPaginaAdoptadas(pagina) {
+            // Realizar la petición Ajax
+            $.ajax({
+                url: '@Url.Action("_MascotasAdoptadasPartial", "Adoptante")',
+                data: { pagina: pagina },
+                type: "GET",
+                success: function(data) {
+                    // Actualizar el contenedor con la respuesta
+                    $("#contenedorMascotasAdoptadas").html(data);
+                    // Actualizar la información de paginación
+                    var paginaInfo = $("#paginaInfoAdoptadas").text();
+                    $(".pagination-info-adoptadas .badge span").text(paginaInfo);
+                },
+                error: function(xhr) {
+                    if (xhr.status === 401) {
+                        window.location.href = '@Url.Action("Login", "Managed")';
+                    } else {
+                        console.error("Error al cargar las mascotas adoptadas:", xhr);
+                        $("#contenedorMascotasAdoptadas").html('<div class="alert alert-danger">Error al cargar las mascotas adoptadas</div>');
+                    }
+                }
+            });
+        }
+
         // Opcional: Inicializar la primera página al cargar
         $(document).ready(function() {
             // Solo si no hay contenido inicial
             if ($("#contenedorMascotas").children().length === 0) {
                 cargarPagina(1);
+            }
+            // Cargar adoptadas si no hay contenido inicial
+            if ($("#contenedorMascotasAdoptadas").children().length === 0) {
+                cargarPaginaAdoptadas(1);
             }
         });
     </script>

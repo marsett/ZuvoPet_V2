@@ -42,7 +42,7 @@ namespace ZuvoPet_V2.Repositories
         Task<Refugio> GetDetallesRefugioAsync(int idrefugio);
         Task<List<Mascota>> GetMascotasPorRefugioAsync(int idrefugio);
 
-
+        Task<List<MascotaAdoptada>> ObtenerMascotasAdoptadas(int idusuario);
 
         Task<Refugio> GetRefugioByUsuarioIdAsync(int idUsuario);
         Task<int> GetSolicitudesPendientesCountAsync(int idRefugio);
@@ -84,6 +84,5 @@ namespace ZuvoPet_V2.Repositories
         Task<List<ConversacionViewModel>> GetConversacionesRefugioAsync(int usuarioId);
         Task<Mensaje> AgregarMensajeAsync(int emisorId, int receptorId, string contenido);
 
-        Task<List<Veterinario>> GetVeterinariosRefugioAsync(int idusuario);
     }
 }

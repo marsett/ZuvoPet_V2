@@ -98,22 +98,23 @@
                 <div class="card-header bg-light py-3">
                     <h5 class="mb-0 fw-bold"><i class="fas fa-chart-pie me-2"></i> Distribución por Especies</h5>
                 </div>
-                <div class="card-body chart-stable-container">
-                    @if (ViewBag.EspeciesData != null && ViewBag.EspeciesData.Length > 0)
-                    {
-                        <div class="chart-wrapper">
+                <div class="card-body chart-container">
+                    <div id="chart-wrapper" class="position-relative">
+                        @if (ViewBag.EspeciesData != null && ViewBag.EspeciesData.Length > 0)
+                        {
                             <canvas id="especiesChart"></canvas>
-                        </div>
-                    }
-                    else
-                    {
-                        <div class="text-center text-muted py-5">
-                            <i class="fas fa-exclamation-circle fa-3x mb-3"></i>
-                            <h4>No hay datos disponibles</h4>
-                            <p>Actualmente no hay información sobre especies para mostrar en el gráfico.</p>
-                            <p class="mt-2">Agrega animales de diferentes especies al refugio para visualizar su distribución.</p>
-                        </div>
-                    }
+                            <div id="especies-legend" class="mt-4 chart-legend text-center"></div>
+                        }
+                        else
+                        {
+                            <div class="text-center text-muted py-5">
+                                <i class="fas fa-exclamation-circle fa-3x mb-3"></i>
+                                <h4>No hay datos disponibles</h4>
+                                <p>Actualmente no hay información sobre especies para mostrar en el gráfico.</p>
+                                <p class="mt-2">Agrega animales de diferentes especies al refugio para visualizar su distribución.</p>
+                            </div>
+                        }
+                    </div>
                 </div>
             </div>
         </div>
@@ -236,107 +237,262 @@
     }
 </style>
 
+<style>
+    /* Contenedor principal del gráfico con mejor manejo responsive */
+    .chart-container {
+        padding: 1.5rem;
+    }
+
+    #chart-wrapper {
+        width: 100%;
+        max-width: 650px;
+        margin: 0 auto;
+        min-height: 300px;
+    }
+
+    /* Estilos para la leyenda personalizada */
+    .chart-legend {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 1rem;
+        margin-top: 1.5rem;
+    }
+
+    .legend-item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 0.5rem;
+        padding: 0.5rem 1rem;
+        border-radius: 50px;
+        background-color: #f8f9fa;
+        transition: all 0.2s ease;
+        cursor: pointer;
+    }
+
+        .legend-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+    .legend-color {
+        width: 15px;
+        height: 15px;
+        border-radius: 50%;
+        margin-right: 8px;
+    }
+
+    .legend-text {
+        font-size: 0.9rem;
+        font-weight: 500;
+    }
+
+    .legend-value {
+        margin-left: 5px;
+        font-weight: 700;
+        opacity: 0.7;
+    }
+
+    /* Animación de entrada para el gráfico */
+    @@keyframes fadeInChart {
+        from
+
+    {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    }
+
+    #especiesChart {
+        animation: fadeInChart 0.8s ease-out forwards;
+    }
+
+    /* Mejora para dispositivos móviles */
+    @@media (max-width: 768px) {
+        #chart-wrapper
+
+    {
+        max-width: 100%;
+        min-height: 250px;
+    }
+
+    .legend-item {
+        padding: 0.4rem 0.8rem;
+        margin-bottom: 0.4rem;
+    }
+
+    }
+</style>
+
 @section Scripts {
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-                  document.addEventListener('DOMContentLoaded', function () {
-            var especiesChartElement = document.getElementById('especiesChart');
+        document.addEventListener('DOMContentLoaded', function() {
+            // Datos del gráfico
+            const especiesLabels = @Html.Raw(Json.Serialize(ViewBag.EspeciesLabels));
+            const especiesData = @Html.Raw(Json.Serialize(ViewBag.EspeciesData));
 
-            if (especiesChartElement) {
-                // Configurar un tamaño fijo para el canvas que se mantendrá estable
-                especiesChartElement.style.width = '100%';
+            if (!especiesLabels || !especiesData || especiesLabels.length === 0) return;
 
-                // Esperar a que el DOM esté completamente cargado y el contenedor tenga dimensiones estables
-                setTimeout(function() {
-                    var ctxEspecies = especiesChartElement.getContext('2d');
-                    var especiesChart = new Chart(ctxEspecies, {
-                        type: 'pie',
-                        data: {
-                            labels: @Html.Raw(Json.Serialize(ViewBag.EspeciesLabels)),
-                            datasets: [{
-                                data: @Html.Raw(Json.Serialize(ViewBag.EspeciesData)),
-                                backgroundColor: [
-                                    'rgba(54, 162, 235, 0.8)',
-                                    'rgba(255, 99, 132, 0.8)',
-                                    'rgba(255, 206, 86, 0.8)',
-                                    'rgba(75, 192, 192, 0.8)',
-                                    'rgba(153, 102, 255, 0.8)',
-                                    'rgba(255, 159, 64, 0.8)',
-                                    'rgba(199, 199, 199, 0.8)',
-                                    'rgba(0, 0, 0, 0.8)'
-                                ],
-                                borderColor: [
-                                    'rgba(54, 162, 235, 1)',
-                                    'rgba(255, 99, 132, 1)',
-                                    'rgba(255, 206, 86, 1)',
-                                    'rgba(75, 192, 192, 1)',
-                                    'rgba(153, 102, 255, 1)',
-                                    'rgba(255, 159, 64, 1)',
-                                    'rgba(199, 199, 199, 1)',
-                                    'rgba(0, 0, 0, 0.8)'
-                                ],
-                                borderWidth: 2
-                            }]
+            // Colores para el gráfico
+            const backgroundColors = [
+                'rgba(54, 162, 235, 0.8)',
+                'rgba(255, 99, 132, 0.8)',
+                'rgba(255, 206, 86, 0.8)',
+                'rgba(75, 192, 192, 0.8)',
+                'rgba(153, 102, 255, 0.8)',
+                'rgba(255, 159, 64, 0.8)',
+                'rgba(199, 199, 199, 0.8)',
+                'rgba(0, 0, 0, 0.8)'
+            ];
+
+            const borderColors = backgroundColors.map(color => color.replace('0.8', '1'));
+
+            // Calcular porcentajes para mostrar en la leyenda
+            const total = especiesData.reduce((sum, value) => sum + value, 0);
+            const percentages = especiesData.map(value => ((value / total) * 100).toFixed(1));
+
+            // Elemento canvas
+            const ctx = document.getElementById('especiesChart').getContext('2d');
+
+            // Crear instancia de Chart.js
+            const chart = new Chart(ctx, {
+                type: 'doughnut', // Cambiado de pie a doughnut para mejor visualización
+                data: {
+                    labels: especiesLabels,
+                    datasets: [{
+                        data: especiesData,
+                        backgroundColor: backgroundColors,
+                        borderColor: borderColors,
+                        borderWidth: 2,
+                        hoverOffset: 15,
+                        borderRadius: 5
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    cutout: '50%', // Ajuste para el doughnut
+                    plugins: {
+                        legend: {
+                            display: false // Desactivamos la leyenda por defecto
                         },
-                        options: {
-                            responsive: true,
-                            maintainAspectRatio: true, // Cambiado a true para mantener estabilidad
-                            aspectRatio: 2, // Proporción fija de ancho/alto (2:1)
-                            layout: {
-                                padding: {
-                                    left: 10,
-                                    right: 10,
-                                    top: 0,
-                                    bottom: 0
+                        tooltip: {
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            titleFont: { size: 16, weight: 'bold' },
+                            bodyFont: { size: 14 },
+                            padding: 12,
+                            cornerRadius: 8,
+                            displayColors: true,
+                            callbacks: {
+                                label: function(context) {
+                                    const label = context.label || '';
+                                    const value = context.raw || 0;
+                                    const percentage = ((value / total) * 100).toFixed(1);
+                                    return `${label}: ${value} (${percentage}%)`;
                                 }
-                            },
-                            plugins: {
-                                legend: {
-                                    position: 'bottom',
-                                    labels: {
-                                        padding: 20,
-                                        font: {
-                                            size: 14
-                                        }
-                                    }
-                                },
-                                tooltip: {
-                                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                                    padding: 15,
-                                    titleFont: {
-                                        size: 16
-                                    },
-                                    bodyFont: {
-                                        size: 14
-                                    },
-                                    displayColors: true,
-                                    borderWidth: 0,
-                                    cornerRadius: 8,
-                                    boxPadding: 8,
-                                }
-                            },
-                            animation: {
-                                animateScale: true,
-                                animateRotate: true,
-                                duration: 1500,
-                                easing: 'easeOutQuart'
-                            },
-                            // Desactivar cualquier interacción con el gráfico que pueda causar redimensionamiento
-                            events: ['mousemove', 'mouseout', 'click', 'touchstart', 'touchmove'],
-                            // No permitir actualizaciones del diseño después de la inicialización
-                            resizeDelay: 0,
-                            onResize: null
+                            }
+                        }
+                    },
+                    animation: {
+                        animateScale: true,
+                        animateRotate: true,
+                        duration: 1000,
+                        easing: 'easeOutCirc'
+                    },
+                    layout: {
+                        padding: {
+                            top: 10,
+                            bottom: 10
+                        }
+                    }
+                }
+            });
+
+            // Crear leyenda personalizada
+            const legendContainer = document.getElementById('especies-legend');
+            if (legendContainer) {
+                especiesLabels.forEach((label, index) => {
+                    const item = document.createElement('div');
+                    item.className = 'legend-item';
+
+                    const colorSpan = document.createElement('span');
+                    colorSpan.className = 'legend-color';
+                    colorSpan.style.backgroundColor = backgroundColors[index];
+
+                    const textSpan = document.createElement('span');
+                    textSpan.className = 'legend-text';
+                    textSpan.textContent = label;
+
+                    const valueSpan = document.createElement('span');
+                    valueSpan.className = 'legend-value';
+                    valueSpan.textContent = `(${percentages[index]}%)`;
+
+                    item.appendChild(colorSpan);
+                    item.appendChild(textSpan);
+                    item.appendChild(valueSpan);
+
+                    // Agregar interactividad
+                    item.addEventListener('mouseover', () => {
+                        chart.setActiveElements([{datasetIndex: 0, index: index}]);
+                        chart.update();
+                    });
+
+                    item.addEventListener('mouseout', () => {
+                        chart.setActiveElements([]);
+                        chart.update();
+                    });
+
+                    item.addEventListener('click', () => {
+                        const meta = chart.getDatasetMeta(0);
+                        const isHidden = meta.data[index].hidden || false;
+
+                        chart.toggleDataVisibility(index);
+                        chart.update();
+
+                        // Actualizar estilo visual de la leyenda
+                        if (!isHidden) {
+                            item.style.opacity = "0.5";
+                            item.style.textDecoration = "line-through";
+                        } else {
+                            item.style.opacity = "1";
+                            item.style.textDecoration = "none";
                         }
                     });
 
-                    // Desactivar manualmente el evento de resize para este gráfico específico
-                    Chart.instances.forEach(function(instance) {
-                        if (instance.canvas === especiesChartElement) {
-                            instance.resize = function() { return; }; // No hacer nada en resize
-                        }
-                    });
-                }, 200); // Pequeño retraso para asegurar que los contenedores estén estables
+                    legendContainer.appendChild(item);
+                });
             }
+
+            // Función para manejar el resize
+            function handleResize() {
+                const parentWidth = chart.canvas.parentNode.clientWidth;
+
+                // Ajustar tamaños según el ancho disponible
+                if (parentWidth < 400) {
+                    chart.options.plugins.tooltip.titleFont.size = 14;
+                    chart.options.plugins.tooltip.bodyFont.size = 12;
+                    chart.options.plugins.tooltip.padding = 8;
+                } else {
+                    chart.options.plugins.tooltip.titleFont.size = 16;
+                    chart.options.plugins.tooltip.bodyFont.size = 14;
+                    chart.options.plugins.tooltip.padding = 12;
+                }
+
+                chart.update();
+            }
+
+            // Escuchar eventos de resize
+            window.addEventListener('resize', handleResize);
+
+            // Llamar inicialmente para configurar según tamaño actual
+            handleResize();
         });
     </script>
 }

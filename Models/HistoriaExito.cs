@@ -35,8 +35,6 @@ namespace ZuvoPet_V2.Models
         [Required, MaxLength(50)]
         [Column("Estado")]
         public string Estado { get; set; } = "Pendiente";
-
-        public virtual ICollection<ComentarioHistoria> Comentarios { get; set; } = new HashSet<ComentarioHistoria>();
         public virtual ICollection<LikeHistoria> Likes { get; set; } = new HashSet<LikeHistoria>();
     }
 }

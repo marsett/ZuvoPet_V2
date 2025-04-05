@@ -683,7 +683,7 @@
 
         <div class="pet-content container">
             <div class="row">
-                <div class="col-lg-8">
+                <div class="@(Model.Estado == "Adoptado" ? "col-12" : "col-lg-8")">
                     <!-- Acerca de la mascota -->
                     <div class="section-card animate-section">
                         <h3 class="section-title">Sobre @Model.Nombre</h3>
@@ -819,10 +819,12 @@
 
                 </div>
 
+                @if (Model.Estado != "Adoptado")
+    {
                 <div class="col-lg-4">
                     <div class="sticky-top" style="top: 30px;">
                         <!-- Información del refugio con hover -->
-                        @if (Model.IdRefugio != null)
+                        @if (Model.IdRefugio != null && Model.Estado != "Adoptada")
                         {
                             <div class="section-card animate-section">
                                 <h3 class="section-title">Contacto</h3>
@@ -862,23 +864,23 @@
                                 </div>
                             </div>
                         }
-                        else
+                        @* else
                         {
-                            <div class="section-card text-center py-5 animate-section">
-                                <i class="bi bi-heart-fill text-danger mb-4" style="font-size: 3rem;"></i>
-                                <h4 class="mb-3">¡@Model.Nombre ya fue adoptado!</h4>
-                                <p class="text-muted">Esta mascota ya encontró un hogar para siempre.</p>
-                                <a href="@Url.Action("Adoptante", "Adopta")" class="btn btn-outline-primary mt-3">
-                                    <i class="bi bi-search-heart me-2"></i>Buscar otras mascotas
-                                </a>
+
+                            <div id="adoptionAction" class="adoption-form animate-section">
+                                <h3 class="section-title mb-4">@Model.Nombre</h3>
+                                <div class="text-center py-3">
+                                    <p class="mb-4">Esta mascota ya ha sido adoptada y es feliz con sus nuevos dueños.</p>
+                                </div>
                             </div>
-                        }
+                        } *@
                     </div>
                 </div>
+                }
             </div>
 
             <!-- Mapa de ubicación -->
-            @if (Model.Latitud != null && Model.Longitud != null)
+            @if (Model.Latitud != null && Model.Longitud != null && Model.Estado != "Adoptado")
             {
                 <div class="section-card animate-section">
                     <h3 class="section-title">Ubicación</h3>

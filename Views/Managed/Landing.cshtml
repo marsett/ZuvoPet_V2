@@ -6,17 +6,17 @@
         <div class="col-md-6 d-flex flex-column justify-content-center mb-4">
             <h1 class="pet-page-title">
                 <span class="title-highlight">¡Encuentra</span> a tu
-                <span class="title-highlight">compañero</span> peludo
+                <span class="title-highlight">compañero</span> peludo!
                 <span class="title-emoji">🐾</span>
             </h1>
             <p class="lead text-muted my-3">Explora historias de adopción de mascotas, encuentra refugios cercanos y haz la diferencia.</p>
 
             <!-- Botones CTA directamente bajo el texto principal -->
             <div class="cta-buttons mt-4 d-flex flex-wrap gap-3">
-                <a asp-controller="Managed" asp-action="Register" class="btn btn-primary btn-lg shadow-sm">
+                <a asp-controller="Managed" asp-action="Register" class="btn botonregistro btn-lg shadow-sm">
                     <i class="fas fa-user-plus me-2"></i>Registrarse
                 </a>
-                <a asp-controller="Managed" asp-action="Login" class="btn btn-outline-primary btn-lg shadow-sm">
+                <a asp-controller="Managed" asp-action="Login" class="btn botoninicio btn-lg shadow-sm">
                     <i class="fas fa-sign-in-alt me-2"></i>Iniciar sesión
                 </a>
             </div>
@@ -96,6 +96,34 @@
 </div>
 
 <style>
+    /* Registration button */
+    .botonregistro {
+        background-color: #bab986;
+        color: #000039;
+        border: none;
+    }
+
+        .botonregistro:hover {
+            background-color: transparent;
+            color: #bab986;
+            border: 1px solid #bab986;
+        }
+
+    /* Login button */
+    .botoninicio {
+        background-color: #000039;
+        color: #ffffff;
+        border: none;
+    }
+
+        .botoninicio:hover {
+            background-color: transparent;
+            color: #bab986;
+            border: 1px solid #bab986;
+        }
+
+
+
     /* Page Title Styling */
     .pet-page-title {
         font-family: 'Arial', sans-serif;
@@ -119,7 +147,7 @@
             left: 0;
             width: 100%;
             height: 3px;
-            background: linear-gradient(to right, #007bff, #00c6ff);
+            background: linear-gradient(to right, #bab986, #bab986);
             transform: scaleX(0);
             transform-origin: right;
             transition: transform 0.3s ease;
@@ -179,18 +207,6 @@
     #carrusel:hover .pet-card-image {
         transform: scale(1.05);
     }
-
-    /* Buttons */
-    .btn-primary, .btn-outline-primary {
-        transition: all 0.3s ease;
-        position: relative;
-        overflow: hidden;
-    }
-
-        .btn-primary:hover, .btn-outline-primary:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
 
     /* Carousel Customization */
     .carousel-item {

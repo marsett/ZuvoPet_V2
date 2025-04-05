@@ -8,13 +8,43 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/ZuvoPet_V2.styles.css" asp-append-version="true" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     @await RenderSectionAsync("Styles", required: false)
     @inject IRepositoryZuvoPet_V2 Repo
     <style>
-        .nav-pills li a:hover {
-            background-color: blue;
+        .nav-item .nav-link .role-text {
+            display: none;
+            transition: all 0.3s ease;
         }
+
+        .nav-item .nav-link:hover .role-text {
+            display: block !important;
+        }
+
+        .nav-item .nav-link .nombre-usuario {
+            margin-bottom: 0;
+            line-height: 50px; 
+        }
+
+        .nav-item .nav-link:hover .nombre-usuario {
+            margin-bottom: 3px;
+            line-height: normal;
+        }
+        .fondo {
+            background-color: #000039;
+        }
+        .nav-pills li a:hover {
+            background-color: #bab986;
+            color: #000 !important;
+            
+        }
+
+            .nav-pills li a:hover .badge-notificacion {
+                display: none !important;
+            }
 
         .content-area {
             display: flex;
@@ -182,7 +212,7 @@
                 left: 0;
                 right: 0;
                 height: 4px;
-                background: linear-gradient(to right, #007bff, #00c6ff);
+                background: linear-gradient(to right, #bab986, #bab986);
             }
 
         .footer-title {
@@ -200,7 +230,7 @@
             display: inline-block;
             font-size: 1.2rem;
             font-weight: 700;
-            color: #007bff;
+            color: #000039;
             margin-bottom: 1.5rem;
             padding-bottom: 0.5rem;
         }
@@ -212,7 +242,7 @@
                 left: 0;
                 width: 50px;
                 height: 3px;
-                background: linear-gradient(to right, #007bff, #00c6ff);
+                background: linear-gradient(to right, #bab986, #bab986);
             }
 
         .footer-links, .footer-contact {
@@ -238,7 +268,7 @@
             }
 
                 .footer-links a:hover {
-                    color: #007bff;
+                    color: #000039;
                 }
 
             .footer-contact li {
@@ -248,7 +278,7 @@
             }
 
                 .footer-contact li i {
-                    color: #007bff;
+                    color: #000039;
                     width: 20px;
                 }
 
@@ -265,13 +295,13 @@
             height: 40px;
             background-color: #fff;
             border-radius: 50%;
-            color: #007bff;
+            color: #000039;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
             transition: all 0.3s ease;
         }
 
             .social-icon:hover {
-                background-color: #007bff;
+                background-color: #000039;
                 color: #fff;
                 transform: translateY(-3px);
             }
@@ -297,7 +327,7 @@
                 left: 0;
                 width: 100%;
                 height: 3px;
-                background: linear-gradient(to right, #007bff, #00c6ff);
+                background: linear-gradient(to right, #bab986, #bab986) !important;
                 transform: scaleX(0);
                 transform-origin: right;
                 transition: transform 0.3s ease;
@@ -362,10 +392,10 @@
     {
         <div class="container-fluid">
             <div class="row flex-nowrap">
-                <div class="miclase bg-dark col-auto col-md-3 col-lg-2 min-vh-100 d-flex flex-column justify-content-between p-0" style="position: sticky; top: 0; height: 100vh; overflow-y: auto;">
-                    <div class="bg-dark p-2">
-                        <a class="d-flex text-decoration-none mt-1 align-items-center text-white">
-                            <span class="fs-6 d-none d-sm-inline">ZuvoPet_V2</span>
+                <div class="miclase fondo col-auto col-md-3 col-lg-2 min-vh-100 d-flex flex-column justify-content-between p-0" style="position: sticky; top: 0; height: 100vh; overflow-y: auto;">
+                    <div class="fondo p-2">
+                        <a class="d-flex text-decoration-none mt-1 align-items-center text-white justify-content-center">
+                            <span class="fs-5 fw-bold d-none d-sm-inline">ZuvoPet</span>
                             @if (isAdmin)
                             {
                                 <span class="badge bg-danger ms-2">Admin</span>
@@ -456,7 +486,8 @@
                             }
                         </ul>
                     </div>
-                    <div class="bg-dark p-2">
+                    <!-- Mejora del área de perfil -->
+                    <div class="fondo p-2">
                         <ul class="nav nav-pills flex-column">
                             <li class="nav-item py-2 py-sm-0 mb-2">
                                 <a asp-controller="Managed" asp-action="Logout" class="nav-link text-danger">
@@ -477,10 +508,15 @@
                                     </a>
                                 </li>
                             }
-                            <li class="nav-item py-2 py-sm-0 mb-2 text-white">
-                                <a asp-controller="@userRole" asp-action="Perfil" class="nav-link text-white">
-                                    <img src="~/images/@(fotoPerfil ?? fotoUsuario)" alt="Avatar" class="fs-5 rounded-circle" style="width: 40px; height: 40px; object-fit: cover;">
-                                    <span class="fs-6 ms-3 text-truncate d-none d-sm-inline nombre-usuario">@(userName ?? nombreUsuario)</span>
+                            <li class="nav-item py-2 py-sm-0 mb-2">
+                                <a asp-controller="@userRole" asp-action="Perfil" class="nav-link text-white position-relative">
+                                    <div class="d-flex align-items-center">
+                                        <img src="~/images/@(fotoPerfil ?? fotoUsuario)" alt="Avatar" class="rounded-circle" style="width: 40px; height: 40px; object-fit: cover;">
+                                        <div class="ms-3 d-none d-sm-block">
+                                            <span class="fs-6 text-truncate d-block nombre-usuario">@(userName ?? nombreUsuario)</span>
+                                            <small class="text-muted role-text" style="display: none;">@userRole</small>
+                                        </div>
+                                    </div>
                                 </a>
                             </li>
                         </ul>

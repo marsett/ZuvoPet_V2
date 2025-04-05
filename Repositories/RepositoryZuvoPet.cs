@@ -554,6 +554,21 @@ namespace ZuvoPet_V2.Repositories
             return favoritas;
         }
 
+        public async Task<List<MascotaAdoptada>> ObtenerMascotasAdoptadas(int idusuario)
+        {
+            var adoptante = await this.context.Adoptantes
+                .FirstOrDefaultAsync(a => a.IdUsuario == idusuario);
+
+            string sql = "EXEC SP_OBTENERMASCOTASADOPTADAS @idadoptante";
+            SqlParameter pamAdoptante = new SqlParameter("@idadoptante", adoptante.Id);
+
+            List<MascotaAdoptada> adoptadas = await this.context.MascotasAdoptadas
+                .FromSqlRaw(sql, pamAdoptante)
+                .ToListAsync();
+
+            return adoptadas;
+        }
+
         public async Task<DateTime?> ObtenerUltimaAccionFavorito(int idusuario, int idmascota)
         {
             var adoptante = await this.context.Adoptantes
@@ -884,28 +899,28 @@ namespace ZuvoPet_V2.Repositories
                         .Where(h => h.IdMascota == id)
                         .ToListAsync();
 
-                    foreach (var historia in historias)
-                    {
-                        // 3.1 Eliminar comentarios de las historias
-                        var comentarios = await this.context.ComentariosHistorias
-                            .Where(c => c.IdHistoria == historia.Id)
-                            .ToListAsync();
+                    //foreach (var historia in historias)
+                    //{
+                    //    // 3.1 Eliminar comentarios de las historias
+                    //    var comentarios = await this.context.ComentariosHistorias
+                    //        .Where(c => c.IdHistoria == historia.Id)
+                    //        .ToListAsync();
 
-                        if (comentarios.Any())
-                        {
-                            this.context.ComentariosHistorias.RemoveRange(comentarios);
-                        }
+                    //    if (comentarios.Any())
+                    //    {
+                    //        this.context.ComentariosHistorias.RemoveRange(comentarios);
+                    //    }
 
-                        // 3.2 Eliminar likes de las historias
-                        var likes = await this.context.LikesHistorias
-                            .Where(l => l.IdHistoria == historia.Id)
-                            .ToListAsync();
+                    //    // 3.2 Eliminar likes de las historias
+                    //    var likes = await this.context.LikesHistorias
+                    //        .Where(l => l.IdHistoria == historia.Id)
+                    //        .ToListAsync();
 
-                        if (likes.Any())
-                        {
-                            this.context.LikesHistorias.RemoveRange(likes);
-                        }
-                    }
+                    //    if (likes.Any())
+                    //    {
+                    //        this.context.LikesHistorias.RemoveRange(likes);
+                    //    }
+                    //}
 
                     // Ahora eliminamos las historias
                     if (historias.Any())
@@ -999,7 +1014,7 @@ namespace ZuvoPet_V2.Repositories
             if (nuevoEstado == "Aprobada")
             {
                 notificacion.Mensaje = $"¡Felicidades! Tu solicitud para adoptar a {solicitud.Mascota.Nombre} ha sido aprobada.";
-                notificacion.Url = $"/Adoptante/MisAdopciones";
+                notificacion.Url = $"/Adoptante/DetallesMascota?idmascota={solicitud.Mascota.Id}";
 
                 // Actualizar el estado de la mascota
                 solicitud.Mascota.Estado = "Adoptado";
@@ -1262,15 +1277,6 @@ namespace ZuvoPet_V2.Repositories
             this.context.Mensajes.Add(mensaje);
             await this.context.SaveChangesAsync();
             return mensaje;
-        }
-
-        public async Task<List<Veterinario>> GetVeterinariosRefugioAsync(int idrefugio)
-        {
-            List<Veterinario> veterinarios = await this.context.Veterinarios
-                .Where(s => s.IdRefugio == idrefugio)
-                .Include(v => v.Refugio) // Include the Refugio navigation property
-                .ToListAsync();
-            return veterinarios;
         }
     }
 }

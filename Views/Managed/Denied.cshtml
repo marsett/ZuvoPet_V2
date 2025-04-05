@@ -43,13 +43,13 @@
                         {
                             @if (User.IsInRole("Adoptante"))
                             {
-                                <a asp-controller="Adoptante" asp-action="Index" class="btn btn-primary btn-lg shadow-sm adopt-btn">
+                                <a asp-controller="Adoptante" asp-action="Index" class="btn botoninicio btn-lg shadow-sm">
                                     <i class="fas fa-home me-2"></i>Volver a Inicio
                                 </a>
                             }
                             else if (User.IsInRole("Refugio"))
                             {
-                                <a asp-controller="Refugio" asp-action="Index" class="btn btn-primary btn-lg shadow-sm adopt-btn">
+                                <a asp-controller="Refugio" asp-action="Index" class="btn botoninicio btn-lg shadow-sm">
                                     <i class="fas fa-home me-2"></i>Volver a Inicio
                                 </a>
                             }
@@ -62,6 +62,17 @@
 </div>
 
 <style>
+    .botoninicio {
+        background-color: #000039;
+        color: #ffffff;
+        border: none;
+    }
+
+        .botoninicio:hover {
+            background-color: transparent;
+            color: #bab986;
+            border: 2px solid #bab986;
+        }
     /* Page Title Styling */
     .pet-page-title {
         font-family: 'Arial', sans-serif;

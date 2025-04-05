@@ -23,7 +23,7 @@
 </div>
 
 <!-- Div para dispositivos móviles -->
-<div id="carrusel" class="carousel slide carousel-dark w-100 mx-auto d-block d-md-none" data-bs-ride="carousel" id="carrusel-movil">
+<div id="carrusel-movil" class="carousel slide carousel-dark w-100 mx-auto d-block d-md-none" data-bs-ride="carousel">
     <div class="carousel-inner">
         @for (int i = 0; i < Model.MascotasDestacadas.Count; i++)
         {
@@ -55,28 +55,6 @@
                                     </h4>
                                 </div>
 
-                                @* <div class="pet-characteristics">
-                                    <div class="characteristic">
-                                        <div class="characteristic-icon">
-                                            <i class="fas fa-ruler text-primary"></i>
-                                        </div>
-                                        <div class="characteristic-info">
-                                            <span class="label">Tamaño</span>
-                                            <span class="value">@mascota.Tamano</span>
-                                        </div>
-                                    </div>
-
-                                    <div class="characteristic">
-                                        <div class="characteristic-icon">
-                                            <i class="fas fa-birthday-cake text-success"></i>
-                                        </div>
-                                        <div class="characteristic-info">
-                                            <span class="label">Edad</span>
-                                            <span class="value">@años años @meses meses</span>
-                                        </div>
-                                    </div>
-                                </div> *@
-
                                 <div class="text-center mt-4">
                                     <a asp-controller="Adoptante"
                                        asp-action="DetallesMascota"
@@ -93,18 +71,18 @@
         }
     </div>
 
-    <button class="carousel-control-prev" type="button" data-bs-target="#carrusel" data-bs-slide="prev">
+    <button class="carousel-control-prev" type="button" data-bs-target="#carrusel-movil" data-bs-slide="prev">
         <span class="carousel-control-prev-icon text-black" aria-hidden="true" style="display:none;"></span>
         <span class="visually-hidden">Anterior</span>
     </button>
-    <button class="carousel-control-next" type="button" data-bs-target="#carrusel" data-bs-slide="next">
+    <button class="carousel-control-next" type="button" data-bs-target="#carrusel-movil" data-bs-slide="next">
         <span class="carousel-control-next-icon text-black" aria-hidden="true" style="display:none;"></span>
         <span class="visually-hidden">Siguiente</span>
     </button>
 </div>
 
 <div class="d-none d-md-block" id="carrusel-tablet">
-    <div id="carruseltablet" class="carousel slide carousel-dark w-100 mx-auto" data-bs-ride="carruseltablet">
+    <div id="carrusel-tablet-inner" class="carousel slide carousel-dark w-100 mx-auto" data-bs-ride="carousel">
         <div class="carousel-inner">
             @for (int i = 0; i < Model.MascotasDestacadas.Count; i += 2)
             {
@@ -141,28 +119,6 @@
                                             </h4>
                                         </div>
 
-                                        @* <div class="pet-characteristics">
-                                            <div class="characteristic">
-                                                <div class="characteristic-icon">
-                                                    <i class="fas fa-ruler text-primary"></i>
-                                                </div>
-                                                <div class="characteristic-info">
-                                                    <span class="label">Tamaño</span>
-                                                    <span class="value">@mascota1.Tamano</span>
-                                                </div>
-                                            </div>
-
-                                            <div class="characteristic">
-                                                <div class="characteristic-icon">
-                                                    <i class="fas fa-birthday-cake text-success"></i>
-                                                </div>
-                                                <div class="characteristic-info">
-                                                    <span class="label">Edad</span>
-                                                    <span class="value">@años1 años @meses1 meses</span>
-                                                </div>
-                                            </div>
-                                        </div> *@
-
                                         <div class="text-center mt-4">
                                             <a asp-controller="Adoptante"
                                                asp-action="DetallesMascota"
@@ -198,28 +154,6 @@
                                             </h4>
                                         </div>
 
-                                        @* <div class="pet-characteristics">
-                                            <div class="characteristic">
-                                                <div class="characteristic-icon">
-                                                    <i class="fas fa-ruler text-primary"></i>
-                                                </div>
-                                                <div class="characteristic-info">
-                                                    <span class="label">Tamaño</span>
-                                                    <span class="value">@mascota2.Tamano</span>
-                                                </div>
-                                            </div>
-
-                                            <div class="characteristic">
-                                                <div class="characteristic-icon">
-                                                    <i class="fas fa-birthday-cake text-success"></i>
-                                                </div>
-                                                <div class="characteristic-info">
-                                                    <span class="label">Edad</span>
-                                                    <span class="value">@años2 años @meses2 meses</span>
-                                                </div>
-                                            </div>
-                                        </div> *@
-
                                         <div class="text-center mt-4">
                                             <a asp-controller="Adoptante"
                                                asp-action="DetallesMascota"
@@ -237,11 +171,11 @@
             }
         </div>
 
-        <button class="carousel-control-prev" type="button" data-bs-target="#carruseltablet" data-bs-slide="prev">
+        <button class="carousel-control-prev" type="button" data-bs-target="#carrusel-tablet-inner" data-bs-slide="prev">
             <span class="carousel-control-prev-icon text-black" aria-hidden="true" style="display:none;"></span>
             <span class="visually-hidden">Anterior</span>
         </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#carruseltablet" data-bs-slide="next">
+        <button class="carousel-control-next" type="button" data-bs-target="#carrusel-tablet-inner" data-bs-slide="next">
             <span class="carousel-control-next-icon text-black" aria-hidden="true" style="display:none;"></span>
             <span class="visually-hidden">Siguiente</span>
         </button>
@@ -250,7 +184,7 @@
 
 <!-- Div para tamaños mayores a móvil -->
 <div class="d-none d-sm-block d-md-none" id="carrusel-escritorio">
-    <div id="carruselescritorio" class="carousel slide carousel-dark w-100 mx-auto" data-bs-ride="carruselescritorio">
+    <div id="carrusel-escritorio-inner" class="carousel slide carousel-dark w-100 mx-auto" data-bs-ride="carousel">
         <div class="carousel-inner">
             @for (int i = 0; i < Model.MascotasDestacadas.Count; i += 3)
             {
@@ -291,28 +225,6 @@
                                             </h4>
                                         </div>
 
-                                        @* <div class="pet-characteristics">
-                                            <div class="characteristic">
-                                                <div class="characteristic-icon">
-                                                    <i class="fas fa-ruler text-primary"></i>
-                                                </div>
-                                                <div class="characteristic-info">
-                                                    <span class="label">Tamaño</span>
-                                                    <span class="value">@mascota1.Tamano</span>
-                                                </div>
-                                            </div>
-
-                                            <div class="characteristic">
-                                                <div class="characteristic-icon">
-                                                    <i class="fas fa-birthday-cake text-success"></i>
-                                                </div>
-                                                <div class="characteristic-info">
-                                                    <span class="label">Edad</span>
-                                                    <span class="value">@años1 años @meses1 meses</span>
-                                                </div>
-                                            </div>
-                                        </div> *@
-
                                         <div class="text-center mt-4">
                                             <a asp-controller="Adoptante"
                                                asp-action="DetallesMascota"
@@ -347,28 +259,6 @@
                                                 @mascota2.Nombre
                                             </h4>
                                         </div>
-
-                                        @* <div class="pet-characteristics">
-                                            <div class="characteristic">
-                                                <div class="characteristic-icon">
-                                                    <i class="fas fa-ruler text-primary"></i>
-                                                </div>
-                                                <div class="characteristic-info">
-                                                    <span class="label">Tamaño</span>
-                                                    <span class="value">@mascota2.Tamano</span>
-                                                </div>
-                                            </div>
-
-                                            <div class="characteristic">
-                                                <div class="characteristic-icon">
-                                                    <i class="fas fa-birthday-cake text-success"></i>
-                                                </div>
-                                                <div class="characteristic-info">
-                                                    <span class="label">Edad</span>
-                                                    <span class="value">@años2 años @meses2 meses</span>
-                                                </div>
-                                            </div>
-                                        </div> *@
 
                                         <div class="text-center mt-4">
                                             <a asp-controller="Adoptante"
@@ -405,28 +295,6 @@
                                             </h4>
                                         </div>
 
-                                        @* <div class="pet-characteristics">
-                                            <div class="characteristic">
-                                                <div class="characteristic-icon">
-                                                    <i class="fas fa-ruler text-primary"></i>
-                                                </div>
-                                                <div class="characteristic-info">
-                                                    <span class="label">Tamaño</span>
-                                                    <span class="value">@mascota3.Tamano</span>
-                                                </div>
-                                            </div>
-
-                                            <div class="characteristic">
-                                                <div class="characteristic-icon">
-                                                    <i class="fas fa-birthday-cake text-success"></i>
-                                                </div>
-                                                <div class="characteristic-info">
-                                                    <span class="label">Edad</span>
-                                                    <span class="value">@años3 años @meses3 meses</span>
-                                                </div>
-                                            </div>
-                                        </div> *@
-
                                         <div class="text-center mt-4">
                                             <a asp-controller="Adoptante"
                                                asp-action="DetallesMascota"
@@ -444,11 +312,11 @@
             }
         </div>
 
-        <button class="carousel-control-prev" type="button" data-bs-target="#carruselescritorio" data-bs-slide="prev">
+        <button class="carousel-control-prev" type="button" data-bs-target="#carrusel-escritorio-inner" data-bs-slide="prev">
             <span class="carousel-control-prev-icon text-black" aria-hidden="true" style="display:none;"></span>
             <span class="visually-hidden">Anterior</span>
         </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#carruselescritorio" data-bs-slide="next">
+        <button class="carousel-control-next" type="button" data-bs-target="#carrusel-escritorio-inner" data-bs-slide="next">
             <span class="carousel-control-next-icon text-black" aria-hidden="true" style="display:none;"></span>
             <span class="visually-hidden">Siguiente</span>
         </button>
@@ -475,7 +343,7 @@
     }
 
     .welcome-name {
-        color: #007bff;
+        color: #000039;
         display: inline-block;
         position: relative;
     }
@@ -487,7 +355,7 @@
             left: 0;
             width: 100%;
             height: 5px;
-            background: linear-gradient(to right, #007bff, #00c6ff);
+            background: linear-gradient(to right, #bab986, #bab986);
             transform: scaleX(0);
             transform-origin: right;
             transition: transform 0.3s ease;
@@ -518,17 +386,6 @@
         margin-bottom: 1.5rem;
     }
 
-        .featured-pets-title::before {
-            content: '';
-            position: absolute;
-            bottom: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 100px;
-            height: 4px;
-            background: linear-gradient(to right, #007bff, #00c6ff);
-        }
-
     .decorative-paw {
         position: absolute;
         opacity: 0.1;
@@ -547,7 +404,7 @@
         right: -50px;
         transform: rotate(20deg);
     }
-    /* Page Title Styling */
+
     .pet-page-title {
         font-family: 'Arial', sans-serif;
         font-size: 2.5rem;
@@ -585,7 +442,6 @@
         transform: translateY(-3px);
     }
 
-    /* Pet Species Badge */
     .pet-species-badge {
         position: absolute;
         top: 10px;
@@ -613,7 +469,6 @@
         box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     }
 
-    /* Pet Name Styling */
     .pet-name-container {
         display: flex;
         justify-content: center;
@@ -644,7 +499,6 @@
             transform: rotate(-1deg);
         }
 
-    /* Additional Color for Sex Badge */
     .bg-pink {
         background-color: #ff69b4 !important;
     }
@@ -784,192 +638,3 @@
 
     }
 </style>
-
-@* <style>
-    .card {
-        border: 1px solid #ddd;
-        border-radius: 8px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        overflow: hidden;
-    }
-
-    .card-img-left {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
-
-    .card-body {
-        padding: 15px;
-    }
-
-    .btn-sm {
-        font-size: 14px;
-    }
-
-    .comment {
-    background-color: #f9f9f9;
-    padding: 10px;
-    margin-top: 10px;
-    border-radius: 5px;
-    }
-
-    @@media (max-width: 1110px) {
-    .card {
-    max-width: 100%;
-    margin: 0 15px;
-    }
-
-    .card .row {
-    flex-direction: column;
-    }
-
-    .card-img-left {
-    width: 100%;
-    height: auto;
-    margin-bottom: 15px;
-    }
-
-    .card-body {
-    padding: 10px;
-    }
-
-    .personalizado {
-    flex: 0 0 auto;
-    width: 100%;
-    }
-    }
-
-    @@media (min-width: 1111px) {
-    .personalizado {
-    flex: 0 0 auto;
-    width: 33.3333333%;
-    }
-    }
-
-    #historias-exito {
-        position: relative;
-        background: linear-gradient(135deg, #f6f8f9 0%, #e5ebee 100%);
-        padding: 6rem 0;
-        overflow: hidden;
-    }
-
-        #historias-exito::after {
-            content: "♥";
-            position: absolute;
-            top: -100px;
-            right: -100px;
-            font-size: 500px;
-            color: rgba(0,123,255,0.05);
-            z-index: 0;
-            transform: rotate(-15deg);
-        }
-
-        #historias-exito h2 {
-            font-family: 'Arial', sans-serif;
-            font-size: 2.5rem;
-            font-weight: 800;
-            color: #333;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            position: relative;
-            margin-bottom: 1rem;
-            display: inline-block;
-            padding: 0 10px; /* Added some padding to the title background */
-        }
-
-            #historias-exito h2 .title-highlight {
-                position: relative;
-                display: inline-block;
-            }
-
-                #historias-exito h2 .title-highlight::after {
-                    content: '';
-                    position: absolute;
-                    bottom: -10px;
-                    left: 0;
-                    width: 100%;
-                    height: 3px;
-                    background: linear-gradient(to right, #007bff, #00c6ff);
-                    transform: scaleX(0);
-                    transform-origin: right;
-                    transition: transform 0.3s ease;
-                }
-
-        #historias-exito:hover h2 .title-highlight::after {
-            transform: scaleX(1);
-            transform-origin: left;
-        }
-
-        #historias-exito p {
-            font-size: 1.2rem;
-            color: #6c757d;
-            max-width: 700px;
-            margin: 0 auto;
-        }
-</style>
-
-<section id="historias-exito">
-    <div class="container text-center">
-        <h2>
-            Descubre <span class="title-highlight">Historias</span> de Adopción que
-            <span class="title-highlight">Cambiaron</span> Vidas
-        </h2>
-        <p>¡Conoce a las mascotas que encontraron un hogar gracias a ZuvoPet_V2!</p>
-    </div>
-</section>
-
-<!-- Sección de Historias de Éxito -->
-<div class="historias-exito">
-    @foreach (var historiaConDetalles in Model.HistoriasExito)
-    {
-        var historia = historiaConDetalles.HistoriaExito;
-        var comentarios = historiaConDetalles.ComentariosHistoria;
-        var likes = historiaConDetalles.LikeHistorias;
-
-        <div class="card mx-auto my-4" style="max-width: 100%;">
-            <div class="row g-0">
-                <!-- Imagen de la historia -->
-                <div class="personalizado p-0">
-                    <img src="~/images/@historia.Foto" class="card-img-left" alt="Imagen de la historia" />
-                </div>
-                <!-- Contenido de la historia -->
-                <div class="col-md-8">
-                    <div class="card-body">
-                        <!-- Título de la historia -->
-                        <h5 class="card-title">@historia.Titulo</h5>
-
-                        <!-- Descripción de la historia -->
-                        <p class="card-text">@historia.Descripcion</p>
-
-                        <!-- Detalles adicionales -->
-                        <div class="d-flex justify-content-between align-items-center mt-3">
-                            <span class="text-muted">@historia.FechaPublicacion.ToString("dd/MM/yyyy")</span>
-                            <span class="text-muted"><i class="fas fa-heart"></i> @likes.Count Likes</span>
-                            <span class="text-muted"><i class="fas fa-comment"></i> @comentarios.Count Comentarios</span>
-                        </div>
-
-                        <!-- Botones de interacción -->
-                        <div class="mt-4">
-                            <button class="btn btn-primary btn-sm mr-2">Me gusta</button>
-                            <button class="btn btn-outline-secondary btn-sm">Comentar</button>
-                        </div>
-
-                        <!-- Comentarios -->
-                        <div class="mt-4">
-                            <h6>Comentarios</h6>
-                            @foreach (var comentario in comentarios)
-                            {
-                                <div class="comment">
-                                    <small><strong>@comentario.Usuario.NombreUsuario</strong> - @comentario.Fecha.ToString("dd/MM/yyyy")</small>
-                                    <p>"@comentario.Comentario"</p>
-                                </div>
-                            }
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    }
-</div> *@
-

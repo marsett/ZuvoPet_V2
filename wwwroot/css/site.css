@@ -12,6 +12,15 @@ html {
   box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
 
+body {
+    font-family: "Work Sans", sans-serif;
+}
+
+/* Opcionalmente, puedes definir diferentes elementos con la misma fuente */
+h1, h2, h3, h4, h5, h6, p, span, div, a {
+    font-family: "Work Sans", sans-serif;
+}
+
 html {
   position: relative;
   min-height: 100%;

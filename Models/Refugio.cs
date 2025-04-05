@@ -37,8 +37,6 @@ namespace ZuvoPet_V2.Models
         [NotMapped]
         public string LongitudStr { get; set; }
 
-        public virtual ICollection<EventoVoluntariado> Eventos { get; set; } = new HashSet<EventoVoluntariado>();
-
         public List<Mascota> ListaMascotas { get; set; }
     }
 }
